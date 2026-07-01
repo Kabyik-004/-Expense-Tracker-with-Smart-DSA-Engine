@@ -1,0 +1,1 @@
+/* Sidebar — collapsible side navigation */

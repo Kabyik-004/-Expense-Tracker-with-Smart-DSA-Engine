@@ -15,6 +15,7 @@ from app.controllers.auth_controller import (
     get_user_profile,
     update_user_profile,
     change_user_password,
+    upload_user_avatar,
     forgot_password,
     reset_password,
     validate_token,
@@ -137,6 +138,17 @@ def change_password():
         return change_user_password(request.get_json())
     except ValidationError as e:
         return error_response("Validation failed", 400, errors=e.messages)
+
+
+@auth_bp.route("/avatar", methods=["POST"])
+@jwt_required()
+def upload_avatar():
+    """
+    POST /api/auth/avatar
+    Headers: Authorization: Bearer <access_token>
+    Body: { avatar: "<base64_string>" }
+    """
+    return upload_user_avatar(request.get_json())
 
 
 @auth_bp.route("/validate", methods=["GET"])

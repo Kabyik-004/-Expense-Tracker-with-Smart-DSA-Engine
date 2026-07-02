@@ -147,5 +147,6 @@ class UserResponseSchema(Schema):
     email = fields.String(dump_only=True)
     full_name = fields.String(dump_only=True)
     currency = fields.String(dump_only=True)
+    avatar = fields.String(dump_only=True, allow_none=True)
     created_at = fields.DateTime(dump_only=True, format="iso")
     updated_at = fields.DateTime(dump_only=True, format="iso")

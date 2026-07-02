@@ -24,6 +24,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     full_name = db.Column(db.String(150), nullable=True)
     currency = db.Column(db.String(3), nullable=False, default="INR")
+    avatar = db.Column(db.Text, nullable=True)
 
     # ── Password reset ───────────────────────────────────────────────────
     reset_token = db.Column(db.String(256), nullable=True)
@@ -83,6 +84,7 @@ class User(db.Model):
             "email": self.email,
             "full_name": self.full_name,
             "currency": self.currency,
+            "avatar": self.avatar,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

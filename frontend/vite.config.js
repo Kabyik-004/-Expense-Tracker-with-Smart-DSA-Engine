@@ -14,4 +14,22 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
+            return 'react-vendor';
+          }
+          if (id.includes('node_modules/chart.js') || id.includes('node_modules/react-chartjs')) {
+            return 'chart-vendor';
+          }
+          if (id.includes('node_modules/react-icons')) {
+            return 'icon-vendor';
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 400,
+  },
 })

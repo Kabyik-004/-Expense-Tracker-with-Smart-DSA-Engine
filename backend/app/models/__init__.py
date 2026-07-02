@@ -10,5 +10,8 @@ from app.models.expense import Expense
 from app.models.income import Income
 from app.models.category import Category
 from app.models.undo_history import UndoHistory
+from app.models.activity_log import ActivityLog
+from app.models.budget import Budget
+from app.models.blocklist import TokenBlocklist
 
-__all__ = ["User", "Expense", "Income", "Category", "UndoHistory"]
+__all__ = ["User", "Expense", "Income", "Category", "UndoHistory", "ActivityLog", "Budget", "TokenBlocklist"]

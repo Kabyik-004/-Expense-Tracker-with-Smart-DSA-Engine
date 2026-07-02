@@ -1,0 +1,30 @@
+# ─── Git ──────────────────────────────────────────
+.git/
+.gitignore
+
+# ─── Python ───────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+*.db
+backend/instance/
+
+# ─── Node ─────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ─── IDE ──────────────────────────────────────────
+.vscode/
+.idea/
+
+# ─── Environment ──────────────────────────────────
+.env
+*.log
+
+# ─── OS ───────────────────────────────────────────
+.DS_Store
+Thumbs.db

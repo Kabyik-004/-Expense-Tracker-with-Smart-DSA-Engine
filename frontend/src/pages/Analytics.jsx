@@ -1,1 +1,374 @@
-/* Analytics — charts, trends, DSA-powered insights */
+import { useState, useEffect } from "react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler } from "chart.js";
+import { Pie, Bar, Line, Doughnut } from "react-chartjs-2";
+import api from "../services/api";
+import { formatCurrency } from "../utils/helpers";
+import {
+  FiBarChart2,
+  FiPieChart,
+  FiTrendingUp,
+  FiActivity,
+  FiDollarSign,
+  FiArrowUp,
+  FiArrowDown,
+} from "react-icons/fi";
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
+
+const COLORS = [
+  "#4f46e5", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
+  "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#6366f1",
+  "#84cc16", "#d946ef", "#0ea5e9", "#eab308", "#22c55e",
+];
+
+const CHART_OPTIONS = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "bottom",
+      labels: { padding: 16, usePointStyle: true, boxWidth: 8, font: { size: 11 } },
+    },
+    tooltip: {
+      backgroundColor: "rgba(15, 23, 42, 0.9)",
+      padding: 12,
+      cornerRadius: 8,
+      titleFont: { size: 13 },
+      bodyFont: { size: 12 },
+    },
+  },
+};
+
+export default function Analytics() {
+  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
+  const [timeSeries, setTimeSeries] = useState(null);
+  const [extremes, setExtremes] = useState(null);
+  const [timeRange, setTimeRange] = useState("monthly");
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      api.get("/analytics/dashboard"),
+      api.get("/analytics/categories"),
+      api.get("/analytics/time-series"),
+    ])
+      .then(([dashRes, catRes, tsRes]) => {
+        if (dashRes.data.success) {
+          const d = dashRes.data.data;
+          setSummary(d.summary);
+          setExtremes(d.extremes);
+          if (!catRes.data.success) setCategoryData(d.categories);
+          if (!tsRes.data.success) setTimeSeries(d.time_series);
+        }
+        if (catRes.data.success) setCategoryData(catRes.data.data);
+        if (tsRes.data.success) setTimeSeries(tsRes.data.data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false);
+        setTimeout(() => setAnimate(true), 100);
+      });
+  }, []);
+
+  const s = summary || {};
+  const e = extremes || {};
+  const dist = categoryData?.category_distribution || categoryData?.distribution || [];
+  const top5 = categoryData?.top_5_categories || categoryData?.top_5 || [];
+  const monthly = timeSeries?.monthly || {};
+  const daily = timeSeries?.daily || {};
+
+  const monthlyEntries = Object.entries(monthly)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-12);
+  const dailyEntries = Object.entries(daily)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-30);
+
+  const timeLabels = timeRange === "monthly" ? monthlyEntries.map(([m]) => {
+    const [y, mon] = m.split("-");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return `${months[parseInt(mon) - 1]} ${y}`;
+  }) : dailyEntries.map(([d]) => {
+    const parts = d.split("-");
+    return `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+  });
+
+  const timeValues = timeRange === "monthly"
+    ? monthlyEntries.map(([, v]) => v.total)
+    : dailyEntries.map(([, v]) => v.total);
+
+  const pieData = {
+    labels: dist.map((d) => d.category_name || `#${d.category_id}`),
+    datasets: [{
+      data: dist.map((d) => d.total_amount),
+      backgroundColor: COLORS.slice(0, dist.length),
+      borderWidth: 2,
+      borderColor: "#fff",
+    }],
+  };
+
+  const doughnutData = {
+    labels: ["Total Income", "Total Expenses"],
+    datasets: [{
+      data: [s.total_income || 0, s.total_expense || 0],
+      backgroundColor: ["#10b981", "#ef4444"],
+      borderWidth: 3,
+      borderColor: "#fff",
+      hoverOffset: 8,
+    }],
+  };
+
+  const barData = {
+    labels: timeLabels,
+    datasets: [{
+      label: "Expenses",
+      data: timeValues,
+      backgroundColor: timeValues.map((v) =>
+        v > 0 ? "rgba(79, 70, 229, 0.7)" : "rgba(79, 70, 229, 0.1)"
+      ),
+      borderColor: "rgba(79, 70, 229, 1)",
+      borderWidth: 1,
+      borderRadius: 4,
+    }],
+  };
+
+  const lineData = {
+    labels: timeLabels,
+    datasets: [{
+      label: "Expense Trend",
+      data: timeValues,
+      fill: true,
+      backgroundColor: "rgba(79, 70, 229, 0.08)",
+      borderColor: "#4f46e5",
+      borderWidth: 2,
+      pointBackgroundColor: "#4f46e5",
+      pointBorderColor: "#fff",
+      pointBorderWidth: 2,
+      pointRadius: 3,
+      pointHoverRadius: 6,
+      tension: 0.35,
+    }],
+  };
+
+  const statCards = [
+    {
+      label: "Total Income",
+      value: s.total_income,
+      color: "text-green-600",
+      bg: "bg-green-50",
+      icon: FiArrowUp,
+      change: s.total_income > 0 ? "+100%" : "0%",
+    },
+    {
+      label: "Total Expenses",
+      value: s.total_expense,
+      color: "text-red-600",
+      bg: "bg-red-50",
+      icon: FiArrowDown,
+      change: s.total_expense > 0 ? "100%" : "0%",
+    },
+    {
+      label: "Balance",
+      value: s.balance,
+      color: (s.balance || 0) >= 0 ? "text-indigo-600" : "text-red-600",
+      bg: (s.balance || 0) >= 0 ? "bg-indigo-50" : "bg-red-50",
+      icon: FiDollarSign,
+      change: s.total_income > 0
+        ? `${(((s.balance || 0) / s.total_income) * 100).toFixed(1)}% saved`
+        : "—",
+    },
+    {
+      label: "Average Expense",
+      value: e.average_expense,
+      color: "text-purple-600",
+      bg: "bg-purple-50",
+      icon: FiActivity,
+      change: e.highest_expense ? `vs highest ${formatCurrency(e.highest_expense.amount)}` : "—",
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4" />
+        <p className="text-gray-400">Loading analytics...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
+        <p className="text-gray-500 text-sm mt-1">Visual insights into your spending</p>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {statCards.map((card) => (
+          <div key={card.label} className={`${card.bg} rounded-xl p-4 sm:p-5 border border-transparent transition-all duration-300 ${animate ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{card.label}</p>
+              <card.icon className={`w-4 h-4 ${card.color}`} />
+            </div>
+            <p className={`text-lg sm:text-xl font-bold ${card.color}`}>{formatCurrency(card.value)}</p>
+            <p className="text-xs text-gray-400 mt-1 truncate">{card.change}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <FiPieChart className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Category Distribution</h2>
+          </div>
+          <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
+            {dist.length > 0 ? (
+              <Pie data={pieData} options={{
+                ...CHART_OPTIONS,
+                plugins: {
+                  ...CHART_OPTIONS.plugins,
+                  legend: { ...CHART_OPTIONS.plugins.legend, position: "right" },
+                },
+              }} />
+            ) : (
+              <p className="text-gray-400 text-sm">No category data available</p>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <FiDollarSign className="w-5 h-5 text-green-600" />
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Income vs Expenses</h2>
+          </div>
+          <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
+            {(s.total_income || s.total_expense) ? (
+              <Doughnut data={doughnutData} options={{
+                ...CHART_OPTIONS,
+                cutout: "65%",
+                plugins: {
+                  ...CHART_OPTIONS.plugins,
+                  legend: { ...CHART_OPTIONS.plugins.legend, position: "bottom" },
+                },
+              }} />
+            ) : (
+              <p className="text-gray-400 text-sm">Add income and expenses to see comparison</p>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <FiBarChart2 className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Expense Trends</h2>
+            </div>
+            <div className="flex items-center bg-gray-100 rounded-lg p-0.5 gap-0.5">
+              {["monthly", "daily"].map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setTimeRange(range)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize ${
+                    timeRange === range ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  {range === "monthly" ? "Monthly" : "Daily"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="h-[250px] sm:h-[280px]">
+              {(timeLabels.length > 0 && timeValues.some(v => v > 0)) ? (
+                <Bar data={barData} options={{
+                  ...CHART_OPTIONS,
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: {
+                      grid: { color: "rgba(0,0,0,0.05)" },
+                      ticks: { font: { size: 10 }, callback: (v) => `₹${v}` },
+                    },
+                  },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: CHART_OPTIONS.plugins.tooltip,
+                  },
+                }} />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                  No expense data
+                </div>
+              )}
+            </div>
+            <div className="h-[250px] sm:h-[280px]">
+              {(timeLabels.length > 0 && timeValues.some(v => v > 0)) ? (
+                <Line data={lineData} options={{
+                  ...CHART_OPTIONS,
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: {
+                      grid: { color: "rgba(0,0,0,0.05)" },
+                      ticks: { font: { size: 10 }, callback: (v) => `₹${v}` },
+                    },
+                  },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: CHART_OPTIONS.plugins.tooltip,
+                  },
+                }} />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                  No trend data available
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {top5.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <FiTrendingUp className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Top Spending Categories</h2>
+            </div>
+            <div className="space-y-3">
+              {top5.map((cat, idx) => {
+                const pct = s.total_expense > 0 ? ((cat.total_amount / s.total_expense) * 100) : 0;
+                return (
+                  <div key={idx}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: COLORS[idx % COLORS.length] }}>
+                          {idx + 1}
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">{cat.category_name || `Category #${cat.category_id}`}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-sm font-semibold text-gray-900">{formatCurrency(cat.total_amount)}</span>
+                        <span className="text-xs text-gray-400 ml-2">({cat.expense_count} expenses)</span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${animate ? Math.min(pct, 100) : 0}%`, backgroundColor: COLORS[idx % COLORS.length] }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">{pct.toFixed(1)}% of total expenses</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

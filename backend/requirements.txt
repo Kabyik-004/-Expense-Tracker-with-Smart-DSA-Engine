@@ -12,6 +12,12 @@ bcrypt==4.3.0
 # Environment
 python-dotenv==1.1.0
 
+# Production server
+gunicorn==23.0.0
+
+# Database (production)
+psycopg2-binary==2.9.10
+
 # Testing
 pytest==8.4.1
 pytest-cov==6.2.1

@@ -26,6 +26,7 @@ from app.schemas.user_schema import (
     UserResponseSchema,
 )
 from app.utils.responses import success_response, error_response
+from app.controllers.activity_controller import log_activity
 
 # ── Schema instances ─────────────────────────────────────────────────────────
 register_schema = RegisterSchema()
@@ -97,17 +98,19 @@ def register_user(request_data):
 # ═════════════════════════════════════════════════════════════════════════════
 
 def login_user(request_data):
-    """
-    Authenticate user by email OR username + password.
-    Returns JWT access + refresh tokens.
-    """
     data = login_schema.load(request_data)
     login_value = data["login"]
 
-    # Try email first, then username
+    print("Login attempt:", login_value)
+
     user = User.query.filter_by(email=login_value).first()
     if not user:
         user = User.query.filter_by(username=login_value).first()
+
+    print("User found:", user)
+
+    if user:
+        print("Password check:", user.check_password(data["password"]))
 
     if not user or not user.check_password(data["password"]):
         return error_response("Invalid credentials", 401)
@@ -154,10 +157,26 @@ def refresh_access_token():
 
 def logout_user():
     """
-    Logout is primarily client-side (discard the token).
-    This endpoint confirms the action; a token blocklist can be added later
-    using Redis or a DB table for production-grade revocation.
+    Revoke the current access token so it cannot be used again.
+    Requires token blocklist table in the database.
     """
+    from app.models.blocklist import TokenBlocklist
+
+    jwt_data = get_jwt()
+    jti = jwt_data["jti"]
+    token_type = jwt_data["type"]
+    user_id = int(get_jwt_identity())
+    expires = datetime.fromtimestamp(jwt_data["exp"], tz=timezone.utc)
+
+    entry = TokenBlocklist(
+        jti=jti,
+        token_type=token_type,
+        user_id=user_id,
+        expires_at=expires,
+    )
+    db.session.add(entry)
+    db.session.commit()
+
     return success_response(message="Logged out successfully")
 
 
@@ -211,9 +230,42 @@ def update_user_profile(request_data):
 
     db.session.commit()
 
+    log_activity(user.id, "update", "profile", user.id, "Profile updated")
+
     return success_response(
         data={"user": user_response_schema.dump(user)},
         message="Profile updated successfully",
+    )
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+#  UPLOAD AVATAR
+# ═════════════════════════════════════════════════════════════════════════════
+
+def upload_user_avatar(request_data):
+    """Store a base64-encoded avatar image for the authenticated user."""
+    current_user_id = get_jwt_identity()
+    user = db.session.get(User, int(current_user_id))
+
+    if not user:
+        return error_response("User not found", 404)
+
+    if not request_data or "avatar" not in request_data:
+        return error_response("No avatar data provided", 400)
+
+    avatar_data = request_data["avatar"]
+
+    if not isinstance(avatar_data, str) or len(avatar_data) > 500000:
+        return error_response("Invalid or too large avatar data", 400)
+
+    user.avatar = avatar_data
+    db.session.commit()
+
+    log_activity(user.id, "update", "avatar", user.id, "Avatar updated")
+
+    return success_response(
+        data={"user": user_response_schema.dump(user)},
+        message="Avatar updated successfully",
     )
 
 
@@ -240,6 +292,8 @@ def change_user_password(request_data):
     user.set_password(data["new_password"])
     db.session.commit()
 
+    log_activity(user.id, "update", "password", user.id, "Password changed")
+
     return success_response(message="Password changed successfully")
 
 
@@ -265,11 +319,11 @@ def forgot_password(request_data):
     # Generate a secure random token
     reset_token = secrets.token_urlsafe(32)
     user.reset_token = reset_token
-    user.reset_token_expires = datetime.utcnow() + timedelta(hours=1)
+    user.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
     db.session.commit()
 
+    # In production, send reset_token via email instead of returning it
     return success_response(
-        data={"reset_token": reset_token},  # Remove this in production!
         message="If an account with that email exists, a reset link has been sent",
     )
 
@@ -287,7 +341,7 @@ def reset_password(request_data):
     if not user:
         return error_response("Invalid or expired reset token", 400)
 
-    if not user.reset_token_expires or user.reset_token_expires < datetime.utcnow():
+    if not user.reset_token_expires or user.reset_token_expires.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
         return error_response("Reset token has expired", 400)
 
     user.set_password(data["new_password"])

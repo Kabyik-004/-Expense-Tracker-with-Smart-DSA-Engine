@@ -17,6 +17,14 @@ jwt = JWTManager()
 ma = Marshmallow()
 
 
+def _is_token_revoked(jwt_header, jwt_payload):
+    from app.models.blocklist import TokenBlocklist
+
+    jti = jwt_payload["jti"]
+    entry = TokenBlocklist.query.filter_by(jti=jti).first()
+    return entry is not None
+
+
 def create_app(config_class=Config):
     """Application factory pattern."""
     app = Flask(__name__, instance_relative_config=True)
@@ -27,6 +35,11 @@ def create_app(config_class=Config):
     jwt.init_app(app)
     ma.init_app(app)
     CORS(app, resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}})
+
+    # ── JWT token blocklist (revoked tokens) ──────────────────────────
+    @jwt.token_in_blocklist_loader
+    def check_if_token_revoked(jwt_header, jwt_payload):
+        return _is_token_revoked(jwt_header, jwt_payload)
 
     # ── JWT error callbacks (return JSON instead of HTML) ─────────────
     @jwt.expired_token_loader
@@ -65,18 +78,24 @@ def create_app(config_class=Config):
     from app.routes.expense_routes import expense_bp
     from app.routes.category_routes import category_bp
     from app.routes.analytics_routes import analytics_bp
+    from app.routes.income_routes import income_bp
+    from app.routes.activity_routes import activity_bp
+    from app.routes.budget_routes import budget_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(expense_bp, url_prefix="/api/expenses")
     app.register_blueprint(category_bp, url_prefix="/api/categories")
     app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
+    app.register_blueprint(income_bp, url_prefix="/api/incomes")
+    app.register_blueprint(activity_bp, url_prefix="/api/auth")
+    app.register_blueprint(budget_bp, url_prefix="/api/budgets")
 
     # Ensure instance directory exists for SQLite database
     import os
     os.makedirs(app.instance_path, exist_ok=True)
 
     # Import models so SQLAlchemy registers all tables
-    from app.models import User, Expense, Income, Category, UndoHistory  # noqa: F401
+    from app.models import User, Expense, Income, Category, UndoHistory, ActivityLog, Budget, TokenBlocklist  # noqa: F401
 
     with app.app_context():
         db.create_all()

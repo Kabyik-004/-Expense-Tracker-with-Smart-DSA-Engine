@@ -47,5 +47,19 @@ class Income(db.Model):
         db.Index("ix_incomes_user_date", "user_id", "date"),
     )
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "source": self.source,
+            "amount": self.amount,
+            "description": self.description,
+            "date": self.date.isoformat() if self.date else None,
+            "is_recurring": self.is_recurring,
+            "notes": self.notes,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
     def __repr__(self):
         return f"<Income ₹{self.amount} – {self.source}>"

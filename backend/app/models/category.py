@@ -45,5 +45,17 @@ class Category(db.Model):
         db.Index("ix_categories_user_id", "user_id"),
     )
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "name": self.name,
+            "icon": self.icon,
+            "color": self.color,
+            "budget_limit": self.budget_limit,
+            "is_default": self.is_default,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
     def __repr__(self):
         return f"<Category {self.name}>"

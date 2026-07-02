@@ -1,0 +1,2 @@
+web: gunicorn wsgi:app --config gunicorn.conf.py
+release: python -c "from app import create_app; from app.config import config_by_name; import os; app = create_app(config_by_name.get(os.getenv('FLASK_ENV', 'production'))); print('DB tables ready')"

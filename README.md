@@ -1,94 +1,375 @@
-# Expense Tracker with Smart DSA Engine
+# 💰 Expense Tracker with Smart DSA Engine
 
-A full-stack expense tracking application with a Flask backend that integrates custom data-structure implementations (merge sort, search, stack, hash table) into real API endpoints.
+A modern full-stack Expense Tracker built using **React**, **Flask**, and **PostgreSQL**, enhanced with Data Structures & Algorithms for efficient searching, sorting, analytics, and undo functionality.
 
-## What's implemented
+## 🚀 Live Demo
 
-### Backend (ready to run)
-- **Auth** — register, login, JWT refresh, profile, password reset
-- **Expenses** — CRUD, merge sort, linear/binary search, undo stack, hash-table summaries
-- **Incomes** — CRUD
-- **Analytics** — overview, categories, time series, dashboard
-- **Tests** — 120+ pytest cases
+**Frontend:** https://expense-tracker-with-smart-dsa-engi.vercel.app
 
-### Frontend (scaffold)
-- React + Vite + Tailwind project structure
-- Axios client with JWT interceptors (`src/services/api.js`)
-- Pages and components are placeholders — UI not built yet
+**Backend API:** https://expense-tracker-with-smart-dsa-engine.onrender.com
 
-## Quick start
+---
 
-### 1. Backend
+# ✨ Features
 
-```powershell
+## 🔐 Authentication
+- User Registration
+- Secure Login & Logout
+- JWT Authentication
+- Password Hashing (bcrypt)
+- Token Revocation (JWT Blocklist)
+
+---
+
+## 💸 Expense Management
+
+- Add Expenses
+- Edit Expenses
+- Delete Expenses
+- View Expense History
+- Category-wise Expenses
+- Payment Mode Tracking
+- Undo Last Operation (Stack)
+
+---
+
+## 💵 Income Management
+
+- Add Income
+- Edit Income
+- Delete Income
+- Undo Last Operation
+
+---
+
+## 📊 Dashboard
+
+- Total Income
+- Total Expenses
+- Current Balance
+- Recent Transactions
+- Top Spending Category
+- Savings Rate
+
+---
+
+## 📈 Analytics
+
+- Monthly Expense Summary
+- Category-wise Analytics
+- Dashboard Statistics
+- Financial Overview
+
+---
+
+## 🔍 Smart Searching
+
+Implemented using Data Structures & Algorithms.
+
+### Linear Search
+
+- Search by Title
+- Search by Description
+- Search by Category
+
+### Binary Search
+
+- Search by Expense ID
+- Search by Date
+- Search within Date Range
+
+---
+
+## 📑 Smart Sorting
+
+- Sort by Amount
+- Sort by Date
+- Sort by Category
+- Sort by Title
+- Multi-field Sorting
+
+---
+
+## ↩️ Undo System
+
+Implemented using **Stack (LIFO)**
+
+Supports undo for:
+
+- Expense Creation
+- Expense Update
+- Expense Deletion
+
+Maximum stack size per user:
+- 10 Operations
+
+---
+
+## 🛡 Security
+
+- JWT Access Tokens
+- Refresh Tokens
+- Password Hashing
+- Protected API Routes
+- Environment Variables
+- CORS Protection
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React
+- Vite
+- React Router
+- Context API
+- Axios
+- Tailwind CSS
+- React Icons
+
+---
+
+## Backend
+
+- Flask
+- SQLAlchemy
+- Marshmallow
+- Flask-JWT-Extended
+- Flask-Migrate
+- Gunicorn
+
+---
+
+## Database
+
+- PostgreSQL (Production)
+- SQLite (Development)
+
+---
+
+## Deployment
+
+- Frontend → Vercel
+- Backend → Render
+- Database → Render PostgreSQL
+
+---
+
+# 📂 Project Structure
+
+```
+Expense-Tracker/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/
+│   ├── app/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── schemas/
+│   │   └── utils/
+│   │
+│   ├── migrations/
+│   ├── tests/
+│   ├── wsgi.py
+│   └── requirements.txt
+│
+└── README.md
+```
+
+---
+
+# ⚙️ Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/expense-tracker.git
+
+cd expense-tracker
+```
+
+---
+
+# Backend Setup
+
+```bash
 cd backend
-python -m venv .venv
-.venv\Scripts\activate
+
+python -m venv venv
+
+source venv/bin/activate
+```
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies
+
+```bash
 pip install -r requirements.txt
-copy .env.example .env
+```
+
+Create `.env`
+
+```env
+SECRET_KEY=your_secret_key
+
+JWT_SECRET_KEY=your_jwt_secret
+
+DATABASE_URL=sqlite:///expense_tracker.db
+```
+
+Run database migrations
+
+```bash
+flask db upgrade
+```
+
+Run backend
+
+```bash
 python run.py
 ```
 
-API runs at `http://localhost:5000`.
+---
 
-### 2. Frontend (optional)
+# Frontend Setup
 
-```powershell
+```bash
 cd frontend
+
 npm install
+
 npm run dev
 ```
 
-UI runs at `http://localhost:5173` and proxies `/api` to the Flask server.
+---
 
-### 3. Run tests
+# Production Deployment
 
-```powershell
-cd backend
-.venv\Scripts\activate
-pytest tests/ -v
+## Frontend
+
+Deploy on **Vercel**
+
+```bash
+npm run build
 ```
 
-## Environment variables
+---
 
-Copy `backend/.env.example` to `backend/.env`:
+## Backend
 
-| Variable | Description |
-|----------|-------------|
-| `SECRET_KEY` | Flask secret (use 32+ characters in production) |
-| `JWT_SECRET_KEY` | JWT signing key (use 32+ characters in production) |
-| `DATABASE_URL` | SQLite by default |
-| `CORS_ORIGINS` | Allowed frontend origin(s) |
-| `FLASK_ENV` | `development`, `testing`, or `production` |
+Deploy on **Render**
 
-## API overview
+Uses
 
-| Prefix | Description |
-|--------|-------------|
-| `/api/auth` | Authentication |
-| `/api/expenses` | Expenses + DSA features (sort, search, undo, summaries) |
-| `/api/incomes` | Income tracking |
-| `/api/analytics` | Spending analytics |
-| `/api/categories` | Reserved (routes not yet implemented) |
+- Gunicorn
+- PostgreSQL
+- Environment Variables
 
-## DSA engine
+---
 
-| Structure | Module | Used for |
-|-----------|--------|----------|
-| Merge sort | `services/merge_sort.py` | Expense sorting |
-| Linear/binary search | `services/search.py` | Expense search |
-| Stack | `services/stack.py` | Undo history (max 10 per user) |
-| Hash table | `services/hash_table.py` | Per-user category/monthly summaries |
+# REST API
 
-See `backend/MERGE_SORT_GUIDE.md`, `SEARCH_GUIDE.md`, and `STACK_GUIDE.md` for details.
+## Authentication
 
-## Project structure
+| Method | Endpoint |
+|----------|---------------------------|
+| POST | `/api/auth/register` |
+| POST | `/api/auth/login` |
+| POST | `/api/auth/logout` |
 
-```
-backend/
-  app/           Flask application (routes, controllers, models, services)
-  tests/         pytest suite
-  run.py         Entry point
-frontend/
-  src/           React source (scaffold)
-```
+---
+
+## Expenses
+
+| Method | Endpoint |
+|----------|---------------------------|
+| GET | `/api/expenses/` |
+| POST | `/api/expenses/` |
+| PUT | `/api/expenses/{id}` |
+| DELETE | `/api/expenses/{id}` |
+
+---
+
+## Income
+
+| Method | Endpoint |
+|----------|---------------------------|
+| GET | `/api/incomes/` |
+| POST | `/api/incomes/` |
+| PUT | `/api/incomes/{id}` |
+| DELETE | `/api/incomes/{id}` |
+
+---
+
+## Analytics
+
+| Method | Endpoint |
+|----------|---------------------------|
+| GET | `/api/analytics/dashboard` |
+
+---
+
+# Data Structures & Algorithms Used
+
+| Feature | Algorithm / Data Structure |
+|-----------|----------------------------|
+| Undo | Stack |
+| Search by Title | Linear Search |
+| Search by Description | Linear Search |
+| Search by Category | Linear Search |
+| Search by ID | Binary Search |
+| Search by Date | Binary Search |
+| Sorting | Python TimSort |
+| Multi-field Sorting | Custom Sorting Logic |
+
+---
+
+# Testing
+
+- Backend Unit Tests
+- Authentication Testing
+- CRUD Testing
+- Search Testing
+- Sorting Testing
+- Analytics Testing
+
+---
+
+# Future Improvements
+
+- AI Expense Prediction
+- OCR Receipt Scanner
+- Email Reports
+- Budget Notifications
+- Mobile Application
+- Cloud Storage Integration
+- Export Reports (PDF/Excel)
+
+---
+
+# Author
+
+**Kabyik Paul**
+
+B.Tech – Computer Science Engineering (IoT & Cyber Security)
+
+Heritage Institute of Technology
+
+---
+
+# License
+
+This project is developed for educational purposes.

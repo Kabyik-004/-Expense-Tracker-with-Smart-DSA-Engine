@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
@@ -24,11 +24,18 @@ export default function Dashboard() {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const fetching = useRef(false);
 
   const fetchData = useCallback(async () => {
+    if (fetching.current) return;
+    fetching.current = true;
     setLoading(true);
     setError(null);
     try {
+      if (!localStorage.getItem("access_token")) {
+        navigate("/login", { replace: true });
+        return;
+      }
       const [dashRes, expRes] = await Promise.all([
         api.get("/analytics/dashboard"),
         api.get("/expenses/"),
@@ -36,12 +43,22 @@ export default function Dashboard() {
       if (dashRes.data.success) setData(dashRes.data.data);
       if (expRes.data.success) setRecentTransactions(expRes.data.data.expenses || []);
     } catch (err) {
-      const msg = err.response?.data?.message || "Failed to load dashboard data";
+      let msg;
+      if (err.code === "ECONNABORTED") {
+        msg = "Request timed out — Render may be cold-starting. Click Retry in 30s.";
+      } else if (err.response) {
+        msg = err.response.data?.message || `Server error (${err.response.status})`;
+      } else if (err.request) {
+        msg = "Backend unreachable — check if Render is running";
+      } else {
+        msg = err.message || "Failed to load dashboard data";
+      }
       setError(msg);
     } finally {
       setLoading(false);
+      fetching.current = false;
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     fetchData();

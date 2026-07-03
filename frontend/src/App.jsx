@@ -147,6 +147,7 @@ function AppLayout() {
         <ToastProvider>
           <ExpenseProvider>
             <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/incomes" element={<Incomes />} />

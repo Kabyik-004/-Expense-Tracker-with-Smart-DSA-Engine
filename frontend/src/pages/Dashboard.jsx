@@ -210,7 +210,7 @@ export default function Dashboard() {
         {stats.map((stat) => (
           <article
             key={stat.label}
-            className="relative group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+            className="relative group bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl border border-white/40 dark:border-gray-700/30 shadow-lg shadow-black/5 dark:shadow-black/20 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
             role="listitem"
           >
             <div className={`h-1 w-full bg-gradient-to-r ${stat.scheme.accent} opacity-80`} />
@@ -237,7 +237,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md">
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl border border-white/40 dark:border-gray-700/30 shadow-lg shadow-black/5 dark:shadow-black/20 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-xl">
           <AnimatedCircularProgress
             value={budgetStatus?.total_budget > 0 ? Math.min(budgetStatus.overall_percentage, 100) : 0}
             size={130}
@@ -263,7 +263,7 @@ export default function Dashboard() {
           </svg>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md">
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl border border-white/40 dark:border-gray-700/30 shadow-lg shadow-black/5 dark:shadow-black/20 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-xl">
           <AnimatedCircularProgress
             value={totalIncome > 0 ? Math.max(0, Math.min(((totalIncome - totalExpense) / totalIncome) * 100, 100)) : 0}
             size={130}
@@ -289,7 +289,7 @@ export default function Dashboard() {
           </svg>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md sm:col-span-2 lg:col-span-1">
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl border border-white/40 dark:border-gray-700/30 shadow-lg shadow-black/5 dark:shadow-black/20 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-xl sm:col-span-2 lg:col-span-1">
           <AnimatedCircularProgress
             value={totalIncome > 0 ? Math.min((totalExpense / totalIncome) * 100, 100) : 0}
             size={130}

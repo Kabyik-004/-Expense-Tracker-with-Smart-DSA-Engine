@@ -96,7 +96,7 @@ function AppLayout() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col">
+      <aside className="w-64 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-800/50 flex flex-col">
         <div className="p-6 border-b border-gray-100 dark:border-gray-800">
           <h1 className="text-lg font-bold text-indigo-600">
             Expense Tracker

@@ -100,8 +100,8 @@ export default function Budgets() {
     <div className="max-w-4xl mx-auto space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Budgets</h1>
-          <p className="text-sm text-gray-500 mt-1">Set and track your monthly spending limits</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Budgets</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Set and track your monthly spending limits</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -112,32 +112,32 @@ export default function Budgets() {
         </button>
       </div>
 
-      <div className="flex items-center justify-center gap-4 bg-white rounded-xl shadow-sm border border-gray-100 p-3">
-        <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-100 rounded-lg"><FiChevronLeft className="w-4 h-4 text-gray-500" /></button>
-        <span className="text-lg font-semibold text-gray-900 min-w-[140px] text-center">{MONTHS[month - 1]} {year}</span>
-        <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 rounded-lg"><FiChevronRight className="w-4 h-4 text-gray-500" /></button>
+      <div className="flex items-center justify-center gap-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-3">
+        <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"><FiChevronLeft className="w-4 h-4 text-gray-500 dark:text-gray-400" /></button>
+        <span className="text-lg font-semibold text-gray-900 dark:text-white min-w-[140px] text-center">{MONTHS[month - 1]} {year}</span>
+        <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"><FiChevronRight className="w-4 h-4 text-gray-500 dark:text-gray-400" /></button>
       </div>
 
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-1/3 mb-3" />
-              <div className="h-8 bg-gray-200 rounded mb-2" />
-              <div className="h-3 bg-gray-200 rounded w-1/2" />
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 animate-pulse">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-3" />
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : status ? (
         <>
           {exceededAlerts.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
-              <div className="flex items-center gap-2 text-red-700 font-medium">
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 rounded-xl p-4 space-y-2">
+              <div className="flex items-center gap-2 text-red-700 dark:text-red-300 font-medium">
                 <FiAlertOctagon className="w-5 h-5" />
                 Exceeded Budget{exceededAlerts.length > 1 ? "s" : ""}
               </div>
               {exceededAlerts.map((b) => (
-                <div key={b.budget.id} className="flex justify-between text-sm text-red-600 pl-7">
+                <div key={b.budget.id} className="flex justify-between text-sm text-red-600 dark:text-red-400 pl-7">
                   <span>{b.budget.category_name || "Overall"}</span>
                   <span className="font-medium">{formatCurrency(b.spent - b.budget.amount)} over</span>
                 </div>
@@ -161,10 +161,10 @@ export default function Budgets() {
           )}
 
           {status.total_budget > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <FiTarget className="w-4 h-4 text-indigo-500" />
+                <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <FiTarget className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                   Overall Budget
                 </h3>
               </div>
@@ -177,28 +177,28 @@ export default function Budgets() {
           )}
 
           {status.budgets && status.budgets.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Category Budgets</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Category Budgets</h3>
               <div className="space-y-5">
                 {status.budgets.map((b) => (
                   <div key={b.budget.id} className="relative">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {b.budget.category_icon ? `${b.budget.category_icon} ` : ""}
                           {b.budget.category_name || "Overall"}
                         </span>
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                          b.exceeded ? "bg-red-100 text-red-700" :
+                          b.exceeded ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" :
                           b.warning ? "bg-amber-100 text-amber-700" :
-                          "bg-green-100 text-green-700"
+                          "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
                         }`}>
                           {b.exceeded ? "Exceeded" : b.warning ? "Warning" : "On Track"}
                         </span>
                       </div>
                       <button
                         onClick={() => handleDelete(b.budget.id)}
-                        className="p-1 text-gray-300 hover:text-red-500 transition-colors"
+                        className="p-1 text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                         title="Delete budget"
                       >
                         <FiTrash2 className="w-3.5 h-3.5" />
@@ -216,24 +216,24 @@ export default function Budgets() {
           )}
 
           {(!status.budgets || status.budgets.length === 0) && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center">
               <FiTarget className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">No budgets set for {MONTHS[month - 1]} {year}</p>
-              <p className="text-gray-400 text-sm mt-1">Click "Set Budget" to create one</p>
+              <p className="text-gray-500 dark:text-gray-400 font-medium">No budgets set for {MONTHS[month - 1]} {year}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Click "Set Budget" to create one</p>
             </div>
           )}
         </>
       ) : null}
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowForm(false)}>
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Set Budget</h3>
+        <div className="fixed inset-0 bg-black/30 dark:bg-black/70 flex items-center justify-center z-50" onClick={() => setShowForm(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Set Budget</h3>
             <form onSubmit={handleSetBudget} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category (optional)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Category (optional)</label>
                 <select
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                   value={form.category_id}
                   onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                 >
@@ -246,13 +246,13 @@ export default function Budgets() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Budget Amount</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Budget Amount</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                   placeholder="e.g. 50000"
                   value={form.amount}
                   onChange={(e) => setForm({ ...form, amount: e.target.value })}
@@ -262,7 +262,7 @@ export default function Budgets() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 text-sm font-medium"
                 >
                   Cancel
                 </button>
@@ -285,7 +285,7 @@ export default function Budgets() {
 function BudgetProgressBar({ percentage, spent, remaining }) {
   const pct = Math.min(percentage, 100);
   const barColor = percentage > 100 ? "bg-red-500" : percentage >= 80 ? "bg-amber-500" : "bg-green-500";
-  const barBg = percentage > 100 ? "bg-red-100" : percentage >= 80 ? "bg-amber-100" : "bg-green-100";
+  const barBg = percentage > 100 ? "bg-red-100 dark:bg-red-900/30" : percentage >= 80 ? "bg-amber-100" : "bg-green-100 dark:bg-green-900/30";
 
   return (
     <div>
@@ -295,9 +295,9 @@ function BudgetProgressBar({ percentage, spent, remaining }) {
           style={{ width: `${Math.min(pct, 100)}%` }}
         />
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
         <span>{formatCurrency(spent)} spent</span>
-        <span className="font-semibold text-gray-700">{pct}%</span>
+        <span className="font-semibold text-gray-700 dark:text-gray-200">{pct}%</span>
         <span>{formatCurrency(remaining)} left</span>
       </div>
     </div>

@@ -74,13 +74,13 @@ export default function Dashboard() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6" />
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-6" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-              <div className="h-8 bg-gray-200 rounded w-1/2" />
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -91,11 +91,11 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="space-y-6">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex items-start gap-4">
+        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-6 flex items-start gap-4">
           <FiAlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-red-800">Failed to load dashboard</h3>
-            <p className="text-sm text-red-600 mt-1">{error}</p>
+            <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">Failed to load dashboard</h3>
+            <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>
           </div>
           <button
             onClick={fetchData}
@@ -178,15 +178,15 @@ export default function Dashboard() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Welcome{user?.full_name ? `, ${user.full_name}` : ""}
           </h1>
-          <p className="text-gray-500 mt-1">Here's your financial overview</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Here's your financial overview</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={fetchData}
-            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
             title="Refresh dashboard data"
           >
             <FiRefreshCw className="w-4 h-4" />
@@ -199,15 +199,15 @@ export default function Dashboard() {
         {stats.map((stat, _index) => (
           <article
             key={stat.label}
-            className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-200"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
             role="listitem"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
                 <p className={`text-2xl font-bold mt-1 ${stat.color}`}>{stat.value}</p>
                 <p className={`text-xs font-medium mt-2 ${stat.trendColor} flex items-center gap-1`}>
-                  <span className="text-gray-400">vs last month</span>
+                  <span className="text-gray-400 dark:text-gray-500">vs last month</span>
                   {stat.trend}
                 </p>
               </div>
@@ -220,9 +220,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <section className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Transactions</h2>
+        <section className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
             <button
               onClick={() => navigate("/expenses")}
               className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1"
@@ -230,11 +230,11 @@ export default function Dashboard() {
               View all <FiArrowRight className="w-4 h-4" />
             </button>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {recentTransactions.length === 0 ? (
               <div className="p-12 text-center">
-                <FiCreditCard className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No transactions yet</p>
+                <FiCreditCard className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                <p className="text-gray-500 dark:text-gray-400">No transactions yet</p>
                 <button
                   onClick={() => navigate("/expenses")}
                   className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
@@ -246,18 +246,18 @@ export default function Dashboard() {
               recentTransactions.map((txn) => (
                 <article
                   key={txn.id}
-                  className="p-4 hover:bg-gray-50 transition-colors flex items-center gap-4"
+                  className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center gap-4"
                 >
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100 text-red-600"
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400"
                   >
                     <FiTrendingDown className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{txn.title}</p>
-                    <p className="text-sm text-gray-500 flex items-center gap-2">
+                    <p className="font-medium text-gray-900 dark:text-white truncate">{txn.title}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                       <span>{txn.category_name || "Uncategorized"}</span>
-                      <span className="text-gray-300">•</span>
+                      <span className="text-gray-300 dark:text-gray-600">•</span>
                       <span>{formatDate(txn.date)}</span>
                     </p>
                   </div>
@@ -265,7 +265,7 @@ export default function Dashboard() {
                     <p className="font-semibold text-red-600">
                       -{formatCurrency(txn.amount)}
                     </p>
-                    <p className="text-xs text-gray-400">{txn.payment_method || "Cash"}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{txn.payment_method || "Cash"}</p>
                   </div>
                 </article>
               ))
@@ -273,8 +273,8 @@ export default function Dashboard() {
           </div>
         </section>
 
-        <aside className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
+        <aside className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Actions</h2>
           <div className="space-y-2" role="list" aria-label="Quick actions">
             {quickActions.map((action) => (
               <button
@@ -291,15 +291,15 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <div className="pt-4 border-t border-gray-100">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Spending Insights</h3>
+          <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Spending Insights</h3>
             <div className="space-y-3">
-              <div className="p-3 bg-indigo-50 rounded-lg">
-                <p className="text-sm font-medium text-indigo-900">Top Category</p>
-                <p className="text-lg font-semibold text-indigo-600 mt-1">
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <p className="text-sm font-medium text-indigo-900 dark:text-indigo-300">Top Category</p>
+                <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mt-1">
                   {data?.categories?.most_used?.category_name || "—"}
                 </p>
-                <p className="text-xs text-indigo-500 mt-1">
+                <p className="text-xs text-indigo-500 dark:text-indigo-400 mt-1">
                   {formatCurrency(
                     data?.categories?.distribution?.find(
                       d => d.category_id === data?.categories?.most_used?.category_id
@@ -307,31 +307,31 @@ export default function Dashboard() {
                   )} total
                 </p>
               </div>
-              <div className="p-3 bg-green-50 rounded-lg">
-                <p className="text-sm font-medium text-green-900">Savings Rate</p>
-                <p className="text-lg font-semibold text-green-600 mt-1">
+              <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <p className="text-sm font-medium text-green-900 dark:text-green-300">Savings Rate</p>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400 mt-1">
                   {totalIncome > 0
                     ? `${(((totalIncome - totalExpense) / totalIncome) * 100).toFixed(1)}%`
                     : "—"}
                 </p>
-                <p className="text-xs text-green-500 mt-1">of income saved</p>
+                <p className="text-xs text-green-500 dark:text-green-400 mt-1">of income saved</p>
               </div>
             </div>
           </div>
         </aside>
       </div>
 
-      <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-6" aria-labelledby="charts-heading">
-        <h2 id="charts-heading" className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6" aria-labelledby="charts-heading">
+        <h2 id="charts-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <FiBarChart2 className="w-5 h-5 text-indigo-600" />
           Charts & Analytics
         </h2>
-        <div className="aspect-[4/3] bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl flex items-center justify-center relative overflow-hidden">
+        <div className="aspect-[4/3] bg-gradient-to-br from-indigo-50 dark:from-indigo-900/20 to-purple-50 dark:to-purple-900/20 rounded-xl flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-50" />
           <div className="relative z-10 text-center p-8">
-            <FiBarChart2 className="w-16 h-16 text-indigo-200 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">Charts coming soon</p>
-            <p className="text-gray-400 text-sm mt-1">Expense trends, category breakdown, monthly comparison</p>
+            <FiBarChart2 className="w-16 h-16 text-indigo-200 dark:text-indigo-700 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-lg">Charts coming soon</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Expense trends, category breakdown, monthly comparison</p>
             <button
               onClick={() => navigate("/analytics")}
               className="mt-6 px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"

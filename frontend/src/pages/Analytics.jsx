@@ -156,24 +156,24 @@ export default function Analytics() {
     {
       label: "Total Income",
       value: s.total_income,
-      color: "text-green-600",
-      bg: "bg-green-50",
+      color: "text-green-600 dark:text-green-400",
+      bg: "bg-green-50 dark:bg-green-900/30",
       icon: FiArrowUp,
       change: s.total_income > 0 ? "+100%" : "0%",
     },
     {
       label: "Total Expenses",
       value: s.total_expense,
-      color: "text-red-600",
-      bg: "bg-red-50",
+      color: "text-red-600 dark:text-red-400",
+      bg: "bg-red-50 dark:bg-red-900/30",
       icon: FiArrowDown,
       change: s.total_expense > 0 ? "100%" : "0%",
     },
     {
       label: "Balance",
       value: s.balance,
-      color: (s.balance || 0) >= 0 ? "text-indigo-600" : "text-red-600",
-      bg: (s.balance || 0) >= 0 ? "bg-indigo-50" : "bg-red-50",
+      color: (s.balance || 0) >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
+      bg: (s.balance || 0) >= 0 ? "bg-indigo-50 dark:bg-indigo-900/30" : "bg-red-50 dark:bg-red-900/30",
       icon: FiDollarSign,
       change: s.total_income > 0
         ? `${(((s.balance || 0) / s.total_income) * 100).toFixed(1)}% saved`
@@ -183,7 +183,7 @@ export default function Analytics() {
       label: "Average Expense",
       value: e.average_expense,
       color: "text-purple-600",
-      bg: "bg-purple-50",
+      bg: "bg-purple-50 dark:bg-purple-900/30",
       icon: FiActivity,
       change: e.highest_expense ? `vs highest ${formatCurrency(e.highest_expense.amount)}` : "—",
     },
@@ -193,7 +193,7 @@ export default function Analytics() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4" />
-        <p className="text-gray-400">Loading analytics...</p>
+        <p className="text-gray-400 dark:text-gray-500">Loading analytics...</p>
       </div>
     );
   }
@@ -201,28 +201,28 @@ export default function Analytics() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-        <p className="text-gray-500 text-sm mt-1">Visual insights into your spending</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visual insights into your spending</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map((card) => (
           <div key={card.label} className={`${card.bg} rounded-xl p-4 sm:p-5 border border-transparent transition-all duration-300 ${animate ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{card.label}</p>
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{card.label}</p>
               <card.icon className={`w-4 h-4 ${card.color}`} />
             </div>
             <p className={`text-lg sm:text-xl font-bold ${card.color}`}>{formatCurrency(card.value)}</p>
-            <p className="text-xs text-gray-400 mt-1 truncate">{card.change}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 truncate">{card.change}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
           <div className="flex items-center gap-2 mb-4">
-            <FiPieChart className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Category Distribution</h2>
+            <FiPieChart className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Category Distribution</h2>
           </div>
           <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
             {dist.length > 0 ? (
@@ -234,15 +234,15 @@ export default function Analytics() {
                 },
               }} />
             ) : (
-              <p className="text-gray-400 text-sm">No category data available</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm">No category data available</p>
             )}
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
           <div className="flex items-center gap-2 mb-4">
-            <FiDollarSign className="w-5 h-5 text-green-600" />
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Income vs Expenses</h2>
+            <FiDollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Income vs Expenses</h2>
           </div>
           <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
             {(s.total_income || s.total_expense) ? (
@@ -255,24 +255,24 @@ export default function Analytics() {
                 },
               }} />
             ) : (
-              <p className="text-gray-400 text-sm">Add income and expenses to see comparison</p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm">Add income and expenses to see comparison</p>
             )}
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div className="flex items-center gap-2">
-              <FiBarChart2 className="w-5 h-5 text-indigo-600" />
-              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Expense Trends</h2>
+              <FiBarChart2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Expense Trends</h2>
             </div>
-            <div className="flex items-center bg-gray-100 rounded-lg p-0.5 gap-0.5">
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 gap-0.5">
               {["monthly", "daily"].map((range) => (
                 <button
                   key={range}
                   onClick={() => setTimeRange(range)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize ${
-                    timeRange === range ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                    timeRange === range ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   }`}
                 >
                   {range === "monthly" ? "Monthly" : "Daily"}
@@ -300,7 +300,7 @@ export default function Analytics() {
                   },
                 }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-sm">
                   No expense data
                 </div>
               )}
@@ -324,7 +324,7 @@ export default function Analytics() {
                   },
                 }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-sm">
                   No trend data available
                 </div>
               )}
@@ -333,10 +333,10 @@ export default function Analytics() {
         </div>
 
         {top5.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <FiTrendingUp className="w-5 h-5 text-indigo-600" />
-              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Top Spending Categories</h2>
+              <FiTrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Top Spending Categories</h2>
             </div>
             <div className="space-y-3">
               {top5.map((cat, idx) => {
@@ -348,20 +348,20 @@ export default function Analytics() {
                         <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: COLORS[idx % COLORS.length] }}>
                           {idx + 1}
                         </span>
-                        <span className="text-sm font-medium text-gray-900">{cat.category_name || `Category #${cat.category_id}`}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">{cat.category_name || `Category #${cat.category_id}`}</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-sm font-semibold text-gray-900">{formatCurrency(cat.total_amount)}</span>
-                        <span className="text-xs text-gray-400 ml-2">({cat.expense_count} expenses)</span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(cat.total_amount)}</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">({cat.expense_count} expenses)</span>
                       </div>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-700"
                         style={{ width: `${animate ? Math.min(pct, 100) : 0}%`, backgroundColor: COLORS[idx % COLORS.length] }}
                       />
                     </div>
-                    <p className="text-xs text-gray-400 mt-0.5">{pct.toFixed(1)}% of total expenses</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{pct.toFixed(1)}% of total expenses</p>
                   </div>
                 );
               })}

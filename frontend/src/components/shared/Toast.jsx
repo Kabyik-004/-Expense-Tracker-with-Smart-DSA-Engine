@@ -17,17 +17,17 @@ const ICONS = {
 };
 
 const COLORS = {
-  success: "bg-green-50 border-green-200 text-green-800",
-  error: "bg-red-50 border-red-200 text-red-800",
-  info: "bg-blue-50 border-blue-200 text-blue-800",
-  undo: "bg-orange-50 border-orange-200 text-orange-800",
+  success: "bg-green-50 dark:bg-green-900/30 border-green-200 text-green-800",
+  error: "bg-red-50 dark:bg-red-900/30 border-red-200 text-red-800",
+  info: "bg-blue-50 dark:bg-blue-900/30 border-blue-200 text-blue-800",
+  undo: "bg-orange-50 dark:bg-orange-900/30 border-orange-200 text-orange-800",
 };
 
 const ICON_COLORS = {
-  success: "text-green-500",
-  error: "text-red-500",
-  info: "text-blue-500",
-  undo: "text-orange-500",
+  success: "text-green-500 dark:text-green-400",
+  error: "text-red-500 dark:text-red-400",
+  info: "text-blue-500 dark:text-blue-400",
+  undo: "text-orange-500 dark:text-orange-400",
 };
 
 export function ToastProvider({ children }) {

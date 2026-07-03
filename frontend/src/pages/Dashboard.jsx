@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
 import { formatCurrency, formatDate } from "../utils/helpers";
 import {
@@ -12,29 +12,46 @@ import {
   FiArrowRight,
   FiBarChart2,
   FiSettings,
+  FiRefreshCw,
+  FiAlertCircle,
 } from "react-icons/fi";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState(null);
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [dashRes, expRes] = await Promise.all([
+        api.get("/analytics/dashboard"),
+        api.get("/expenses/"),
+      ]);
+      if (dashRes.data.success) setData(dashRes.data.data);
+      if (expRes.data.success) setRecentTransactions(expRes.data.data.expenses || []);
+    } catch (err) {
+      const msg = err.response?.data?.message || "Failed to load dashboard data";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    Promise.all([
-      api.get("/analytics/dashboard"),
-      api.get("/expenses/"),
-    ])
-      .then(([dashRes, expRes]) => {
-        if (dashRes.data.success) setData(dashRes.data.data);
-        if (expRes.data.success) setRecentTransactions(expRes.data.data.expenses || []);
-      })
-      .catch(() => {})
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    fetchData();
+  }, [fetchData, location.pathname]);
+
+  useEffect(() => {
+    const handleFocus = () => fetchData();
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [fetchData]);
 
   if (loading) {
     return (
@@ -49,6 +66,26 @@ export default function Dashboard() {
               <div className="h-8 bg-gray-200 rounded w-1/2" />
             </div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex items-start gap-4">
+          <FiAlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-red-800">Failed to load dashboard</h3>
+            <p className="text-sm text-red-600 mt-1">{error}</p>
+          </div>
+          <button
+            onClick={fetchData}
+            className="shrink-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium flex items-center gap-2"
+          >
+            <FiRefreshCw className="w-4 h-4" /> Retry
+          </button>
         </div>
       </div>
     );
@@ -130,9 +167,13 @@ export default function Dashboard() {
           <p className="text-gray-500 mt-1">Here's your financial overview</p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2">
-            <FiPlus className="w-4 h-4" />
-            Add Transaction
+          <button
+            onClick={fetchData}
+            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+            title="Refresh dashboard data"
+          >
+            <FiRefreshCw className="w-4 h-4" />
+            Refresh
           </button>
         </div>
       </div>

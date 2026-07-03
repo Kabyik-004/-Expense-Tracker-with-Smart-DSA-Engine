@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
+import ThemeSwitch from "../shared/ThemeSwitch";
 
 const navLinks = [
   { label: "Features", href: "features" },
@@ -77,7 +78,8 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeSwitch compact className="hidden sm:flex" />
             <Link
               to="/login"
               className={`hidden sm:inline-flex px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
@@ -128,7 +130,10 @@ export default function Navbar() {
               {link.label}
             </button>
           ))}
-          <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2">
+          <div className="flex justify-center pt-3 pb-1">
+            <ThemeSwitch />
+          </div>
+          <div className="pb-3 pt-1 border-t border-gray-100 dark:border-gray-800 space-y-2">
             <Link
               to="/login"
               onClick={() => setMobileOpen(false)}

@@ -9,7 +9,6 @@ export function ExpenseProvider({ children }) {
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
 
   const [searchMode, setSearchMode] = useState(false);
@@ -37,8 +36,7 @@ export function ExpenseProvider({ children }) {
         setPage(1);
         setCategories(res.data.categories || []);
       }
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch expenses");
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -145,8 +143,7 @@ export function ExpenseProvider({ children }) {
         setPage(1);
         setSearchMode(true);
       }
-    } catch (err) {
-      setError(err.response?.data?.message || "Search failed");
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -173,7 +170,6 @@ export function ExpenseProvider({ children }) {
         allExpenses: expenses,
         filteredExpenses,
         loading,
-        error,
         page,
         totalPages,
         setPage,

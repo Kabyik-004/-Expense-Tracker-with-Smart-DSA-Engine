@@ -12,6 +12,8 @@ import {
   FiArrowUp,
   FiArrowDown,
 } from "react-icons/fi";
+import { SkeletonAnalytics } from "../components/shared/skeletons";
+import EmptyState from "../components/shared/EmptyState";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
 
@@ -207,14 +209,7 @@ export default function Analytics() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4" />
-        <p className="text-gray-400 dark:text-gray-500">Loading analytics...</p>
-      </div>
-    );
-  }
+  if (loading) return <SkeletonAnalytics />;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -252,7 +247,7 @@ export default function Analytics() {
                 },
               }} />
             ) : (
-              <p className="text-gray-400 dark:text-gray-500 text-sm">No category data available</p>
+              <EmptyState icon={<FiPieChart className="w-6 h-6" />} title="No category data" color="indigo" />
             )}
           </div>
         </div>
@@ -273,7 +268,7 @@ export default function Analytics() {
                 },
               }} />
             ) : (
-              <p className="text-gray-400 dark:text-gray-500 text-sm">Add income and expenses to see comparison</p>
+              <EmptyState icon={<FiDollarSign className="w-6 h-6" />} title="No data to compare" description="Add income and expenses to see the comparison" color="green" />
             )}
           </div>
         </div>
@@ -318,8 +313,8 @@ export default function Analytics() {
                   },
                 }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-sm">
-                  No expense data
+                <div className="flex items-center justify-center h-full">
+                  <EmptyState icon={<FiBarChart2 className="w-6 h-6" />} title="No expense data" color="indigo" />
                 </div>
               )}
             </div>
@@ -342,8 +337,8 @@ export default function Analytics() {
                   },
                 }} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500 text-sm">
-                  No trend data available
+                <div className="flex items-center justify-center h-full">
+                  <EmptyState icon={<FiTrendingUp className="w-6 h-6" />} title="No trend data" color="indigo" />
                 </div>
               )}
             </div>

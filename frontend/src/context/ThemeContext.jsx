@@ -1,34 +1,71 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const ThemeContext = createContext(null);
 
-function getInitialTheme() {
-  const saved = localStorage.getItem("theme") || "light";
-  if (saved === "dark") {
-    document.documentElement.classList.add("dark");
+function getSystemPref() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyTheme(resolved) {
+  const root = document.documentElement;
+  if (resolved === "dark") {
+    root.classList.add("dark");
   } else {
-    document.documentElement.classList.remove("dark");
+    root.classList.remove("dark");
   }
-  return saved;
 }
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(getInitialTheme);
+  const [preference, setPreference] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark" || saved === "light" || saved === "system") return saved;
+    return "system";
+  });
+
+  const [resolvedTheme, setResolvedTheme] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") return "dark";
+    if (saved === "light") return "light";
+    return getSystemPref();
+  });
+
+  const computeResolved = useCallback((pref) => {
+    return pref === "system" ? getSystemPref() : pref;
+  }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    const resolved = computeResolved(preference);
+    setResolvedTheme(resolved);
+    applyTheme(resolved);
+    localStorage.setItem("theme", preference);
+  }, [preference, computeResolved]);
 
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  useEffect(() => {
+    if (preference !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => {
+      const next = mq.matches ? "dark" : "light";
+      setResolvedTheme(next);
+      applyTheme(next);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [preference]);
+
+  const setTheme = useCallback((pref) => {
+    setPreference(pref);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setPreference((prev) => {
+      if (prev === "light") return "dark";
+      if (prev === "dark") return "system";
+      return "light";
+    });
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: preference, resolvedTheme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

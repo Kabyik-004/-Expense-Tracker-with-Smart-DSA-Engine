@@ -4,6 +4,8 @@ import { useDebounce } from "../hooks/useDebounce";
 import { formatCurrency, formatDate } from "../utils/helpers";
 import { PAYMENT_METHODS } from "../utils/constants";
 import { useToast } from "../components/shared/Toast";
+import { SkeletonExpensesTable } from "../components/shared/skeletons";
+import EmptyState from "../components/shared/EmptyState";
 import api from "../services/api";
 import {
   FiPlus,
@@ -199,16 +201,29 @@ export default function Expenses() {
   const handleDelete = async () => {
     if (!deleteTarget) return;
     const res = await removeExpense(deleteTarget.id);
-    if (res?.success) addToast(res.message || "Expense deleted", "success");
+    if (res?.success) {
+      addToast("Expense deleted", "success", {
+        onUndo: async () => {
+          const undoRes = await undoLastExpense();
+          if (undoRes?.success) {
+            addToast("Expense restored", "success");
+          } else {
+            addToast("Failed to undo", "error");
+          }
+          fetchUndoStatus();
+        },
+        duration: 6000,
+      });
+    }
     setDeleteTarget(null);
   };
 
   const handleUndoConfirm = async () => {
     const res = await undoLastExpense();
     if (res?.success) {
-      addToast(res.message || "Last action undone", "undo");
+      addToast("Last action undone", "success");
     } else {
-      addToast(res?.message || "Nothing to undo", "info");
+      addToast("Nothing to undo", "info");
     }
     setUndoTarget(null);
     fetchUndoStatus();
@@ -483,21 +498,60 @@ export default function Expenses() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4" />
-            <p className="text-gray-400 dark:text-gray-500 text-sm">Loading expenses...</p>
+          <div className="animate-pulse">
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-100 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/80">
+                    {["Title", "Amount", "Date", "Category", "Payment", "Actions"].map((h) => (
+                      <th key={h} className="px-4 py-3">
+                        <div className="h-3 bg-gray-200 dark:bg-gray-600 rounded w-16" />
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <tr key={i} className="border-b border-gray-50 dark:border-gray-700">
+                      {[1, 2, 3, 4, 5, 6].map((j) => (
+                        <td key={j} className="px-4 py-3.5">
+                          <div className={`h-4 bg-gray-200 dark:bg-gray-700 rounded ${j === 0 ? "w-3/4" : j === 5 ? "w-1/4" : "w-1/2"}`} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-4 space-y-2">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full shrink-0" />
+                    <div className="flex-1 space-y-1">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                    </div>
+                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+                  </div>
+                  <div className="flex gap-2 pt-2 border-t border-gray-50 dark:border-gray-700">
+                    {[1, 2, 3].map((k) => (
+                      <div key={k} className="flex-1 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-16 text-center">
-            <FiSearch className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-500 dark:text-gray-400 text-lg mb-1">{hasActiveFilters ? "No matching expenses" : "No expenses yet"}</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">{hasActiveFilters ? "Try adjusting your filters" : "Add your first expense to get started"}</p>
-            {!hasActiveFilters && (
-              <button onClick={() => { resetForm(); setShowForm(true); }} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium inline-flex items-center gap-2">
-                <FiPlus className="w-4 h-4" /> Add Expense
-              </button>
-            )}
-          </div>
+          <EmptyState
+            icon={<FiSearch className="w-7 h-7" />}
+            title={hasActiveFilters ? "No matching expenses" : "No expenses yet"}
+            description={hasActiveFilters ? "Try adjusting your filters to find what you're looking for." : "Add your first expense to get started with tracking."}
+            action={hasActiveFilters ? undefined : { label: "Add Expense", onClick: () => { resetForm(); setShowForm(true); } }}
+            secondaryAction={hasActiveFilters ? { label: "Clear Filters", onClick: clearFilters } : undefined}
+            color="indigo"
+          />
         ) : (
           <>
             <div className="hidden md:block overflow-x-auto">

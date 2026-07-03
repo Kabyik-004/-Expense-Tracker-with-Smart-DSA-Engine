@@ -15,14 +15,13 @@ import {
   FiSettings,
   FiTarget,
   FiLogOut,
-  FiSun,
-  FiMoon,
 } from "react-icons/fi";
+
+import ThemeSwitch from "./components/shared/ThemeSwitch";
 
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import { ExpenseProvider } from "./context/ExpenseContext";
-import { useTheme } from "./context/ThemeContext";
 import { ToastProvider } from "./components/shared/Toast";
 
 import { lazy, Suspense } from "react";
@@ -84,8 +83,6 @@ function PublicRoute({ children }) {
 
 function AppLayout() {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -138,13 +135,10 @@ function AppLayout() {
             </div>
           </div>
 
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 w-full rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            {theme === "dark" ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
-            {theme === "dark" ? "Light Mode" : "Dark Mode"}
-          </button>
+          <div className="px-4 mb-2">
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Theme</p>
+            <ThemeSwitch />
+          </div>
 
           <button
             onClick={handleLogout}
@@ -157,19 +151,17 @@ function AppLayout() {
       </aside>
 
       <main className="flex-1 p-8 overflow-auto">
-        <ToastProvider>
-          <ExpenseProvider>
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/expenses" element={<Expenses />} />
-              <Route path="/incomes" element={<Incomes />} />
-              <Route path="/budgets" element={<Budgets />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </ExpenseProvider>
-        </ToastProvider>
+        <ExpenseProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/incomes" element={<Incomes />} />
+            <Route path="/budgets" element={<Budgets />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </ExpenseProvider>
       </main>
     </div>
   );
@@ -179,6 +171,7 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
+        <ToastProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
@@ -209,6 +202,7 @@ export default function App() {
             }
           />
         </Routes>
+        </ToastProvider>
       </AuthProvider>
     </Router>
   );

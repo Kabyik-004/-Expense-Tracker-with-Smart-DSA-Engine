@@ -15,6 +15,8 @@ import {
   FiRefreshCw,
   FiAlertCircle,
 } from "react-icons/fi";
+import { SkeletonDashboard } from "../components/shared/skeletons";
+import EmptyState from "../components/shared/EmptyState";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -70,23 +72,7 @@ export default function Dashboard() {
     return () => window.removeEventListener("focus", handleFocus);
   }, [fetchData]);
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-6" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <SkeletonDashboard />;
 
   if (error) {
     return (
@@ -231,16 +217,13 @@ export default function Dashboard() {
           </div>
           <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {recentTransactions.length === 0 ? (
-              <div className="p-12 text-center">
-                <FiCreditCard className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-                <p className="text-gray-500 dark:text-gray-400">No transactions yet</p>
-                <button
-                  onClick={() => navigate("/expenses")}
-                  className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
-                >
-                  Add your first expense
-                </button>
-              </div>
+              <EmptyState
+                icon={<FiCreditCard className="w-7 h-7" />}
+                title="No transactions yet"
+                description="Your recent expenses will appear here once you add your first one."
+                action={{ label: "Add your first expense", onClick: () => navigate("/expenses") }}
+                color="indigo"
+              />
             ) : (
               recentTransactions.map((txn) => (
                 <article
@@ -325,19 +308,15 @@ export default function Dashboard() {
           <FiBarChart2 className="w-5 h-5 text-indigo-600" />
           Charts & Analytics
         </h2>
-        <div className="aspect-[4/3] bg-gradient-to-br from-indigo-50 dark:from-indigo-900/20 to-purple-50 dark:to-purple-900/20 rounded-xl flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-50" />
-          <div className="relative z-10 text-center p-8">
-            <FiBarChart2 className="w-16 h-16 text-indigo-200 dark:text-indigo-700 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400 text-lg">Charts coming soon</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Expense trends, category breakdown, monthly comparison</p>
-            <button
-              onClick={() => navigate("/analytics")}
-              className="mt-6 px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
-            >
-              View Analytics <FiArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="bg-gradient-to-br from-indigo-50 dark:from-indigo-900/20 to-purple-50 dark:to-purple-900/20 rounded-xl">
+          <EmptyState
+            icon={<FiBarChart2 className="w-7 h-7" />}
+            title="Charts coming soon"
+            description="Expense trends, category breakdown, monthly comparison"
+            action={{ label: "View Analytics", onClick: () => navigate("/analytics"), icon: <FiArrowRight className="w-4 h-4" /> }}
+            color="indigo"
+            size="large"
+          />
         </div>
       </section>
     </div>

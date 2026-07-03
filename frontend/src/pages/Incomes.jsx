@@ -22,6 +22,7 @@ import {
   FiArrowUp,
   FiArrowDown,
 } from "react-icons/fi";
+import EmptyState from "../components/shared/EmptyState";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -217,7 +218,18 @@ export default function Incomes() {
       const res = await incomeService.deleteIncome(deleteTarget.id);
       if (res.success) {
         await fetchIncomes();
-        addToast(res.message || "Income deleted", "success");
+        addToast("Income deleted", "success", {
+          onUndo: async () => {
+            const undoRes = await incomeService.undoIncome();
+            if (undoRes.success) {
+              await fetchIncomes();
+              addToast("Income restored", "success");
+            } else {
+              addToast("Failed to undo", "error");
+            }
+          },
+          duration: 6000,
+        });
         setDeleteTarget(null);
       } else {
         addToast(res.message || "Failed to delete income", "error");
@@ -232,9 +244,9 @@ export default function Incomes() {
       const res = await incomeService.undoIncome();
       if (res.success) {
         await fetchIncomes();
-        addToast(res.message || "Last income action undone", "undo");
+        addToast("Last action undone", "success");
       } else {
-        addToast(res?.message || "Nothing to undo", "info");
+        addToast("Nothing to undo", "info");
       }
     } catch {
       addToast("Failed to undo action", "error");
@@ -433,24 +445,67 @@ export default function Incomes() {
       )}
 
       {loading ? (
-        <div className="flex flex-col items-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4" />
-          <p className="text-gray-400 dark:text-gray-500 text-sm">Loading incomes...</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden animate-pulse">
+          <div className="p-4 border-b border-gray-100 dark:border-gray-700">
+            <div className="flex gap-2">
+              <div className="flex-1 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+              <div className="w-24 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+            </div>
+          </div>
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/80">
+                  {["Source", "Amount", "Date", "Description", "Recurring", "Actions"].map((h) => (
+                    <th key={h} className="px-4 py-3">
+                      <div className="h-3 bg-gray-200 dark:bg-gray-600 rounded w-16" />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <tr key={i} className="border-b border-gray-50 dark:border-gray-700">
+                    {[1, 2, 3, 4, 5, 6].map((j) => (
+                      <td key={j} className="px-4 py-3.5">
+                        <div className={`h-4 bg-gray-200 dark:bg-gray-700 rounded ${j === 0 ? "w-3/4" : j === 5 ? "w-1/4" : "w-1/2"}`} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="p-4 space-y-2">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-1">
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                  </div>
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+                </div>
+                <div className="flex gap-2 pt-2 border-t border-gray-50 dark:border-gray-700">
+                  {[1, 2, 3].map((k) => (
+                    <div key={k} className="flex-1 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 py-16 text-center">
-          <FiTrendingUp className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-500 dark:text-gray-400 text-lg mb-1">{hasActiveFilters ? "No matching incomes" : "No incomes yet"}</p>
-          <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">{hasActiveFilters ? "Try adjusting your search or filters" : "Add your first income record"}</p>
-          {hasActiveFilters ? (
-            <button onClick={clearFilters} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium inline-flex items-center gap-2">
-              <FiX className="w-4 h-4" /> Clear Filters
-            </button>
-          ) : (
-            <button onClick={() => { resetForm(); setShowForm(true); }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium inline-flex items-center gap-2">
-              <FiPlus className="w-4 h-4" /> Add Income
-            </button>
-          )}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+          <EmptyState
+            icon={<FiTrendingUp className="w-7 h-7" />}
+            title={hasActiveFilters ? "No matching incomes" : "No incomes yet"}
+            description={hasActiveFilters ? "Try adjusting your search or filters to find what you're looking for." : "Add your first income record to start tracking your earnings."}
+            action={hasActiveFilters ? undefined : { label: "Add Income", onClick: () => { resetForm(); setShowForm(true); } }}
+            secondaryAction={hasActiveFilters ? { label: "Clear Filters", onClick: clearFilters } : undefined}
+            color="green"
+          />
         </div>
       ) : (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">

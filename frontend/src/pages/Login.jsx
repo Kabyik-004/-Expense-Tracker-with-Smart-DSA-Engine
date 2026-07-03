@@ -2,18 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/shared/Toast";
+import ThemeSwitch from "../components/shared/ThemeSwitch";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const { addToast } = useToast();
   const [form, setForm] = useState({ login: "", password: "" });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
@@ -22,10 +21,10 @@ export default function Login() {
       if (res.success) {
         navigate("/dashboard");
       } else {
-        setError(res.message || "Login failed");
+        addToast(res.message || "Login failed", "error");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      addToast(err.response?.data?.message || "Login failed", "error");
     } finally {
       setLoading(false);
     }
@@ -33,17 +32,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 relative">
+        <div className="absolute top-4 right-4">
+          <ThemeSwitch />
+        </div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
           Welcome back
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">Sign in to your account</p>
-
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-lg mb-4 text-sm">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

@@ -12,6 +12,8 @@ import {
   FiChevronLeft,
   FiChevronRight,
 } from "react-icons/fi";
+import { SkeletonBudgets } from "../components/shared/skeletons";
+import EmptyState from "../components/shared/EmptyState";
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -123,17 +125,7 @@ export default function Budgets() {
         <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"><FiChevronRight className="w-4 h-4 text-gray-500 dark:text-gray-400" /></button>
       </div>
 
-      {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 animate-pulse">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-3" />
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
-            </div>
-          ))}
-        </div>
-      ) : status ? (
+      {loading ? <SkeletonBudgets /> : status ? (
         <>
           {exceededAlerts.length > 0 && (
             <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-4 space-y-2">
@@ -221,10 +213,14 @@ export default function Budgets() {
           )}
 
           {(!status.budgets || status.budgets.length === 0) && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-12 text-center">
-              <FiTarget className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 dark:text-gray-400 font-medium">No budgets set for {MONTHS[month - 1]} {year}</p>
-              <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Click "Set Budget" to create one</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <EmptyState
+                icon={<FiTarget className="w-7 h-7" />}
+                title={`No budgets set for ${MONTHS[month - 1]} ${year}`}
+                description="Set a spending limit to track your expenses and stay on top of your finances."
+                action={{ label: "Set Budget", onClick: () => setShowForm(true) }}
+                color="indigo"
+              />
             </div>
           )}
         </>

@@ -17,6 +17,8 @@ import {
   FiDollarSign,
   FiAtSign,
 } from "react-icons/fi";
+import { SkeletonSettingsActivity } from "../components/shared/skeletons";
+import EmptyState from "../components/shared/EmptyState";
 
 export default function Settings() {
   const { user, setUser } = useAuth();
@@ -427,23 +429,8 @@ function ActivitySection({ activities, setActivities, loading, setLoading }) {
         Recent Activity
       </h3>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center gap-3 animate-pulse">
-              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-              <div className="flex-1 space-y-1">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : activities.length === 0 ? (
-        <div className="text-center py-8">
-          <FiClock className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-          <p className="text-gray-400 dark:text-gray-500 text-sm">No recent activity</p>
-        </div>
+      {loading ? <SkeletonSettingsActivity rows={3} /> : activities.length === 0 ? (
+        <EmptyState icon={<FiClock className="w-6 h-6" />} title="No recent activity" description="Your account actions will appear here" color="gray" />
       ) : (
         <div className="space-y-1">
           {activities.map((act) => {

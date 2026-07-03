@@ -4,17 +4,17 @@ import { SiGithub } from "react-icons/si";
 
 const links = [
   {
-    href: "https://github.com/kabyikpaul",
+    href: "https://github.com/kabyik-004",
     icon: SiGithub,
     label: "GitHub",
   },
   {
-    href: "https://linkedin.com/in/kabyikpaul",
+    href: "https://www.linkedin.com/in/kabyik-paul-77387b2ba",
     icon: FaLinkedin,
     label: "LinkedIn",
   },
   {
-    href: "mailto:kabyik@email.com",
+    href: "mailto:kabyikpaul9@gmail.com",
     icon: FiMail,
     label: "Email",
   },
@@ -67,7 +67,7 @@ export default function Footer() {
             Made with{" "}
             <FiHeart className="w-3 h-3 text-red-500 fill-red-500" /> by{" "}
             <a
-              href="https://github.com/kabyikpaul"
+              href="https://github.com/kabyik-004"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"

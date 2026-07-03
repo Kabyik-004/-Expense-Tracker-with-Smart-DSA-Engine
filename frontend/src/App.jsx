@@ -25,6 +25,7 @@ import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastProvider } from "./components/shared/Toast";
 import FloatingActionButton from "./components/shared/FloatingActionButton";
 import PageTransition from "./components/shared/PageTransition";
+import ProfileMenu from "./components/shared/ProfileMenu";
 
 import { lazy, Suspense } from "react";
 
@@ -120,35 +121,13 @@ function AppLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-3 mb-3 px-4">
-            <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center text-sm font-medium text-indigo-600 dark:text-indigo-300">
-              {user?.full_name?.charAt(0) ||
-                user?.username?.charAt(0) ||
-                "U"}
-            </div>
+        <div className="p-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
+          <ProfileMenu user={user} onLogout={handleLogout} />
 
-            <div className="text-sm">
-              <p className="font-medium text-gray-900 dark:text-gray-100 truncate max-w-[140px]">
-                {user?.full_name || user?.username}
-              </p>
-
-              <p className="text-gray-400 text-xs">{user?.email}</p>
-            </div>
-          </div>
-
-          <div className="px-4 mb-2">
-            <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Theme</p>
+          <div className="px-4">
+            <p className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">Theme</p>
             <ThemeSwitch />
           </div>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-red-600 w-full rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            <FiLogOut className="w-4 h-4" />
-            Sign out
-          </button>
         </div>
       </aside>
 

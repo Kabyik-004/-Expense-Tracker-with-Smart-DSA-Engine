@@ -7,6 +7,7 @@ import { useToast } from "../components/shared/Toast";
 import { SkeletonExpensesTable } from "../components/shared/skeletons";
 import EmptyState from "../components/shared/EmptyState";
 import CategoryIcon from "../components/shared/CategoryIcon";
+import SearchBar from "../components/shared/SearchBar";
 import api from "../services/api";
 import {
   FiPlus,
@@ -384,22 +385,17 @@ export default function Expenses() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="p-4 border-b border-gray-100 dark:border-gray-700 space-y-3">
           <div className="flex flex-col sm:flex-row gap-2">
-            <div className="relative flex-1">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
-              <input
-                ref={searchRef}
-                type="text"
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 text-sm"
-                placeholder="Live search expenses..."
-                value={searchInput}
-                onChange={(e) => { setSearchInput(e.target.value); setPage(1); }}
-              />
-              {searchInput && (
-                <button type="button" onClick={() => { setSearchInput(""); setPage(1); }} className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <FiX className="w-4 h-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300" />
-                </button>
-              )}
-            </div>
+            <SearchBar
+              value={searchInput}
+              onChange={(v) => { setSearchInput(v); setPage(1); }}
+              onClear={() => { setSearchInput(""); setPage(1); }}
+              placeholder="Live search expenses..."
+              accentColor="indigo"
+              loading={loading}
+              recentSearchesKey="expenses-search-history"
+              suggestions={searchInput ? categories.filter((c) => c?.toLowerCase().includes(searchInput.toLowerCase())).map((c) => ({ text: c, icon: <CategoryIcon name={c} size="sm" /> })) : []}
+              suggestionsLabel="Categories"
+            />
             <div className="flex gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}

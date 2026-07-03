@@ -27,6 +27,7 @@ import { ToastProvider } from "./components/shared/Toast";
 
 import { lazy, Suspense } from "react";
 
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -179,6 +180,8 @@ export default function App() {
     <Router>
       <AuthProvider>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+
           <Route
             path="/login"
             element={

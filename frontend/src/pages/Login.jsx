@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useToast } from "../components/shared/Toast";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const [form, setForm] = useState({ login: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,6 +70,15 @@ export default function Login() {
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
+            <div className="text-right mt-1">
+              <button
+                type="button"
+                onClick={() => addToast("Forgot password feature coming soon", "info")}
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+              >
+                Forgot password?
+              </button>
+            </div>
           </div>
 
           <button

@@ -32,7 +32,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fadeIn">
+    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
@@ -40,15 +40,19 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl">
+      <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl" role="tablist" aria-label="Settings tabs">
         {tabs.map((tab) => {
           const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`tabpanel-${tab.id}`}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab.id
+                isActive
                   ? "bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               }`}
@@ -61,18 +65,24 @@ export default function Settings() {
       </div>
 
       {activeTab === "profile" && (
-        <ProfileSection user={user} setUser={setUser} addToast={addToast} />
+        <div role="tabpanel" id="tabpanel-profile" aria-labelledby="tab-profile">
+          <ProfileSection user={user} setUser={setUser} addToast={addToast} />
+        </div>
       )}
       {activeTab === "password" && (
-        <PasswordSection addToast={addToast} />
+        <div role="tabpanel" id="tabpanel-password" aria-labelledby="tab-password">
+          <PasswordSection addToast={addToast} />
+        </div>
       )}
       {activeTab === "activity" && (
-        <ActivitySection
-          activities={activities}
-          setActivities={setActivities}
-          loading={loadingActivity}
-          setLoading={setLoadingActivity}
-        />
+        <div role="tabpanel" id="tabpanel-activity" aria-labelledby="tab-activity">
+          <ActivitySection
+            activities={activities}
+            setActivities={setActivities}
+            loading={loadingActivity}
+            setLoading={setLoadingActivity}
+          />
+        </div>
       )}
     </div>
   );

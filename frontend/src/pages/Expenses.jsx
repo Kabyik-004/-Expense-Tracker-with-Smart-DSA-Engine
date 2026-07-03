@@ -532,7 +532,7 @@ export default function Expenses() {
                       </td>
                       <td className="px-4 py-3.5"><span className="text-sm text-gray-500 dark:text-gray-400 capitalize">{exp.payment_method || "Cash"}</span></td>
                       <td className="px-4 py-3.5 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
                           <button onClick={() => setDetailTarget(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg" title="View"><FiEye className="w-4 h-4" /></button>
                           <button onClick={() => handleEdit(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg" title="Edit"><FiEdit2 className="w-4 h-4" /></button>
                           <button onClick={() => setDeleteTarget(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg" title="Delete"><FiTrash2 className="w-4 h-4" /></button>

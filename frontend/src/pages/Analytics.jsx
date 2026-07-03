@@ -41,6 +41,7 @@ const CHART_OPTIONS = {
 
 export default function Analytics() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [summary, setSummary] = useState(null);
   const [categoryData, setCategoryData] = useState(null);
   const [timeSeries, setTimeSeries] = useState(null);
@@ -48,7 +49,9 @@ export default function Analytics() {
   const [timeRange, setTimeRange] = useState("monthly");
   const [animate, setAnimate] = useState(false);
 
-  useEffect(() => {
+  const fetchData = () => {
+    setLoading(true);
+    setError(null);
     Promise.all([
       api.get("/analytics/dashboard"),
       api.get("/analytics/categories"),
@@ -65,11 +68,15 @@ export default function Analytics() {
         if (catRes.data.success) setCategoryData(catRes.data.data);
         if (tsRes.data.success) setTimeSeries(tsRes.data.data);
       })
-      .catch(() => {})
+      .catch(() => setError("Failed to load analytics data"))
       .finally(() => {
         setLoading(false);
         setTimeout(() => setAnimate(true), 100);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const s = summary || {};
@@ -159,7 +166,7 @@ export default function Analytics() {
       color: "text-green-600 dark:text-green-400",
       bg: "bg-green-50 dark:bg-green-900/30",
       icon: FiArrowUp,
-      change: s.total_income > 0 ? "+100%" : "0%",
+      change: s.total_income > 0 ? `${formatCurrency(s.total_income)} total` : "—",
     },
     {
       label: "Total Expenses",
@@ -167,7 +174,7 @@ export default function Analytics() {
       color: "text-red-600 dark:text-red-400",
       bg: "bg-red-50 dark:bg-red-900/30",
       icon: FiArrowDown,
-      change: s.total_expense > 0 ? "100%" : "0%",
+      change: s.total_expense > 0 ? `${formatCurrency(s.total_expense)} total` : "—",
     },
     {
       label: "Balance",
@@ -181,13 +188,24 @@ export default function Analytics() {
     },
     {
       label: "Average Expense",
-      value: e.average_expense,
+      value: e?.average_expense,
       color: "text-purple-600",
       bg: "bg-purple-50 dark:bg-purple-900/30",
       icon: FiActivity,
-      change: e.highest_expense ? `vs highest ${formatCurrency(e.highest_expense.amount)}` : "—",
+      change: e?.highest_expense ? `vs highest ${formatCurrency(e.highest_expense.amount)}` : "—",
     },
   ];
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <p className="text-red-500 dark:text-red-400">{error}</p>
+        <button onClick={fetchData} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

@@ -113,33 +113,35 @@ export default function Dashboard() {
   const totalIncome = s.total_income || 0;
   const totalExpense = s.total_expense || 0;
 
+  const incomePct = totalIncome > 0 ? ((totalExpense / totalIncome) * 100) : 0;
+
   const stats = [
     {
       label: "Total Income",
       value: formatCurrency(totalIncome),
       icon: FiTrendingUp,
-      color: "text-green-600",
-      bg: "bg-green-50",
-      trend: "+12.5%",
-      trendColor: "text-green-600",
+      color: "text-green-600 dark:text-green-400",
+      bg: "bg-green-50 dark:bg-green-900/30",
+      trend: totalIncome > 0 ? `${formatCurrency(totalIncome)} period` : "—",
+      trendColor: "text-gray-400 dark:text-gray-500",
     },
     {
       label: "Total Expenses",
       value: formatCurrency(totalExpense),
       icon: FiTrendingDown,
-      color: "text-red-600",
-      bg: "bg-red-50",
-      trend: "+8.2%",
-      trendColor: "text-red-600",
+      color: "text-red-600 dark:text-red-400",
+      bg: "bg-red-50 dark:bg-red-900/30",
+      trend: totalExpense > 0 ? `${incomePct.toFixed(1)}% of income` : "—",
+      trendColor: "text-gray-400 dark:text-gray-500",
     },
     {
       label: "Balance",
       value: formatCurrency(balance),
       icon: FiDollarSign,
-      color: balance >= 0 ? "text-indigo-600" : "text-red-600",
-      bg: balance >= 0 ? "bg-indigo-50" : "bg-red-50",
-      trend: balance >= 0 ? "Positive" : "Negative",
-      trendColor: balance >= 0 ? "text-green-600" : "text-red-600",
+      color: balance >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
+      bg: balance >= 0 ? "bg-indigo-50 dark:bg-indigo-900/30" : "bg-red-50 dark:bg-red-900/30",
+      trend: totalIncome > 0 ? `${((balance / totalIncome) * 100).toFixed(1)}% saved` : "—",
+      trendColor: balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400",
     },
   ];
 
@@ -206,10 +208,7 @@ export default function Dashboard() {
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
                 <p className={`text-2xl font-bold mt-1 ${stat.color}`}>{stat.value}</p>
-                <p className={`text-xs font-medium mt-2 ${stat.trendColor} flex items-center gap-1`}>
-                  <span className="text-gray-400 dark:text-gray-500">vs last month</span>
-                  {stat.trend}
-                </p>
+                <p className={`text-xs font-medium mt-2 ${stat.trendColor}`}>{stat.trend}</p>
               </div>
               <div className={`p-3 rounded-xl ${stat.bg}`}>
                 <stat.icon className={`w-6 h-6 ${stat.color}`} aria-hidden="true" />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "../components/shared/Toast";
 import { formatCurrency } from "../utils/helpers";
 import * as budgetService from "../services/budgetService";
@@ -23,28 +23,30 @@ export default function Budgets() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ amount: "", category_id: "" });
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        const [sRes, cRes] = await Promise.all([
-          budgetService.getBudgetStatus(month, year),
-          api.get("/categories/"),
-        ]);
-        if (sRes.success) setStatus(sRes.data);
-        if (cRes.data.success) setCategories(cRes.data.data.categories);
-      } catch {
-        addToast("Failed to load budgets", "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const loadStatus = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [sRes, cRes] = await Promise.all([
+        budgetService.getBudgetStatus(month, year),
+        api.get("/categories/"),
+      ]);
+      if (sRes.success) setStatus(sRes.data);
+      if (cRes.data.success) setCategories(cRes.data.data.categories);
+    } catch {
+      addToast("Failed to load budgets", "error");
+    } finally {
+      setLoading(false);
+    }
   }, [month, year, addToast]);
+
+  useEffect(() => {
+    loadStatus();
+  }, [loadStatus]);
 
   const handleSetBudget = async (e) => {
     e.preventDefault();
@@ -61,7 +63,7 @@ export default function Budgets() {
         addToast(res.message, "success");
         setShowForm(false);
         setForm({ amount: "", category_id: "" });
-        fetchStatus(month, year);
+        loadStatus();
       } else {
         addToast(res.message || "Failed to set budget", "error");
       }
@@ -72,15 +74,18 @@ export default function Budgets() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      const res = await budgetService.deleteBudget(id);
+      const res = await budgetService.deleteBudget(deleteTarget);
       if (res.success) {
         addToast("Budget deleted", "success");
-        fetchStatus(month, year);
+        loadStatus();
       }
     } catch {
       addToast("Failed to delete budget", "error");
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -97,7 +102,7 @@ export default function Budgets() {
   const exceededAlerts = status?.budgets?.filter((b) => b.exceeded) || [];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fadeIn">
+    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Budgets</h1>
@@ -131,7 +136,7 @@ export default function Budgets() {
       ) : status ? (
         <>
           {exceededAlerts.length > 0 && (
-            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 rounded-xl p-4 space-y-2">
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-4 space-y-2">
               <div className="flex items-center gap-2 text-red-700 dark:text-red-300 font-medium">
                 <FiAlertOctagon className="w-5 h-5" />
                 Exceeded Budget{exceededAlerts.length > 1 ? "s" : ""}
@@ -146,13 +151,13 @@ export default function Budgets() {
           )}
 
           {warningAlerts.length > 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
-              <div className="flex items-center gap-2 text-amber-700 font-medium">
+            <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-xl p-4 space-y-2">
+              <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-medium">
                 <FiAlertTriangle className="w-5 h-5" />
                 Budget Warning{warningAlerts.length > 1 ? "s" : ""}
               </div>
               {warningAlerts.map((b) => (
-                <div key={b.budget.id} className="flex justify-between text-sm text-amber-600 pl-7">
+                <div key={b.budget.id} className="flex justify-between text-sm text-amber-600 dark:text-amber-400 pl-7">
                   <span>{b.budget.category_name || "Overall"}</span>
                   <span className="font-medium">{b.percentage}% used</span>
                 </div>
@@ -190,14 +195,14 @@ export default function Budgets() {
                         </span>
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                           b.exceeded ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" :
-                          b.warning ? "bg-amber-100 text-amber-700" :
+                          b.warning ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" :
                           "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
                         }`}>
                           {b.exceeded ? "Exceeded" : b.warning ? "Warning" : "On Track"}
                         </span>
                       </div>
                       <button
-                        onClick={() => handleDelete(b.budget.id)}
+                        onClick={() => setDeleteTarget(b.budget.id)}
                         className="p-1 text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                         title="Delete budget"
                       >
@@ -224,6 +229,34 @@ export default function Budgets() {
           )}
         </>
       ) : null}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/70 backdrop-blur-sm" onClick={() => setDeleteTarget(null)}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in" onClick={(e) => e.stopPropagation()}>
+            <div className="text-center">
+              <div className="w-14 h-14 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiTrash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Delete Budget</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Are you sure you want to delete this budget? This action cannot be undone.</p>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/70 flex items-center justify-center z-50" onClick={() => setShowForm(false)}>
@@ -285,7 +318,7 @@ export default function Budgets() {
 function BudgetProgressBar({ percentage, spent, remaining }) {
   const pct = Math.min(percentage, 100);
   const barColor = percentage > 100 ? "bg-red-500" : percentage >= 80 ? "bg-amber-500" : "bg-green-500";
-  const barBg = percentage > 100 ? "bg-red-100 dark:bg-red-900/30" : percentage >= 80 ? "bg-amber-100" : "bg-green-100 dark:bg-green-900/30";
+  const barBg = percentage > 100 ? "bg-red-100 dark:bg-red-900/30" : percentage >= 80 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-green-100 dark:bg-green-900/30";
 
   return (
     <div>

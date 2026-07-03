@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { formatCurrency, formatDate } from "../utils/helpers";
 import * as incomeService from "../services/incomeService";
 import { useToast } from "../components/shared/Toast";
+import { useDebounce } from "../hooks/useDebounce";
 import {
   FiPlus,
   FiX,
@@ -15,6 +16,11 @@ import {
   FiChevronRight,
   FiChevronsLeft,
   FiChevronsRight,
+  FiSearch,
+  FiSliders,
+  FiFilter,
+  FiArrowUp,
+  FiArrowDown,
 } from "react-icons/fi";
 
 const ITEMS_PER_PAGE = 10;
@@ -40,6 +46,90 @@ export default function Incomes() {
   const [undoTarget, setUndoTarget] = useState(null);
   const [page, setPage] = useState(1);
   const [detailTarget, setDetailTarget] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({ dateFrom: "", dateTo: "", amountMin: "", amountMax: "", recurring: "" });
+  const [sortField, setSortField] = useState("date");
+  const [sortAscending, setSortAscending] = useState(false);
+
+  const debouncedSearch = useDebounce(searchInput, 400);
+  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const hasActiveFilters = !!debouncedSearch || activeFilterCount > 0;
+
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setSortAscending((prev) => !prev);
+    } else {
+      setSortField(field);
+      setSortAscending(field === "date" ? false : true);
+    }
+  };
+
+  const getSortIcon = (field) => {
+    if (sortField !== field) return null;
+    return sortAscending ? <FiArrowUp className="w-3 h-3 inline ml-1" /> : <FiArrowDown className="w-3 h-3 inline ml-1" />;
+  };
+
+  const clearFilters = () => {
+    setSearchInput("");
+    setFilters({ dateFrom: "", dateTo: "", amountMin: "", amountMax: "", recurring: "" });
+    setPage(1);
+  };
+
+  const updateFilter = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
+  };
+
+  const SORT_OPTIONS = [
+    { value: "date", label: "Date" },
+    { value: "amount", label: "Amount" },
+    { value: "source", label: "Source" },
+  ];
+
+  const filtered = useMemo(() => {
+    let result = [...incomes];
+
+    if (debouncedSearch) {
+      const q = debouncedSearch.toLowerCase();
+      result = result.filter((inc) =>
+        inc.source?.toLowerCase().includes(q) ||
+        inc.description?.toLowerCase().includes(q) ||
+        inc.notes?.toLowerCase().includes(q)
+      );
+    }
+
+    if (filters.dateFrom) result = result.filter((inc) => inc.date && inc.date >= filters.dateFrom);
+    if (filters.dateTo) result = result.filter((inc) => inc.date && inc.date <= filters.dateTo);
+    if (filters.amountMin) result = result.filter((inc) => parseFloat(inc.amount) >= parseFloat(filters.amountMin));
+    if (filters.amountMax) result = result.filter((inc) => parseFloat(inc.amount) <= parseFloat(filters.amountMax));
+    if (filters.recurring) {
+      const val = filters.recurring === "yes";
+      result = result.filter((inc) => inc.is_recurring === val);
+    }
+
+    if (sortField) {
+      result.sort((a, b) => {
+        let va = a[sortField], vb = b[sortField];
+        if (sortField === "amount") {
+          va = parseFloat(va) || 0;
+          vb = parseFloat(vb) || 0;
+        } else if (sortField === "date") {
+          va = va || "";
+          vb = vb || "";
+        } else {
+          va = (va || "").toString().toLowerCase();
+          vb = (vb || "").toString().toLowerCase();
+        }
+        return va < vb ? (sortAscending ? -1 : 1) : va > vb ? (sortAscending ? 1 : -1) : 0;
+      });
+    }
+
+    return result;
+  }, [incomes, debouncedSearch, filters, sortField, sortAscending]);
+
+  const totalFilteredPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginatedFiltered = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   const fetchIncomes = async () => {
     setLoading(true);
@@ -51,18 +141,14 @@ export default function Incomes() {
         );
         setIncomes(sorted);
       }
-    } catch {} finally {
+    } catch {
+      addToast("Failed to load incomes", "error");
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => { fetchIncomes(); }, []);
-
-  const totalPages = Math.ceil(incomes.length / ITEMS_PER_PAGE) || 1;
-  const paginatedIncomes = incomes.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  );
 
   const resetForm = () => {
     setForm(initialForm);
@@ -91,12 +177,22 @@ export default function Incomes() {
       is_recurring: form.is_recurring,
       notes: form.notes || undefined,
     };
-    const res = editing
-      ? await incomeService.updateIncome(editing, payload)
-      : await incomeService.createIncome(payload);
-    if (res.success) {
-      await fetchIncomes();
-      resetForm();
+    try {
+      const res = editing
+        ? await incomeService.updateIncome(editing, payload)
+        : await incomeService.createIncome(payload);
+      if (res.success) {
+        addToast(
+          editing ? "Income updated" : "Income created",
+          "success"
+        );
+        await fetchIncomes();
+        resetForm();
+      } else {
+        addToast(res.message || "Failed to save income", "error");
+      }
+    } catch {
+      addToast("Failed to save income", "error");
     }
   };
 
@@ -117,23 +213,34 @@ export default function Incomes() {
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
-    const res = await incomeService.deleteIncome(deleteTarget.id);
-    if (res.success) {
-      await fetchIncomes();
-      addToast(res.message || "Income deleted", "success");
-      setDeleteTarget(null);
+    try {
+      const res = await incomeService.deleteIncome(deleteTarget.id);
+      if (res.success) {
+        await fetchIncomes();
+        addToast(res.message || "Income deleted", "success");
+        setDeleteTarget(null);
+      } else {
+        addToast(res.message || "Failed to delete income", "error");
+      }
+    } catch {
+      addToast("Failed to delete income", "error");
     }
   };
 
   const handleUndoConfirm = async () => {
-    const res = await incomeService.undoIncome();
-    if (res.success) {
-      await fetchIncomes();
-      addToast(res.message || "Last income action undone", "undo");
-    } else {
-      addToast(res?.message || "Nothing to undo", "info");
+    try {
+      const res = await incomeService.undoIncome();
+      if (res.success) {
+        await fetchIncomes();
+        addToast(res.message || "Last income action undone", "undo");
+      } else {
+        addToast(res?.message || "Nothing to undo", "info");
+      }
+    } catch {
+      addToast("Failed to undo action", "error");
+    } finally {
+      setUndoTarget(null);
     }
-    setUndoTarget(null);
   };
 
   const DetailModal = ({ income, onClose }) => {
@@ -215,7 +322,7 @@ export default function Incomes() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Incomes</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{incomes.length} total income records</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{filtered.length} of {incomes.length} income records</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -330,17 +437,135 @@ export default function Incomes() {
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4" />
           <p className="text-gray-400 dark:text-gray-500 text-sm">Loading incomes...</p>
         </div>
-      ) : incomes.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 py-16 text-center">
           <FiTrendingUp className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-500 dark:text-gray-400 text-lg mb-1">No incomes yet</p>
-          <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">Add your first income record</p>
-          <button onClick={() => { resetForm(); setShowForm(true); }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium inline-flex items-center gap-2">
-            <FiPlus className="w-4 h-4" /> Add Income
-          </button>
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-1">{hasActiveFilters ? "No matching incomes" : "No incomes yet"}</p>
+          <p className="text-gray-400 dark:text-gray-500 text-sm mb-4">{hasActiveFilters ? "Try adjusting your search or filters" : "Add your first income record"}</p>
+          {hasActiveFilters ? (
+            <button onClick={clearFilters} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium inline-flex items-center gap-2">
+              <FiX className="w-4 h-4" /> Clear Filters
+            </button>
+          ) : (
+            <button onClick={() => { resetForm(); setShowForm(true); }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium inline-flex items-center gap-2">
+              <FiPlus className="w-4 h-4" /> Add Income
+            </button>
+          )}
         </div>
       ) : (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="p-4 border-b border-gray-100 dark:border-gray-700 space-y-3">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+                <input
+                  type="text"
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 text-sm"
+                  placeholder="Search incomes..."
+                  value={searchInput}
+                  onChange={(e) => { setSearchInput(e.target.value); setPage(1); }}
+                />
+                {searchInput && (
+                  <button type="button" onClick={() => { setSearchInput(""); setPage(1); }} className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <FiX className="w-4 h-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300" />
+                  </button>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`px-3 py-2 rounded-lg text-sm border font-medium flex items-center gap-1.5 transition-colors ${
+                    showFilters || activeFilterCount > 0
+                      ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300"
+                      : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  }`}
+                >
+                  <FiSliders className="w-4 h-4" /> Filters{activeFilterCount > 0 && ` (${activeFilterCount})`}
+                </button>
+                {hasActiveFilters && (
+                  <button onClick={clearFilters} className="px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg border border-gray-300 dark:border-gray-600 font-medium">
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {showFilters && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl space-y-4 animate-fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Date From</label>
+                    <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400" value={filters.dateFrom} onChange={(e) => updateFilter("dateFrom", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Date To</label>
+                    <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400" value={filters.dateTo} onChange={(e) => updateFilter("dateTo", e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Min Amount</label>
+                    <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400" value={filters.amountMin} onChange={(e) => updateFilter("amountMin", e.target.value)} placeholder="₹0" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Max Amount</label>
+                    <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400" value={filters.amountMax} onChange={(e) => updateFilter("amountMax", e.target.value)} placeholder="₹99999" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Recurring</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400" value={filters.recurring} onChange={(e) => updateFilter("recurring", e.target.value)}>
+                      <option value="">All</option>
+                      <option value="yes">Recurring</option>
+                      <option value="no">One-time</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Sort By</label>
+                    <div className="flex gap-1">
+                      {SORT_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => toggleSort(opt.value)}
+                          className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-0.5 ${
+                            sortField === opt.value
+                              ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+                              : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                          }`}
+                        >
+                          {opt.label}
+                          {getSortIcon(opt.value)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium mr-1 shrink-0">Sort:</span>
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => toggleSort(opt.value)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${
+                    sortField === opt.value
+                      ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  }`}
+                >
+                  {opt.label}
+                  {getSortIcon(opt.value)}
+                </button>
+              ))}
+            </div>
+
+            {hasActiveFilters && (
+              <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-2 rounded-lg flex-wrap">
+                <FiFilter className="w-4 h-4 shrink-0" />
+                <span>Filtered to <strong>{filtered.length}</strong> of {incomes.length} incomes</span>
+                {debouncedSearch && <span className="text-green-400">· search: "{debouncedSearch}"</span>}
+              </div>
+            )}
+          </div>
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -354,7 +579,7 @@ export default function Incomes() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedIncomes.map((inc) => (
+                {paginatedFiltered.map((inc) => (
                   <tr key={inc.id} className="border-b border-gray-50 dark:border-gray-700 hover:bg-gray-50/70 dark:hover:bg-gray-700/50 transition-colors group">
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-3">
@@ -379,7 +604,7 @@ export default function Incomes() {
                       )}
                     </td>
                     <td className="px-4 py-3.5 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => setDetailTarget(inc)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-colors" title="View details">
                           <FiFileText className="w-4 h-4" />
                         </button>
@@ -398,7 +623,7 @@ export default function Incomes() {
           </div>
 
           <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
-            {paginatedIncomes.map((inc) => (
+            {paginatedFiltered.map((inc) => (
               <div key={inc.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
@@ -437,16 +662,16 @@ export default function Incomes() {
             ))}
           </div>
 
-          {totalPages > 1 && (
+          {totalFilteredPages > 1 && (
             <div className="px-4 py-4 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Page {page} of {totalPages} ({incomes.length} results)</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Page {page} of {totalFilteredPages} ({filtered.length} results)</p>
               <div className="flex items-center gap-1.5">
                 <button onClick={() => setPage(1)} disabled={page === 1} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronsLeft className="w-4 h-4" /></button>
                 <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronLeft className="w-4 h-4" /></button>
                 {(() => {
                   const pages = [];
                   const start = Math.max(1, page - 2);
-                  const end = Math.min(totalPages, page + 2);
+                  const end = Math.min(totalFilteredPages, page + 2);
                   for (let i = start; i <= end; i++) {
                     pages.push(
                       <button key={i} onClick={() => setPage(i)} className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition-colors ${i === page ? "bg-green-600 text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}>{i}</button>
@@ -454,8 +679,8 @@ export default function Incomes() {
                   }
                   return pages;
                 })()}
-                <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronRight className="w-4 h-4" /></button>
-                <button onClick={() => setPage(totalPages)} disabled={page === totalPages} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronsRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage(Math.min(totalFilteredPages, page + 1))} disabled={page === totalFilteredPages} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setPage(totalFilteredPages)} disabled={page === totalFilteredPages} className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"><FiChevronsRight className="w-4 h-4" /></button>
               </div>
             </div>
           )}

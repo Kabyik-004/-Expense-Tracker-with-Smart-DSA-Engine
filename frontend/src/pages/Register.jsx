@@ -15,12 +15,17 @@ export default function Register() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const res = await register(form);
-    setLoading(false);
-    if (res.success) {
-      navigate("/dashboard");
-    } else {
-      setError(res.message || "Registration failed");
+    try {
+      const res = await register(form);
+      if (res.success) {
+        navigate("/dashboard");
+      } else {
+        setError(res.message || "Registration failed");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -6,6 +6,7 @@ import { PAYMENT_METHODS } from "../utils/constants";
 import { useToast } from "../components/shared/Toast";
 import { SkeletonExpensesTable } from "../components/shared/skeletons";
 import EmptyState from "../components/shared/EmptyState";
+import CategoryIcon from "../components/shared/CategoryIcon";
 import api from "../services/api";
 import {
   FiPlus,
@@ -263,7 +264,10 @@ export default function Expenses() {
             </div>
             <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
               <p className="text-xs text-purple-500 dark:text-purple-400 font-medium">Category</p>
-              <p className="text-lg font-semibold text-gray-900 dark:text-white mt-1">{expense.category_name || `#${expense.category_id}`}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <CategoryIcon name={expense.category_name} size="sm" />
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">{expense.category_name || `#${expense.category_id}`}</p>
+              </div>
             </div>
             <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
               <p className="text-xs text-orange-500 dark:text-orange-400 font-medium">Payment</p>
@@ -305,7 +309,7 @@ export default function Expenses() {
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Expenses</h1>
@@ -570,7 +574,7 @@ export default function Expenses() {
                     <tr key={exp.id} className="border-b border-gray-50 dark:border-gray-700 hover:bg-gray-50/70 dark:hover:bg-gray-700/70 transition-colors group">
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-red-600 dark:text-red-400 text-xs font-bold shrink-0">{exp.title?.charAt(0)?.toUpperCase() || "E"}</div>
+                          <CategoryIcon name={exp.category_name} size="sm" />
                           <div>
                             <p className="text-sm font-medium text-gray-900 dark:text-white">{exp.title}</p>
                             {exp.description && <p className="text-xs text-gray-400 dark:text-gray-500 truncate max-w-[200px]">{exp.description}</p>}
@@ -580,7 +584,8 @@ export default function Expenses() {
                       <td className="px-4 py-3.5"><span className="text-sm font-semibold text-red-600 dark:text-red-400">{formatCurrency(exp.amount)}</span></td>
                       <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">{formatDate(exp.date)}</td>
                       <td className="px-4 py-3.5">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">
+                          <CategoryIcon name={exp.category_name} size="sm" className="!w-5 !h-5" />
                           {exp.category_name || `#${exp.category_id}`}
                         </span>
                       </td>
@@ -603,12 +608,15 @@ export default function Expenses() {
                 <div key={exp.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-red-600 dark:text-red-400 text-sm font-bold shrink-0 mt-0.5">{exp.title?.charAt(0)?.toUpperCase() || "E"}</div>
+                      <CategoryIcon name={exp.category_name} size="md" />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{exp.title}</p>
                         {exp.description && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{exp.description}</p>}
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-full">{exp.category_name || `#${exp.category_id}`}</span>
+                          <span className="inline-flex items-center gap-1 text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-full">
+                            <CategoryIcon name={exp.category_name} size="sm" className="!w-4 !h-4" />
+                            {exp.category_name || `#${exp.category_id}`}
+                          </span>
                           <span className="text-xs text-gray-400 dark:text-gray-500 capitalize">{exp.payment_method || "Cash"}</span>
                         </div>
                       </div>

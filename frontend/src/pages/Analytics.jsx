@@ -14,32 +14,48 @@ import {
 } from "react-icons/fi";
 import { SkeletonAnalytics } from "../components/shared/skeletons";
 import EmptyState from "../components/shared/EmptyState";
+import CategoryIcon from "../components/shared/CategoryIcon";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
 
 const COLORS = [
-  "#4f46e5", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
-  "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#6366f1",
-  "#84cc16", "#d946ef", "#0ea5e9", "#eab308", "#22c55e",
+  "#6366f1", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
+  "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#84cc16",
+  "#d946ef", "#0ea5e9",
 ];
 
 const CHART_OPTIONS = {
   responsive: true,
   maintainAspectRatio: false,
+  animation: { duration: 800, easing: "easeOutQuart" },
   plugins: {
     legend: {
       position: "bottom",
       labels: { padding: 16, usePointStyle: true, boxWidth: 8, font: { size: 11 } },
     },
     tooltip: {
-      backgroundColor: "rgba(15, 23, 42, 0.9)",
+      backgroundColor: "rgba(15, 23, 42, 0.95)",
       padding: 12,
-      cornerRadius: 8,
-      titleFont: { size: 13 },
+      cornerRadius: 12,
+      titleFont: { size: 13, weight: "600" },
       bodyFont: { size: 12 },
+      displayColors: true,
+      boxPadding: 4,
+      usePointStyle: true,
+      caretSize: 8,
+      caretPadding: 6,
     },
   },
 };
+
+function gradientBg(ctx, c1, c2) {
+  if (!ctx?.chart?.chartArea) return c1;
+  const { top, bottom } = ctx.chart.chartArea;
+  const g = ctx.chart.ctx.createLinearGradient(0, top, 0, bottom);
+  g.addColorStop(0, c1);
+  g.addColorStop(1, c2);
+  return g;
+}
 
 export default function Analytics() {
   const [loading, setLoading] = useState(true);
@@ -108,6 +124,8 @@ export default function Analytics() {
     ? monthlyEntries.map(([, v]) => v.total)
     : dailyEntries.map(([, v]) => v.total);
 
+  const hasTrend = timeLabels.length > 0 && timeValues.some(v => v > 0);
+
   const pieData = {
     labels: dist.map((d) => d.category_name || `#${d.category_id}`),
     datasets: [{
@@ -115,6 +133,7 @@ export default function Analytics() {
       backgroundColor: COLORS.slice(0, dist.length),
       borderWidth: 2,
       borderColor: "#fff",
+      hoverOffset: 10,
     }],
   };
 
@@ -125,7 +144,8 @@ export default function Analytics() {
       backgroundColor: ["#10b981", "#ef4444"],
       borderWidth: 3,
       borderColor: "#fff",
-      hoverOffset: 8,
+      hoverOffset: 12,
+      spacing: 4,
     }],
   };
 
@@ -134,30 +154,29 @@ export default function Analytics() {
     datasets: [{
       label: "Expenses",
       data: timeValues,
-      backgroundColor: timeValues.map((v) =>
-        v > 0 ? "rgba(79, 70, 229, 0.7)" : "rgba(79, 70, 229, 0.1)"
-      ),
-      borderColor: "rgba(79, 70, 229, 1)",
+      backgroundColor: (ctx) => gradientBg(ctx, "rgba(99, 102, 241, 0.85)", "rgba(99, 102, 241, 0.2)"),
+      borderColor: "#6366f1",
       borderWidth: 1,
-      borderRadius: 4,
+      borderRadius: 6,
+      borderSkipped: false,
     }],
   };
 
-  const lineData = {
+  const areaData = {
     labels: timeLabels,
     datasets: [{
       label: "Expense Trend",
       data: timeValues,
       fill: true,
-      backgroundColor: "rgba(79, 70, 229, 0.08)",
-      borderColor: "#4f46e5",
-      borderWidth: 2,
-      pointBackgroundColor: "#4f46e5",
+      backgroundColor: (ctx) => gradientBg(ctx, "rgba(99, 102, 241, 0.35)", "rgba(99, 102, 241, 0)"),
+      borderColor: "#6366f1",
+      borderWidth: 2.5,
+      pointBackgroundColor: "#6366f1",
       pointBorderColor: "#fff",
       pointBorderWidth: 2,
       pointRadius: 3,
-      pointHoverRadius: 6,
-      tension: 0.35,
+      pointHoverRadius: 7,
+      tension: 0.4,
     }],
   };
 
@@ -212,13 +231,13 @@ export default function Analytics() {
   if (loading) return <SkeletonAnalytics />;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visual insights into your spending</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {statCards.map((card) => (
           <div key={card.label} className={`${card.bg} rounded-xl p-4 sm:p-5 border border-transparent transition-all duration-300 ${animate ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
             <div className="flex items-center justify-between mb-2">
@@ -231,7 +250,7 @@ export default function Analytics() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
           <div className="flex items-center gap-2 mb-4">
             <FiPieChart className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -245,6 +264,7 @@ export default function Analytics() {
                   ...CHART_OPTIONS.plugins,
                   legend: { ...CHART_OPTIONS.plugins.legend, position: "right" },
                 },
+                spacing: 4,
               }} />
             ) : (
               <EmptyState icon={<FiPieChart className="w-6 h-6" />} title="No category data" color="indigo" />
@@ -261,7 +281,8 @@ export default function Analytics() {
             {(s.total_income || s.total_expense) ? (
               <Doughnut data={doughnutData} options={{
                 ...CHART_OPTIONS,
-                cutout: "65%",
+                cutout: "68%",
+                spacing: 6,
                 plugins: {
                   ...CHART_OPTIONS.plugins,
                   legend: { ...CHART_OPTIONS.plugins.legend, position: "bottom" },
@@ -294,22 +315,25 @@ export default function Analytics() {
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="h-[250px] sm:h-[280px]">
-              {(timeLabels.length > 0 && timeValues.some(v => v > 0)) ? (
+            <div className="h-[260px] sm:h-[300px]">
+              {hasTrend ? (
                 <Bar data={barData} options={{
                   ...CHART_OPTIONS,
-                  responsive: true,
-                  maintainAspectRatio: false,
                   scales: {
                     x: { grid: { display: false }, ticks: { font: { size: 10 } } },
                     y: {
-                      grid: { color: "rgba(0,0,0,0.05)" },
-                      ticks: { font: { size: 10 }, callback: (v) => `₹${v}` },
+                      beginAtZero: true,
+                      grid: { color: "rgba(0,0,0,0.04)", drawTicks: false },
+                      border: { dash: [4, 4] },
+                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}` },
                     },
                   },
                   plugins: {
                     legend: { display: false },
-                    tooltip: CHART_OPTIONS.plugins.tooltip,
+                    tooltip: {
+                      ...CHART_OPTIONS.plugins.tooltip,
+                      callbacks: { label: (ctx) => `₹${ctx.parsed.y.toLocaleString("en-IN")}` },
+                    },
                   },
                 }} />
               ) : (
@@ -318,23 +342,27 @@ export default function Analytics() {
                 </div>
               )}
             </div>
-            <div className="h-[250px] sm:h-[280px]">
-              {(timeLabels.length > 0 && timeValues.some(v => v > 0)) ? (
-                <Line data={lineData} options={{
+            <div className="h-[260px] sm:h-[300px]">
+              {hasTrend ? (
+                <Line data={areaData} options={{
                   ...CHART_OPTIONS,
-                  responsive: true,
-                  maintainAspectRatio: false,
                   scales: {
                     x: { grid: { display: false }, ticks: { font: { size: 10 } } },
                     y: {
-                      grid: { color: "rgba(0,0,0,0.05)" },
-                      ticks: { font: { size: 10 }, callback: (v) => `₹${v}` },
+                      beginAtZero: true,
+                      grid: { color: "rgba(0,0,0,0.04)", drawTicks: false },
+                      border: { dash: [4, 4] },
+                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}` },
                     },
                   },
                   plugins: {
                     legend: { display: false },
-                    tooltip: CHART_OPTIONS.plugins.tooltip,
+                    tooltip: {
+                      ...CHART_OPTIONS.plugins.tooltip,
+                      callbacks: { label: (ctx) => `₹${ctx.parsed.y.toLocaleString("en-IN")}` },
+                    },
                   },
+                  elements: { point: { hoverRadius: 7 } },
                 }} />
               ) : (
                 <div className="flex items-center justify-center h-full">
@@ -358,9 +386,12 @@ export default function Analytics() {
                   <div key={idx}>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: COLORS[idx % COLORS.length] }}>
-                          {idx + 1}
-                        </span>
+                        <div className="relative shrink-0">
+                          <CategoryIcon name={cat.category_name} size="sm" />
+                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold text-white ring-2 ring-white dark:ring-gray-800" style={{ backgroundColor: COLORS[idx % COLORS.length] }}>
+                            {idx + 1}
+                          </span>
+                        </div>
                         <span className="text-sm font-medium text-gray-900 dark:text-white">{cat.category_name || `Category #${cat.category_id}`}</span>
                       </div>
                       <div className="text-right">

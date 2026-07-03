@@ -49,7 +49,7 @@ export default function Login() {
             <input
               type="text"
               required
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               value={form.login}
               onChange={(e) => setForm({ ...form, login: e.target.value })}
             />
@@ -62,7 +62,7 @@ export default function Login() {
             <input
               type="password"
               required
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
@@ -70,7 +70,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => addToast("Forgot password feature coming soon", "info")}
-                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                className="link-underline text-xs text-indigo-600 dark:text-indigo-400 font-medium"
               >
                 Forgot password?
               </button>
@@ -90,7 +90,7 @@ export default function Login() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="text-indigo-600 hover:underline font-medium"
+            className="link-underline text-indigo-600 font-medium"
           >
             Sign up
           </Link>

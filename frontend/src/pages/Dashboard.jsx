@@ -17,12 +17,17 @@ import {
 } from "react-icons/fi";
 import { SkeletonDashboard } from "../components/shared/skeletons";
 import EmptyState from "../components/shared/EmptyState";
+import AnimatedCounter from "../components/shared/AnimatedCounter";
+import CategoryIcon from "../components/shared/CategoryIcon";
+import AnimatedCircularProgress from "../components/shared/AnimatedCircularProgress";
+import * as budgetService from "../services/budgetService";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [data, setData] = useState(null);
+  const [budgetStatus, setBudgetStatus] = useState(null);
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,12 +43,15 @@ export default function Dashboard() {
         navigate("/login", { replace: true });
         return;
       }
-      const [dashRes, expRes] = await Promise.all([
+      const now = new Date();
+      const [dashRes, expRes, budRes] = await Promise.all([
         api.get("/analytics/dashboard"),
         api.get("/expenses/"),
+        budgetService.getBudgetStatus(now.getMonth() + 1, now.getFullYear()),
       ]);
       if (dashRes.data.success) setData(dashRes.data.data);
       if (expRes.data.success) setRecentTransactions(expRes.data.data.expenses || []);
+      if (budRes.success) setBudgetStatus(budRes.data);
     } catch (err) {
       let msg;
       if (err.code === "ECONNABORTED") {
@@ -101,33 +109,48 @@ export default function Dashboard() {
 
   const incomePct = totalIncome > 0 ? ((totalExpense / totalIncome) * 100) : 0;
 
+  const gradientSchemes = {
+    income: {
+      accent: "from-green-400 to-emerald-500",
+      iconBg: "from-green-400 to-emerald-500",
+      text: "text-green-600 dark:text-green-400",
+      trend: "text-gray-400 dark:text-gray-500",
+    },
+    expense: {
+      accent: "from-red-400 to-rose-500",
+      iconBg: "from-red-400 to-rose-500",
+      text: "text-red-600 dark:text-red-400",
+      trend: "text-gray-400 dark:text-gray-500",
+    },
+    balance: {
+      accent: balance >= 0 ? "from-indigo-400 to-violet-500" : "from-red-400 to-rose-500",
+      iconBg: balance >= 0 ? "from-indigo-400 to-violet-500" : "from-red-400 to-rose-500",
+      text: balance >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
+      trend: balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400",
+    },
+  };
+
   const stats = [
     {
       label: "Total Income",
-      value: formatCurrency(totalIncome),
+      rawValue: totalIncome,
       icon: FiTrendingUp,
-      color: "text-green-600 dark:text-green-400",
-      bg: "bg-green-50 dark:bg-green-900/30",
+      scheme: gradientSchemes.income,
       trend: totalIncome > 0 ? `${formatCurrency(totalIncome)} period` : "—",
-      trendColor: "text-gray-400 dark:text-gray-500",
     },
     {
       label: "Total Expenses",
-      value: formatCurrency(totalExpense),
+      rawValue: totalExpense,
       icon: FiTrendingDown,
-      color: "text-red-600 dark:text-red-400",
-      bg: "bg-red-50 dark:bg-red-900/30",
+      scheme: gradientSchemes.expense,
       trend: totalExpense > 0 ? `${incomePct.toFixed(1)}% of income` : "—",
-      trendColor: "text-gray-400 dark:text-gray-500",
     },
     {
       label: "Balance",
-      value: formatCurrency(balance),
+      rawValue: balance,
       icon: FiDollarSign,
-      color: balance >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
-      bg: balance >= 0 ? "bg-indigo-50 dark:bg-indigo-900/30" : "bg-red-50 dark:bg-red-900/30",
-      trend: totalIncome > 0 ? `${((balance / totalIncome) * 100).toFixed(1)}% saved` : "—",
-      trendColor: balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400",
+      scheme: gradientSchemes.balance,
+      trend: totalIncome > 0 ? `${((Math.abs(balance) / totalIncome) * 100).toFixed(1)}% ${balance >= 0 ? "saved" : "overspent"}` : "—",
     },
   ];
 
@@ -163,7 +186,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -184,24 +207,117 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4" role="list" aria-label="Financial statistics">
-        {stats.map((stat, _index) => (
+        {stats.map((stat) => (
           <article
             key={stat.label}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
+            className="relative group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
             role="listitem"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
-                <p className={`text-2xl font-bold mt-1 ${stat.color}`}>{stat.value}</p>
-                <p className={`text-xs font-medium mt-2 ${stat.trendColor}`}>{stat.trend}</p>
-              </div>
-              <div className={`p-3 rounded-xl ${stat.bg}`}>
-                <stat.icon className={`w-6 h-6 ${stat.color}`} aria-hidden="true" />
+            <div className={`h-1 w-full bg-gradient-to-r ${stat.scheme.accent} opacity-80`} />
+            <div className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1.5">
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide">{stat.label}</p>
+                  <p className={`text-2xl font-bold tabular-nums ${stat.scheme.text}`}>
+                    {stat.rawValue !== 0 ? (
+                      <AnimatedCounter value={stat.rawValue} formatter={formatCurrency} />
+                    ) : (
+                      formatCurrency(0)
+                    )}
+                  </p>
+                  <p className={`text-xs font-medium mt-1.5 ${stat.scheme.trend}`}>{stat.trend}</p>
+                </div>
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.scheme.iconBg} shadow-lg shadow-black/10 dark:shadow-black/30 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300 animate-float-subtle motion-reduce:animate-none`}>
+                  <stat.icon className="w-6 h-6 text-white" aria-hidden="true" />
+                </div>
               </div>
             </div>
           </article>
         ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md">
+          <AnimatedCircularProgress
+            value={budgetStatus?.total_budget > 0 ? Math.min(budgetStatus.overall_percentage, 100) : 0}
+            size={130}
+            strokeWidth={9}
+            color="url(#budgetGradient)"
+            label="Monthly Budget"
+            subtitle={budgetStatus?.total_budget > 0 ? `${formatCurrency(budgetStatus.total_spent)} / ${formatCurrency(budgetStatus.total_budget)}` : "No budget set"}
+          >
+            <div className="text-center">
+              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 tabular-nums">
+                {budgetStatus?.total_budget > 0 ? `${Math.round(budgetStatus.overall_percentage)}%` : "—"}
+              </p>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">used</p>
+            </div>
+          </AnimatedCircularProgress>
+          <svg width="0" height="0" className="absolute">
+            <defs>
+              <linearGradient id="budgetGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#6366f1" />
+                <stop offset="100%" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md">
+          <AnimatedCircularProgress
+            value={totalIncome > 0 ? Math.max(0, Math.min(((totalIncome - totalExpense) / totalIncome) * 100, 100)) : 0}
+            size={130}
+            strokeWidth={9}
+            color="url(#savingsGradient)"
+            label="Savings Rate"
+            subtitle={totalIncome > 0 ? `${formatCurrency(totalIncome - totalExpense)} saved` : "No income data"}
+          >
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 tabular-nums">
+                {totalIncome > 0 ? `${((totalIncome - totalExpense) / totalIncome * 100).toFixed(0)}%` : "—"}
+              </p>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">saved</p>
+            </div>
+          </AnimatedCircularProgress>
+          <svg width="0" height="0" className="absolute">
+            <defs>
+              <linearGradient id="savingsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#10b981" />
+                <stop offset="100%" stopColor="#059669" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 sm:p-6 flex flex-col items-center gap-4 transition-all duration-300 hover:shadow-md sm:col-span-2 lg:col-span-1">
+          <AnimatedCircularProgress
+            value={totalIncome > 0 ? Math.min((totalExpense / totalIncome) * 100, 100) : 0}
+            size={130}
+            strokeWidth={9}
+            color={totalIncome > 0 && (totalExpense / totalIncome) > 0.8 ? "url(#spendingHighGradient)" : "url(#spendingLowGradient)"}
+            label="Spending Ratio"
+            subtitle={totalIncome > 0 ? `${formatCurrency(totalExpense)} of ${formatCurrency(totalIncome)}` : "No data"}
+          >
+            <div className="text-center">
+              <p className="text-2xl font-bold tabular-nums" style={{ color: totalIncome > 0 && (totalExpense / totalIncome) > 0.8 ? "#ef4444" : "#f59e0b" }}>
+                {totalIncome > 0 ? `${(totalExpense / totalIncome * 100).toFixed(0)}%` : "—"}
+              </p>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">of income</p>
+            </div>
+          </AnimatedCircularProgress>
+          <svg width="0" height="0" className="absolute">
+            <defs>
+              <linearGradient id="spendingLowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#f59e0b" />
+                <stop offset="100%" stopColor="#d97706" />
+              </linearGradient>
+              <linearGradient id="spendingHighGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ef4444" />
+                <stop offset="100%" stopColor="#dc2626" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -210,7 +326,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
             <button
               onClick={() => navigate("/expenses")}
-              className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1"
+              className="link-underline text-sm text-indigo-600 font-medium flex items-center gap-1"
             >
               View all <FiArrowRight className="w-4 h-4" />
             </button>
@@ -230,11 +346,7 @@ export default function Dashboard() {
                   key={txn.id}
                   className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center gap-4"
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400"
-                  >
-                    <FiTrendingDown className="w-5 h-5" />
-                  </div>
+                  <CategoryIcon name={txn.category_name} size="md" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-900 dark:text-white truncate">{txn.title}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
@@ -278,9 +390,12 @@ export default function Dashboard() {
             <div className="space-y-3">
               <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
                 <p className="text-sm font-medium text-indigo-900 dark:text-indigo-300">Top Category</p>
-                <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 mt-1">
-                  {data?.categories?.most_used?.category_name || "—"}
-                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <CategoryIcon name={data?.categories?.most_used?.category_name} size="sm" />
+                  <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
+                    {data?.categories?.most_used?.category_name || "—"}
+                  </p>
+                </div>
                 <p className="text-xs text-indigo-500 dark:text-indigo-400 mt-1">
                   {formatCurrency(
                     data?.categories?.distribution?.find(
@@ -319,6 +434,15 @@ export default function Dashboard() {
           />
         </div>
       </section>
+      <style>{`
+        @keyframes float-subtle {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-4px); }
+        }
+        .animate-float-subtle {
+          animation: float-subtle 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }

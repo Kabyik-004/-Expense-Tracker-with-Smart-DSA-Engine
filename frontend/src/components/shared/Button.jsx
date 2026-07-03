@@ -41,7 +41,7 @@ const Button = forwardRef(({
       ref={ref}
       type={type}
       disabled={disabled || loading}
-      className={`${fullWidth ? "w-full" : ""} ${variantStyles[variant] || variantStyles.primary} ${isIconOnly ? "" : sizeStyles[size] || sizeStyles.md} rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-2 ${disabled || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"} ${className}`}
+      className={`${fullWidth ? "w-full" : ""} ${variantStyles[variant] || variantStyles.primary} ${isIconOnly ? "" : sizeStyles[size] || sizeStyles.md} rounded-lg font-medium inline-flex items-center justify-center gap-2 ${disabled || loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer btn-hover"} ${className}`}
       {...props}
     >
       {iconEl && iconPosition === "left" ? iconEl : null}

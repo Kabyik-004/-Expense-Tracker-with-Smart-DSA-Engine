@@ -104,7 +104,7 @@ export default function Budgets() {
   const exceededAlerts = status?.budgets?.filter((b) => b.exceeded) || [];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Budgets</h1>

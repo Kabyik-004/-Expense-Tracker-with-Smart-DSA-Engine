@@ -23,6 +23,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastProvider } from "./components/shared/Toast";
+import FloatingActionButton from "./components/shared/FloatingActionButton";
+import PageTransition from "./components/shared/PageTransition";
 
 import { lazy, Suspense } from "react";
 
@@ -112,7 +114,7 @@ function AppLayout() {
                   : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="icon-rotate w-4 h-4" />
               {label}
             </Link>
           ))}
@@ -154,15 +156,16 @@ function AppLayout() {
         <ExpenseProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/expenses" element={<Expenses />} />
-            <Route path="/incomes" element={<Incomes />} />
-            <Route path="/budgets" element={<Budgets />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
+            <Route path="/expenses" element={<PageTransition><Expenses /></PageTransition>} />
+            <Route path="/incomes" element={<PageTransition><Incomes /></PageTransition>} />
+            <Route path="/budgets" element={<PageTransition><Budgets /></PageTransition>} />
+            <Route path="/analytics" element={<PageTransition><Analytics /></PageTransition>} />
+            <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
           </Routes>
         </ExpenseProvider>
       </main>
+      <FloatingActionButton />
     </div>
   );
 }
@@ -179,7 +182,7 @@ export default function App() {
             path="/login"
             element={
               <PublicRoute>
-                <Login />
+                <PageTransition><Login /></PageTransition>
               </PublicRoute>
             }
           />
@@ -188,7 +191,7 @@ export default function App() {
             path="/register"
             element={
               <PublicRoute>
-                <Register />
+                <PageTransition><Register /></PageTransition>
               </PublicRoute>
             }
           />

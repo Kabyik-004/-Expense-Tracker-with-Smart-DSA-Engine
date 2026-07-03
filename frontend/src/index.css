@@ -12,32 +12,117 @@
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ─── Fade / Slide ─── */
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .animate-fade-in {
   animation: fade-in 0.4s ease-out forwards;
 }
 
 @keyframes slide-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out forwards;
+}
+
+/* ─── Button hover lift + press ─── */
+
+.btn-hover {
+  transition: all 0.2s ease;
+}
+.btn-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.btn-hover:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Card hover lift ─── */
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1), 0 4px 8px -4px rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Icon rotate ─── */
+
+.icon-rotate {
+  transition: transform 0.3s ease;
+}
+.icon-rotate:hover,
+.group:hover .icon-rotate {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* ─── Link underline slide ─── */
+
+.link-underline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── Input focus glow ─── */
+
+.input-focus {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.input-focus:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  transform: scale(1.005);
+}
+.dark .input-focus:focus {
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+/* ─── Page transition (fade + slide + scale) ─── */
+
+@keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateX(-12px);
+    transform: translateY(16px) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
   }
 }
+.animate-page-enter {
+  animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out forwards;
+/* ─── Scale reveal (for progress bars, etc.) ─── */
+
+@keyframes scale-x-in {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.animate-scale-x-in {
+  transform-origin: left;
+  animation: scale-x-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }

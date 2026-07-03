@@ -110,9 +110,9 @@ function ProfileSection({ user, setUser, addToast }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const maxSize = 350000;
+    const maxSize = 1000000;
     if (file.size > maxSize) {
-      addToast("Image must be under 350KB", "error");
+      addToast("Image must be under 1MB", "error");
       return;
     }
 

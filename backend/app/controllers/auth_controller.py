@@ -255,7 +255,7 @@ def upload_user_avatar(request_data):
 
     avatar_data = request_data["avatar"]
 
-    if not isinstance(avatar_data, str) or len(avatar_data) > 500000:
+    if not isinstance(avatar_data, str) or len(avatar_data) > 2000000:
         return error_response("Invalid or too large avatar data", 400)
 
     user.avatar = avatar_data

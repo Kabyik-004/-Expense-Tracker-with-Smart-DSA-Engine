@@ -2,10 +2,18 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext(null);
 
+function getInitialTheme() {
+  const saved = localStorage.getItem("theme") || "light";
+  if (saved === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+  return saved;
+}
+
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "light";
-  });
+  const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
     const root = document.documentElement;

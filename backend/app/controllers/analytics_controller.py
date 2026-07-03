@@ -9,6 +9,7 @@ Provides comprehensive analytics:
 """
 
 from datetime import datetime, timedelta
+from collections import defaultdict
 from sqlalchemy import func
 
 from app import db
@@ -194,75 +195,66 @@ def get_category_distribution(user_id):
 
 
 def get_monthly_expenses(user_id):
-    """Get total expenses grouped by month.
+    """Get total expenses grouped by month (database-agnostic).
     
     Returns: {
         "2026-07": {"total": 150.50, "count": 5},
         "2026-06": {"total": 200.00, "count": 8},
     }
     """
-    results = db.session.query(
-        func.strftime("%Y-%m", Expense.date).label("period"),
-        func.sum(Expense.amount).label("total"),
-        func.count(Expense.id).label("count"),
-    ).filter_by(user_id=user_id).group_by(
-        func.strftime("%Y-%m", Expense.date)
-    ).order_by(
-        func.strftime("%Y-%m", Expense.date).desc()
+    expenses = Expense.query.filter_by(user_id=user_id).with_entities(
+        Expense.date, Expense.amount
     ).all()
 
-    return {
-        row.period: {"total": float(row.total), "count": row.count}
-        for row in results
-    }
+    monthly = defaultdict(lambda: {"total": 0.0, "count": 0})
+    for expense in expenses:
+        key = expense.date.strftime("%Y-%m")
+        monthly[key]["total"] += float(expense.amount)
+        monthly[key]["count"] += 1
+
+    return dict(sorted(monthly.items(), reverse=True))
 
 
 def get_weekly_expenses(user_id):
-    """Get total expenses grouped by ISO week.
+    """Get total expenses grouped by week (database-agnostic).
     
     Returns: {
         "2026-W27": {"total": 150.50, "count": 5},
         "2026-W26": {"total": 200.00, "count": 8},
     }
     """
-    results = db.session.query(
-        func.strftime("%Y-%W", Expense.date).label("period"),
-        func.sum(Expense.amount).label("total"),
-        func.count(Expense.id).label("count"),
-    ).filter_by(user_id=user_id).group_by(
-        func.strftime("%Y-%W", Expense.date)
-    ).order_by(
-        func.strftime("%Y-%W", Expense.date).desc()
+    expenses = Expense.query.filter_by(user_id=user_id).with_entities(
+        Expense.date, Expense.amount
     ).all()
 
-    return {
-        row.period: {"total": float(row.total), "count": row.count}
-        for row in results
-    }
+    weekly = defaultdict(lambda: {"total": 0.0, "count": 0})
+    for expense in expenses:
+        key = expense.date.strftime("%Y-W%W")
+        weekly[key]["total"] += float(expense.amount)
+        weekly[key]["count"] += 1
+
+    return dict(sorted(weekly.items(), reverse=True))
 
 
 def get_daily_expenses(user_id):
-    """Get total expenses grouped by day.
+    """Get total expenses grouped by day (database-agnostic).
     
     Returns: {
         "2026-07-01": {"total": 150.50, "count": 5},
         "2026-06-30": {"total": 200.00, "count": 8},
     }
     """
-    results = db.session.query(
-        func.strftime("%Y-%m-%d", Expense.date).label("period"),
-        func.sum(Expense.amount).label("total"),
-        func.count(Expense.id).label("count"),
-    ).filter_by(user_id=user_id).group_by(
-        func.strftime("%Y-%m-%d", Expense.date)
-    ).order_by(
-        func.strftime("%Y-%m-%d", Expense.date).desc()
+    expenses = Expense.query.filter_by(user_id=user_id).with_entities(
+        Expense.date, Expense.amount
     ).all()
 
-    return {
-        row.period: {"total": float(row.total), "count": row.count}
-        for row in results
-    }
+    daily = defaultdict(lambda: {"total": 0.0, "count": 0})
+    for expense in expenses:
+        key = expense.date.strftime("%Y-%m-%d")
+        daily[key]["total"] += float(expense.amount)
+        daily[key]["count"] += 1
+
+    return dict(sorted(daily.items(), reverse=True))
 
 
 # ============================================================================

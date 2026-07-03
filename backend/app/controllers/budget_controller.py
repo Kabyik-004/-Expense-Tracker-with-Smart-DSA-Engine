@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from flask_jwt_extended import get_jwt_identity
-from sqlalchemy import func
+from sqlalchemy import func, extract
 
 from app import db
 from app.models import Budget, Expense, Category
@@ -44,15 +44,15 @@ def get_budget_status(month=None, year=None):
             result = db.session.query(func.coalesce(func.sum(Expense.amount), 0)).filter(
                 Expense.user_id == user_id,
                 Expense.category_id == budget.category_id,
-                func.cast(func.strftime("%m", Expense.date), db.Integer) == month,
-                func.cast(func.strftime("%Y", Expense.date), db.Integer) == year,
+                extract("month", Expense.date) == month,
+                extract("year", Expense.date) == year,
             ).scalar()
             spent = float(result)
         else:
             result = db.session.query(func.coalesce(func.sum(Expense.amount), 0)).filter(
                 Expense.user_id == user_id,
-                func.cast(func.strftime("%m", Expense.date), db.Integer) == month,
-                func.cast(func.strftime("%Y", Expense.date), db.Integer) == year,
+                extract("month", Expense.date) == month,
+                extract("year", Expense.date) == year,
             ).scalar()
             spent = float(result)
 

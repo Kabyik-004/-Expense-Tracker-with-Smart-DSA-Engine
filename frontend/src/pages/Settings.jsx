@@ -106,19 +106,21 @@ function ProfileSection({ user, setUser, addToast }) {
     }
   };
 
-  const handleAvatarUpload = async (e) => {
+  const handleAvatarUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 500000) {
-      addToast("Image must be under 500KB", "error");
+    const maxSize = 350000;
+    if (file.size > maxSize) {
+      addToast("Image must be under 350KB", "error");
       return;
     }
 
     setUploading(true);
-    try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
+    const reader = new FileReader();
+
+    reader.onload = async () => {
+      try {
         const base64 = reader.result;
         const res = await authService.uploadAvatar({ avatar: base64 });
         if (res.success) {
@@ -127,13 +129,19 @@ function ProfileSection({ user, setUser, addToast }) {
         } else {
           addToast(res.message || "Upload failed", "error");
         }
+      } catch {
+        addToast("Upload failed", "error");
+      } finally {
         setUploading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch {
-      addToast("Upload failed", "error");
+      }
+    };
+
+    reader.onerror = () => {
+      addToast("Failed to read file", "error");
       setUploading(false);
-    }
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (

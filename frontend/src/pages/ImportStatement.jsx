@@ -34,6 +34,37 @@ export default function ImportStatement() {
     headerRef.current?.focus();
   }, [step]);
 
+  const handleRetryUpload = useCallback(() => {
+    setUploadStatus("idle");
+    setUploadProgress(0);
+    setUploading(false);
+  }, []);
+
+  const loadPreview = useCallback(async (fileId) => {
+    setPreviewLoading(true);
+    setPreviewError(null);
+    try {
+      const resp = await importService.previewImport(fileId);
+      if (resp?.success) {
+        setTransactions(resp.data.transactions || []);
+        setPreviewMeta(resp.data.metadata || null);
+        addToast("Statement parsed successfully", "success", {
+          description: `${(resp.data.transactions || []).length} transactions found`,
+          duration: 3000,
+        });
+      } else {
+        setPreviewError(resp?.message || "Preview failed");
+        addToast(resp?.message || "Preview failed", "error");
+      }
+    } catch (err) {
+      const msg = err?.response?.data?.message || "Failed to parse statement";
+      setPreviewError(msg);
+      addToast("Preview failed", "error", { description: msg });
+    } finally {
+      setPreviewLoading(false);
+    }
+  }, [addToast]);
+
   const handleUpload = useCallback(async (file) => {
     setUploading(true);
     setUploadStatus("processing");
@@ -76,37 +107,6 @@ export default function ImportStatement() {
       setUploading(false);
     }
   }, [addToast, loadPreview]);
-
-  const handleRetryUpload = useCallback(() => {
-    setUploadStatus("idle");
-    setUploadProgress(0);
-    setUploading(false);
-  }, []);
-
-  const loadPreview = useCallback(async (fileId) => {
-    setPreviewLoading(true);
-    setPreviewError(null);
-    try {
-      const resp = await importService.previewImport(fileId);
-      if (resp?.success) {
-        setTransactions(resp.data.transactions || []);
-        setPreviewMeta(resp.data.metadata || null);
-        addToast("Statement parsed successfully", "success", {
-          description: `${(resp.data.transactions || []).length} transactions found`,
-          duration: 3000,
-        });
-      } else {
-        setPreviewError(resp?.message || "Preview failed");
-        addToast(resp?.message || "Preview failed", "error");
-      }
-    } catch (err) {
-      const msg = err?.response?.data?.message || "Failed to parse statement";
-      setPreviewError(msg);
-      addToast("Preview failed", "error", { description: msg });
-    } finally {
-      setPreviewLoading(false);
-    }
-  }, [addToast]);
 
   const handleUpdate = useCallback((rowIndex, field, value) => {
     setTransactions((prev) =>
@@ -185,7 +185,6 @@ export default function ImportStatement() {
     setTransactions([]);
     setPreviewMeta(null);
     setFileMeta(null);
-    setSelected([]);
     setImportResult(null);
     setPreviewError(null);
     setUploadStatus("idle");

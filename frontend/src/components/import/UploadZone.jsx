@@ -146,7 +146,7 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
             <div className="flex flex-col items-center gap-3">
               <div className="relative">
                 <div className="w-20 h-20 rounded-[28px] bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center shadow-inner">
-                  <div className="w-10 h-10 border-3 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
+                  <div className="w-10 h-10 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
                 </div>
               </div>
               <div>

@@ -121,7 +121,7 @@ class ExcelParser(BaseParser):
             raw=raw,
         )
 
-    def parse(self, file_path):
+    def parse(self, file_path, **kwargs):
         if self._is_xlsx(file_path):
             rows = self._parse_xlsx(file_path)
         else:
@@ -149,7 +149,7 @@ class ExcelParser(BaseParser):
             metadata={"detected_headers": headers},
         )
 
-    def parse_stream(self, file_stream):
+    def parse_stream(self, file_stream, **kwargs):
         import tempfile
 
         ext = ".xlsx"

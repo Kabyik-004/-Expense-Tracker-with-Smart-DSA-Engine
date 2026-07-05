@@ -132,7 +132,7 @@ class CSVParser(BaseParser):
             raw=dict(row_dict),
         )
 
-    def parse(self, file_path):
+    def parse(self, file_path, **kwargs):
         raw_rows = self._read_rows(file_path)
         if not raw_rows:
             return self.build_result([], self.FORMAT)
@@ -163,7 +163,7 @@ class CSVParser(BaseParser):
             },
         )
 
-    def parse_stream(self, file_stream):
+    def parse_stream(self, file_stream, **kwargs):
         import codecs
 
         reader = csv.DictReader(codecs.getreader("utf-8-sig")(file_stream))

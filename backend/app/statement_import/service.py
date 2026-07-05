@@ -146,8 +146,6 @@ class ImportService:
         db.session.add(expense)
         db.session.flush()
         _apply_expense_to_summaries(user_id, expense, add=True)
-        _track_undo_create(user_id, expense)
-        log_activity(user_id, "create", "expense", expense.id, f"Imported expense: {expense.title}")
         return expense
 
     @staticmethod
@@ -163,8 +161,6 @@ class ImportService:
         )
         db.session.add(income)
         db.session.flush()
-        _track_income_undo(user_id, income)
-        log_activity(user_id, "create", "income", income.id, f"Imported income: {income.source}")
         return income
 
     @staticmethod
@@ -220,6 +216,13 @@ class ImportService:
         except (sa_exc.SQLAlchemyError, Exception) as e:
             db.session.rollback()
             return {"success": False, "error": f"Import failed: {str(e)}", "results": results}
+
+        for expense in created_expenses:
+            _track_undo_create(user_id, expense)
+            log_activity(user_id, "create", "expense", expense.id, f"Imported expense: {expense.title}")
+        for income in created_incomes:
+            _track_income_undo(user_id, income)
+            log_activity(user_id, "create", "income", income.id, f"Imported income: {income.source}")
 
         return {
             "success": True,

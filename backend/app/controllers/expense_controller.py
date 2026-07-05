@@ -112,8 +112,8 @@ def _get_user_summary_tables(user_id):
 def _apply_expense_to_summaries(user_id, expense, add=True):
     tables = _user_summaries.get(user_id)
     if tables is None:
-        _user_summaries.set(user_id, _build_user_summaries_from_db(user_id))
-        return
+        tables = _build_user_summaries_from_db(user_id)
+        _user_summaries.set(user_id, tables)
     _apply_expense_to_tables(tables, expense, add=add)
 
 

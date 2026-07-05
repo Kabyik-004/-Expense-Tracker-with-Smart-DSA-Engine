@@ -7,11 +7,11 @@ class BaseParser(ABC):
     ALLOWED_EXTENSIONS = set()
 
     @abstractmethod
-    def parse(self, file_path):
+    def parse(self, file_path, **kwargs):
         pass
 
     @abstractmethod
-    def parse_stream(self, file_stream):
+    def parse_stream(self, file_stream, **kwargs):
         pass
 
     @abstractmethod

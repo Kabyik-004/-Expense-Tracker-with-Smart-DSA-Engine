@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { FiUpload, FiFile, FiCheck, FiX, FiAlertCircle } from "react-icons/fi";
+import { FiUpload, FiFile, FiCheck, FiX, FiAlertCircle, FiLock } from "react-icons/fi";
 import ProgressBar from "./ProgressBar";
 
 const FORMATS = [
@@ -10,7 +10,7 @@ const FORMATS = [
 
 const ACCEPTED = ".csv,.pdf,.xlsx,.xls";
 
-export default function UploadZone({ onUpload, loading, progress, uploadStatus, onRetry }) {
+export default function UploadZone({ onUpload, loading, progress, uploadStatus, onRetry, pdfPassword, onPasswordChange }) {
   const [dragOver, setDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState(null);
@@ -179,6 +179,23 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
                 {(selectedFile.size / 1024).toFixed(1)} KB
               </p>
             </div>
+            {selectedFile.name.toLowerCase().endsWith(".pdf") && (
+              <div className="max-w-xs mx-auto w-full">
+                <label className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                  <FiLock className="w-3.5 h-3.5" />
+                  PDF Password (if protected)
+                </label>
+                <input
+                  type="password"
+                  value={pdfPassword}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => onPasswordChange?.(e.target.value)}
+                  placeholder="Enter PDF password"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all input-focus"
+                  aria-label="PDF password"
+                />
+              </div>
+            )}
             <div className="flex justify-center gap-3">
               <button
                 onClick={(e) => { e.stopPropagation(); handleUploadClick(); }}

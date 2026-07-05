@@ -51,9 +51,16 @@ class PDFParser(BaseParser):
                     merged.append(row)
         return headers, merged
 
-    def detect_headers(self, file_path):
+    def _open_pdf(self, file_path, password=None):
         pdfplumber = self._get_library()
-        with pdfplumber.open(file_path) as pdf:
+        kwargs = {}
+        if password:
+            kwargs["password"] = password
+        return pdfplumber.open(file_path, **kwargs)
+
+    def detect_headers(self, file_path, password=None):
+        pdfplumber = self._get_library()
+        with self._open_pdf(file_path, password=password) as pdf:
             tables = self._extract_tables(pdf)
             if not tables:
                 return []
@@ -99,11 +106,20 @@ class PDFParser(BaseParser):
             raw=raw,
         )
 
-    def parse(self, file_path):
+    def parse(self, file_path, password=None):
         pdfplumber = self._get_library()
-        with pdfplumber.open(file_path) as pdf:
-            tables = self._extract_tables(pdf)
-            num_pages = len(pdf.pages)
+        try:
+            with self._open_pdf(file_path, password=password) as pdf:
+                tables = self._extract_tables(pdf)
+                num_pages = len(pdf.pages)
+        except Exception as e:
+            err_str = str(e).lower()
+            if "password" in err_str or "encrypt" in err_str or "not a pdf" in err_str or "cannot be opened" in err_str:
+                raise
+            return self.build_result(
+                [], self.FORMAT,
+                metadata={"error": str(e), "total_pages": 0},
+            )
 
         if not tables:
             return self.build_result(
@@ -115,7 +131,7 @@ class PDFParser(BaseParser):
         header_strs = [str(h).strip() if h else "" for h in headers]
 
         if not rows and pdfplumber:
-            with pdfplumber.open(file_path) as pdf:
+            with self._open_pdf(file_path, password=password) as pdf:
                 for page in pdf.pages:
                     text = page.extract_text()
                     if text:
@@ -143,7 +159,7 @@ class PDFParser(BaseParser):
             },
         )
 
-    def parse_stream(self, file_stream):
+    def parse_stream(self, file_stream, password=None):
         import tempfile
 
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
@@ -151,6 +167,6 @@ class PDFParser(BaseParser):
             tmp_path = tmp.name
 
         try:
-            return self.parse(tmp_path)
+            return self.parse(tmp_path, password=password)
         finally:
             os.unlink(tmp_path)

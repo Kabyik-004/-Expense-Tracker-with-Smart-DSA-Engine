@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { FiUploadCloud, FiArrowRight, FiDatabase, FiAlertCircle, FiCheck, FiDollarSign, FiPlay, FiArrowLeft } from "react-icons/fi";
+import { FiUploadCloud, FiArrowRight, FiDatabase, FiAlertCircle, FiCheck, FiDollarSign, FiPlay, FiArrowLeft, FiLock } from "react-icons/fi";
 import UploadZone from "../components/import/UploadZone";
 import PreviewTable from "../components/import/PreviewTable";
 import ImportSummary from "../components/import/ImportSummary";
@@ -27,6 +27,7 @@ export default function ImportStatement() {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null);
   const [dupActions, setDupActions] = useState({});
+  const [pdfPassword, setPdfPassword] = useState("");
   const headerRef = useRef(null);
   const confirmBtnRef = useRef(null);
 
@@ -40,11 +41,11 @@ export default function ImportStatement() {
     setUploading(false);
   }, []);
 
-  const loadPreview = useCallback(async (fileId) => {
+  const loadPreview = useCallback(async (fileId, password) => {
     setPreviewLoading(true);
     setPreviewError(null);
     try {
-      const resp = await importService.previewImport(fileId);
+      const resp = await importService.previewImport(fileId, password);
       if (resp?.success) {
         setTransactions(resp.data.transactions || []);
         setPreviewMeta(resp.data.metadata || null);
@@ -93,7 +94,7 @@ export default function ImportStatement() {
         });
         setTimeout(() => {
           setStep("preview");
-          loadPreview(resp.data.id);
+          loadPreview(resp.data.id, pdfPassword);
         }, 600);
       } else {
         setUploadStatus("error");
@@ -106,7 +107,7 @@ export default function ImportStatement() {
       addToast("Upload failed", "error", { description: msg });
       setUploading(false);
     }
-  }, [addToast, loadPreview]);
+  }, [addToast, loadPreview, pdfPassword]);
 
   const handleUpdate = useCallback((rowIndex, field, value) => {
     setTransactions((prev) =>
@@ -193,8 +194,8 @@ export default function ImportStatement() {
   }, []);
 
   const handleRetryPreview = useCallback(() => {
-    if (fileMeta?.id) loadPreview(fileMeta.id);
-  }, [fileMeta, loadPreview]);
+    if (fileMeta?.id) loadPreview(fileMeta.id, pdfPassword);
+  }, [fileMeta, loadPreview, pdfPassword]);
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === "Escape" && step === "preview" && !importResult?.success) {
@@ -294,6 +295,8 @@ export default function ImportStatement() {
             progress={uploadProgress}
             uploadStatus={uploadStatus}
             onRetry={handleRetryUpload}
+            pdfPassword={pdfPassword}
+            onPasswordChange={setPdfPassword}
           />
 
           {uploadStatus !== "processing" && (
@@ -397,12 +400,29 @@ export default function ImportStatement() {
           {previewLoading ? (
             <PreviewSkeleton />
           ) : previewError ? (
-            <ErrorBlock
-              title="Failed to load preview"
-              message={previewError}
-              onRetry={handleRetryPreview}
-              retryLabel="Retry Preview"
-            />
+            <div className="space-y-4">
+              <ErrorBlock
+                title="Failed to load preview"
+                message={previewError}
+                onRetry={handleRetryPreview}
+                retryLabel="Retry Preview"
+              />
+              {previewError.toLowerCase().includes("password") && (
+                <div className="max-w-xs mx-auto w-full">
+                  <label className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+                    <FiLock className="w-3.5 h-3.5" />
+                    PDF Password
+                  </label>
+                  <input
+                    type="password"
+                    value={pdfPassword}
+                    onChange={(e) => setPdfPassword(e.target.value)}
+                    placeholder="Enter PDF password"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all input-focus"
+                  />
+                </div>
+              )}
+            </div>
           ) : (
             <>
               {transactions.length > 0 && !importResult?.success && !importing && (

@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from flask import current_app
 from flask_jwt_extended import get_jwt_identity
 
 from app.statement_import.service import ImportService
@@ -34,13 +35,22 @@ def handle_upload(request):
 def handle_preview(request):
     data = request.get_json(silent=True) or {}
     file_id = data.get("file_id")
+    password = data.get("password")
     if not file_id:
         return error_response("file_id is required", 400)
 
     user_id = get_jwt_identity()
-    result = ImportService.parse_and_preview(file_id, user_id=user_id)
+    try:
+        result = ImportService.parse_and_preview(file_id, user_id=user_id, password=password)
+    except Exception as e:
+        current_app.logger.error(f"Preview error for file {file_id}: {e}")
+        err_msg = str(e)
+        if "password" in err_msg.lower() or "encrypt" in err_msg.lower():
+            return error_response("PDF is password-protected. Please provide the password.", 401)
+        return error_response(f"Failed to parse statement: {e}", 500)
+
     if "error" in result:
-        return error_response(result["error"], 404)
+        return error_response(result["error"], 422)
 
     return success_response(data=result, message="Preview generated")
 

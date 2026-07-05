@@ -2,11 +2,17 @@ from app.statement_import.parsers.registry import ParserRegistry
 from app.statement_import.categorizer import CategorizerRegistry
 
 
-def parse_file(file_path, categorize=True):
-    parser = ParserRegistry.get_parser(file_path)
-    result = parser.parse(file_path)
+def parse_file(file_path, categorize=True, password=None):
+    try:
+        parser = ParserRegistry.get_parser(file_path)
+        result = parser.parse(file_path, password=password)
+    except Exception as e:
+        return {"error": f"Failed to parse file: {e}", "transactions": [], "report": {}, "metadata": {}}
     if categorize:
-        _categorize_result(result)
+        try:
+            _categorize_result(result)
+        except Exception as e:
+            result["error"] = f"Categorization failed: {e}"
     return result
 
 

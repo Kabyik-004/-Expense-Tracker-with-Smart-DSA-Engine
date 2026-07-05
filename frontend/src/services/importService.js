@@ -13,10 +13,10 @@ export async function uploadStatement(file, onProgress) {
   return res.data;
 }
 
-export async function previewImport(fileId) {
-  const res = await api.post(API_PATHS.imports.preview, {
-    file_id: fileId,
-  });
+export async function previewImport(fileId, password) {
+  const body = { file_id: fileId };
+  if (password) body.password = password;
+  const res = await api.post(API_PATHS.imports.preview, body);
   return res.data;
 }
 

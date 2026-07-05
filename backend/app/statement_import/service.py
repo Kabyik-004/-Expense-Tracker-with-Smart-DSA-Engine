@@ -80,7 +80,7 @@ class ImportService:
         }
 
     @staticmethod
-    def parse_and_preview(file_id, user_id=None):
+    def parse_and_preview(file_id, user_id=None, password=None):
         upload_dir = os.path.join(current_app.instance_path, "uploads")
         found = None
         for fname in os.listdir(upload_dir):
@@ -91,7 +91,14 @@ class ImportService:
             return {"error": f"No uploaded file found with id '{file_id}'"}
 
         from app.statement_import.parser import parse_file
-        result = parse_file(found, categorize=True)
+        try:
+            result = parse_file(found, categorize=True, password=password)
+        except Exception as e:
+            current_app.logger.error(f"Parse error for file {file_id}: {e}")
+            return {"error": f"Failed to parse statement: {e}"}
+
+        if "error" in result:
+            return result
 
         if user_id:
             from app.statement_import.detector import attach_duplicates_to_preview

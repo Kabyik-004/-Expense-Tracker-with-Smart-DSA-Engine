@@ -27,6 +27,7 @@ import { ToastProvider } from "./components/shared/Toast";
 import FloatingActionButton from "./components/shared/FloatingActionButton";
 import PageTransition from "./components/shared/PageTransition";
 import ProfileMenu from "./components/shared/ProfileMenu";
+import ErrorBoundary from "./components/shared/ErrorBoundary";
 
 import { lazy, Suspense } from "react";
 
@@ -143,7 +144,7 @@ function AppLayout() {
             <Route path="/incomes" element={<PageTransition><Incomes /></PageTransition>} />
             <Route path="/budgets" element={<PageTransition><Budgets /></PageTransition>} />
             <Route path="/analytics" element={<PageTransition><Analytics /></PageTransition>} />
-            <Route path="/import" element={<PageTransition><ImportPage /></PageTransition>} />
+            <Route path="/import" element={<PageTransition><ErrorBoundary><ImportPage /></ErrorBoundary></PageTransition>} />
             <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
           </Routes>
         </ExpenseProvider>

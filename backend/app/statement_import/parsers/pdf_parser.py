@@ -107,69 +107,120 @@ class PDFParser(BaseParser):
             raw=raw,
         )
 
+    def _extract_all_text(self, pdf):
+        for page in pdf.pages:
+            t = page.extract_text(x_tolerance=3, y_tolerance=3)
+            if t:
+                return t, "tolerance"
+        for page in pdf.pages:
+            t = page.extract_text(layout=True)
+            if t:
+                return t, "layout"
+        for page in pdf.pages:
+            words = page.extract_words(x_tolerance=3)
+            if words:
+                lines = {}
+                for w in words:
+                    line_key = round(w["top"], 0)
+                    lines.setdefault(line_key, []).append(w["text"])
+                text = "\n".join(" ".join(lines[k]) for k in sorted(lines))
+                return text, "words"
+        return "", None
+
     def _parse_text_fallback(self, file_path, password=None):
         pdfplumber = self._get_library()
         with self._open_pdf(file_path, password=password) as pdf:
-            all_text = []
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    all_text.append(t)
-        full_text = "\n".join(all_text)
+            full_text, _ = self._extract_all_text(pdf)
+
+        if not full_text.strip():
+            return [], {"parser_mode": "text_fallback", "error": "No extractable text found in PDF"}
 
         date_pat = r"\b(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b"
-        amount_pat = r"([+-]?\s*[\d,]+\.\d{2})"
+        date_text_pat = r"\b(\d{1,2}[/-][A-Za-z]{3}[/-]\d{2,4})\b"
+        amount_pat = r"([+-]?\s*[\d,]+\.\d{1,2})"
+
+        header_keywords = {"date", "narration", "description", "particulars", "debit", "credit",
+                           "deposit", "withdrawal", "balance", "closing", "chq", "ref", "transaction",
+                           "opening", "value dated", "page", "statement"}
+
+        lines = [l.strip() for l in full_text.split("\n") if l.strip()]
+
+        groups = []
+        current = []
+        for line in lines:
+            has_date = bool(re.findall(date_pat, line) or re.findall(date_text_pat, line))
+            low = line.lower()
+            is_header = sum(1 for kw in header_keywords if kw in low) >= 3 or len(line.split()) <= 1
+            if has_date and not is_header and current:
+                groups.append(current)
+                current = [line]
+            elif has_date and not is_header:
+                current = [line]
+            elif current:
+                current.append(line)
+        if current:
+            groups.append(current)
 
         transactions = []
         row_index = 0
-        for line in full_text.split("\n"):
-            line = line.strip()
-            if not line:
+        for group in groups:
+            amount_line = None
+            desc_lines = []
+            for line in reversed(group):
+                amounts = re.findall(amount_pat, line)
+                if amounts:
+                    amount_line = line
+                    break
+                desc_lines.insert(0, line)
+            if amount_line is None:
                 continue
-            dates = re.findall(date_pat, line)
-            amounts = re.findall(amount_pat, line)
-            if not dates or not amounts:
+            amounts = re.findall(amount_pat, amount_line)
+            if not amounts:
                 continue
-            date = parse_date(dates[0])
+
+            desc = " ".join(desc_lines) if desc_lines else " ".join(group)
+            desc = re.sub(r"\s{2,}", " ", desc).strip()
+
+            date_str = (re.findall(date_pat, group[0]) or re.findall(date_text_pat, group[0]))[0]
+            date = parse_date(date_str)
             if not date:
                 continue
-            desc = re.sub(date_pat, "", line, count=1).strip()
+
             for a in amounts:
                 desc = desc.replace(a, "")
+            for pat in (date_pat, date_text_pat):
+                desc = re.sub(pat, "", desc, count=1)
             desc = re.sub(r"\s{2,}", " ", desc).strip()
             desc = clean_description(desc)
 
-            amount = None
+            vals = [float(a.replace(",", "")) for a in amounts]
             debit = None
             credit = None
-            parsed = []
-            for a_str in amounts:
-                a = float(a_str.replace(",", ""))
-                parsed.append(a)
-            if len(parsed) == 1:
-                a = parsed[0]
+            amount = None
+
+            if len(vals) == 1:
+                a = vals[0]
                 if a < 0:
                     debit = abs(a)
                     amount = abs(a)
                 else:
                     debit = a
                     amount = a
-            elif len(parsed) >= 2:
-                negs = [abs(a) for a in parsed if a < 0]
-                poss = [a for a in parsed if a >= 0]
-                if negs and len(negs) == 1:
-                    debit = negs[0]
-                    amount = negs[0]
-                    if poss:
-                        credit = poss[0]
-                        amount = poss[0] if amount is None else max(amount, poss[0])
-                elif len(poss) >= 2:
-                    debit = poss[0]
-                    amount = poss[0]
-                    credit = None
+            elif len(vals) == 2:
+                tx_val = vals[0]
+                if tx_val < 0:
+                    debit = abs(tx_val)
                 else:
-                    debit = parsed[0] if parsed[0] >= 0 else abs(parsed[0])
-                    amount = abs(parsed[0])
+                    debit = tx_val
+                amount = abs(tx_val)
+            else:
+                tx_vals = vals[:-1]
+                for v in tx_vals:
+                    if v < 0:
+                        debit = abs(v)
+                    else:
+                        credit = v
+                amount = max(abs(v) for v in tx_vals) if tx_vals else abs(vals[-1])
 
             tx = self.build_transaction(
                 row_index=row_index,
@@ -179,7 +230,7 @@ class PDFParser(BaseParser):
                 credit=credit,
                 amount=amount,
                 reference_number=None,
-                raw={"line": line},
+                raw={"group": group},
             )
             transactions.append(tx)
             row_index += 1
@@ -214,7 +265,7 @@ class PDFParser(BaseParser):
             tx = self._extract_row(row, header_strs, mapping, i)
             transactions.append(tx)
 
-        if not transactions:
+        if not transactions or not any(t.get("valid") for t in transactions):
             text_tx, extra_meta = self._parse_text_fallback(file_path, password=password)
             if text_tx:
                 transactions = text_tx

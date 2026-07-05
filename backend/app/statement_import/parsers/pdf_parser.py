@@ -1,4 +1,5 @@
 import os
+import re
 
 from app.statement_import.parsers.base import BaseParser
 from app.statement_import.utils import (
@@ -106,6 +107,85 @@ class PDFParser(BaseParser):
             raw=raw,
         )
 
+    def _parse_text_fallback(self, file_path, password=None):
+        pdfplumber = self._get_library()
+        with self._open_pdf(file_path, password=password) as pdf:
+            all_text = []
+            for page in pdf.pages:
+                t = page.extract_text()
+                if t:
+                    all_text.append(t)
+        full_text = "\n".join(all_text)
+
+        date_pat = r"\b(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b"
+        amount_pat = r"([+-]?\s*[\d,]+\.\d{2})"
+
+        transactions = []
+        row_index = 0
+        for line in full_text.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            dates = re.findall(date_pat, line)
+            amounts = re.findall(amount_pat, line)
+            if not dates or not amounts:
+                continue
+            date = parse_date(dates[0])
+            if not date:
+                continue
+            desc = re.sub(date_pat, "", line, count=1).strip()
+            for a in amounts:
+                desc = desc.replace(a, "")
+            desc = re.sub(r"\s{2,}", " ", desc).strip()
+            desc = clean_description(desc)
+
+            amount = None
+            debit = None
+            credit = None
+            parsed = []
+            for a_str in amounts:
+                a = float(a_str.replace(",", ""))
+                parsed.append(a)
+            if len(parsed) == 1:
+                a = parsed[0]
+                if a < 0:
+                    debit = abs(a)
+                    amount = abs(a)
+                else:
+                    debit = a
+                    amount = a
+            elif len(parsed) >= 2:
+                negs = [abs(a) for a in parsed if a < 0]
+                poss = [a for a in parsed if a >= 0]
+                if negs and len(negs) == 1:
+                    debit = negs[0]
+                    amount = negs[0]
+                    if poss:
+                        credit = poss[0]
+                        amount = poss[0] if amount is None else max(amount, poss[0])
+                elif len(poss) >= 2:
+                    debit = poss[0]
+                    amount = poss[0]
+                    credit = None
+                else:
+                    debit = parsed[0] if parsed[0] >= 0 else abs(parsed[0])
+                    amount = abs(parsed[0])
+
+            tx = self.build_transaction(
+                row_index=row_index,
+                date=date,
+                description=desc,
+                debit=debit,
+                credit=credit,
+                amount=amount,
+                reference_number=None,
+                raw={"line": line},
+            )
+            transactions.append(tx)
+            row_index += 1
+
+        return transactions, {"parser_mode": "text_fallback"}
+
     def parse(self, file_path, password=None):
         pdfplumber = self._get_library()
         try:
@@ -121,24 +201,8 @@ class PDFParser(BaseParser):
                 metadata={"error": str(e), "total_pages": 0},
             )
 
-        if not tables:
-            return self.build_result(
-                [], self.FORMAT,
-                metadata={"detected_headers": [], "total_pages": num_pages},
-            )
-
-        headers, rows = self._merge_tables(tables)
+        headers, rows = self._merge_tables(tables) if tables else ([], [])
         header_strs = [str(h).strip() if h else "" for h in headers]
-
-        if not rows and pdfplumber:
-            with self._open_pdf(file_path, password=password) as pdf:
-                for page in pdf.pages:
-                    text = page.extract_text()
-                    if text:
-                        for line in text.split("\n"):
-                            line = line.strip()
-                            if line:
-                                rows.append([line])
 
         mapping = build_column_map(header_strs)
 
@@ -149,6 +213,12 @@ class PDFParser(BaseParser):
                 continue
             tx = self._extract_row(row, header_strs, mapping, i)
             transactions.append(tx)
+
+        if not transactions:
+            text_tx, extra_meta = self._parse_text_fallback(file_path, password=password)
+            if text_tx:
+                transactions = text_tx
+                header_strs = ["text_fallback"]
 
         return self.build_result(
             transactions,

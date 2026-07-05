@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FiShield, FiServer, FiGrid, FiCpu, FiSmartphone } from "react-icons/fi";
+import { FiShield, FiServer, FiGrid, FiCpu, FiSmartphone, FiUploadCloud } from "react-icons/fi";
 
 const stats = [
   {
@@ -33,6 +33,14 @@ const stats = [
     label: "Responsive",
     gradient: "from-orange-500 to-rose-600",
     iconBg: "bg-orange-500/20",
+  },
+  {
+    icon: FiUploadCloud,
+    value: 3,
+    suffix: "+",
+    label: "File Formats",
+    gradient: "from-violet-500 to-indigo-600",
+    iconBg: "bg-violet-500/20",
   },
   {
     icon: FiShield,

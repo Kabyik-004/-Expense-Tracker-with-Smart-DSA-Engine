@@ -34,7 +34,8 @@ export default function Hero() {
 
                 <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                   A production-ready full-stack expense tracker with intelligent
-                  searching, advanced analytics, secure authentication and
+                  searching, advanced analytics, secure authentication,
+                  AI-powered transaction import and
                   algorithm-driven performance.
                 </p>
 

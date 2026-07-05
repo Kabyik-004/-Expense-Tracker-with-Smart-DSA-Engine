@@ -81,6 +81,7 @@ def create_app(config_class=Config):
     from app.routes.income_routes import income_bp
     from app.routes.activity_routes import activity_bp
     from app.routes.budget_routes import budget_bp
+    from app.statement_import import import_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(expense_bp, url_prefix="/api/expenses")
@@ -89,13 +90,14 @@ def create_app(config_class=Config):
     app.register_blueprint(income_bp, url_prefix="/api/incomes")
     app.register_blueprint(activity_bp, url_prefix="/api/auth")
     app.register_blueprint(budget_bp, url_prefix="/api/budgets")
+    app.register_blueprint(import_bp, url_prefix="/api/import")
 
     # Ensure instance directory exists for SQLite database
     import os
     os.makedirs(app.instance_path, exist_ok=True)
 
     # Import models so SQLAlchemy registers all tables
-    from app.models import User, Expense, Income, Category, UndoHistory, ActivityLog, Budget, TokenBlocklist  # noqa: F401
+    from app.models import User, Expense, Income, Category, UndoHistory, ActivityLog, Budget, TokenBlocklist, BankStatement, ImportLog  # noqa: F401
 
     with app.app_context():
         db.create_all()

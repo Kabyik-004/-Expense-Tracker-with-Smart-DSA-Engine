@@ -3,6 +3,9 @@ import {
   FiSearch,
   FiCrosshair,
   FiFilter,
+  FiFileText,
+  FiCopy,
+  FiTag,
 } from "react-icons/fi";
 
 const algorithms = [
@@ -57,6 +60,45 @@ const algorithms = [
       { label: "Stable Ordering" },
     ],
     gradient: "from-emerald-500 to-teal-500",
+  },
+  {
+    icon: FiFileText,
+    title: "File Parsing",
+    purpose:
+      "Multi-format parser that extracts, normalizes and validates transaction data from PDF, CSV and Excel bank statements using format-specific strategies.",
+    complexity: "O(n)",
+    uses: [
+      { label: "PDF Extraction" },
+      { label: "CSV Parsing" },
+      { label: "Excel Parsing" },
+    ],
+    gradient: "from-violet-500 to-indigo-500",
+  },
+  {
+    icon: FiCopy,
+    title: "Duplicate Detection",
+    purpose:
+      "Hash-based deduplication engine that identifies and resolves duplicate transactions by comparing date, description, amount and reference number.",
+    complexity: "O(n)",
+    uses: [
+      { label: "Hash Matching" },
+      { label: "Skip Duplicates" },
+      { label: "Replace Existing" },
+    ],
+    gradient: "from-amber-500 to-orange-500",
+  },
+  {
+    icon: FiTag,
+    title: "Smart Categorization",
+    purpose:
+      "Keyword-based category suggestion system that automatically assigns expense categories by analyzing transaction descriptions against a trained keyword bank.",
+    complexity: "O(n * k)",
+    uses: [
+      { label: "Auto Tagging" },
+      { label: "Category Mapping" },
+      { label: "Keyword Matching" },
+    ],
+    gradient: "from-rose-500 to-pink-500",
   },
 ];
 

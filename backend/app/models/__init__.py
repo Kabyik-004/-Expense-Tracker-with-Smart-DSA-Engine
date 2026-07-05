@@ -13,5 +13,10 @@ from app.models.undo_history import UndoHistory
 from app.models.activity_log import ActivityLog
 from app.models.budget import Budget
 from app.models.blocklist import TokenBlocklist
+from app.models.bank_statement import BankStatement, ImportLog
 
-__all__ = ["User", "Expense", "Income", "Category", "UndoHistory", "ActivityLog", "Budget", "TokenBlocklist"]
+__all__ = [
+    "User", "Expense", "Income", "Category", "UndoHistory",
+    "ActivityLog", "Budget", "TokenBlocklist",
+    "BankStatement", "ImportLog",
+]

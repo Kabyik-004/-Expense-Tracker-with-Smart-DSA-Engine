@@ -14,6 +14,7 @@ import {
   FiBarChart2,
   FiSettings,
   FiTarget,
+  FiUpload,
   FiLogOut,
 } from "react-icons/fi";
 
@@ -38,6 +39,7 @@ const Incomes = lazy(() => import("./pages/Incomes"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Budgets = lazy(() => import("./pages/Budgets"));
+const ImportPage = lazy(() => import("./pages/ImportStatement"));
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: FiHome },
@@ -45,6 +47,7 @@ const navItems = [
   { path: "/incomes", label: "Incomes", icon: FiTrendingUp },
   { path: "/budgets", label: "Budgets", icon: FiTarget },
   { path: "/analytics", label: "Analytics", icon: FiBarChart2 },
+  { path: "/import", label: "Smart Import", icon: FiUpload },
   { path: "/settings", label: "Settings", icon: FiSettings },
 ];
 
@@ -140,6 +143,7 @@ function AppLayout() {
             <Route path="/incomes" element={<PageTransition><Incomes /></PageTransition>} />
             <Route path="/budgets" element={<PageTransition><Budgets /></PageTransition>} />
             <Route path="/analytics" element={<PageTransition><Analytics /></PageTransition>} />
+            <Route path="/import" element={<PageTransition><ImportPage /></PageTransition>} />
             <Route path="/settings" element={<PageTransition><Settings /></PageTransition>} />
           </Routes>
         </ExpenseProvider>

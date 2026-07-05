@@ -58,4 +58,22 @@ export const API_PATHS = {
     base: "/budgets/",
     status: "/budgets/status",
   },
+  imports: {
+    upload: "/import/upload",
+    preview: "/import/preview",
+    confirm: "/import/confirm",
+    history: "/import/history",
+    detail: (id) => `/import/${id}`,
+    supportedBanks: "/import/supported-banks",
+  },
 };
+
+export const IMPORT_FIELDS = [
+  { key: "title", label: "Title", required: true, description: "Transaction name" },
+  { key: "amount", label: "Amount", required: true, description: "Transaction amount" },
+  { key: "date", label: "Date", required: true, description: "Transaction date" },
+  { key: "description", label: "Description", required: false, description: "Additional details" },
+  { key: "category", label: "Category", required: false, description: "Auto-categorized if mapped" },
+  { key: "type", label: "Type", required: false, description: "Debit/Credit indicator" },
+  { key: "balance", label: "Balance", required: false, description: "Running balance" },
+];

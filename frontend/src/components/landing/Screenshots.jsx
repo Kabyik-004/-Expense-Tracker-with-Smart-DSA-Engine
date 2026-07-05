@@ -1,4 +1,4 @@
-import { FiDollarSign, FiTrendingUp, FiTrendingDown } from "react-icons/fi";
+import { FiDollarSign, FiTrendingUp, FiTrendingDown, FiUploadCloud, FiCheck } from "react-icons/fi";
 
 function BrowserFrame({ label, children }) {
   return (
@@ -23,6 +23,7 @@ function BrowserFrame({ label, children }) {
           {label === "Expenses" && "Track and manage transactions"}
           {label === "Income" && "Monitor your earnings"}
           {label === "Analytics" && "Visual spending insights"}
+          {label === "Import" && "Upload & parse statements"}
           {label === "Settings" && "Manage your profile"}
         </p>
       </figcaption>
@@ -179,6 +180,37 @@ export default function Screenshots() {
           </div>
 
           <div className="lg:col-span-1">
+            <BrowserFrame label="Import">
+              <div className="p-5 space-y-3">
+                <div className="border-2 border-dashed border-indigo-200 dark:border-indigo-700/60 rounded-xl p-5 text-center">
+                  <div className="w-10 h-10 mx-auto rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center mb-2">
+                    <FiUploadCloud className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Upload Statement</p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">CSV, PDF or XLSX</p>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-800">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                        <FiCheck className="w-3 h-3 text-green-600 dark:text-green-400" />
+                      </div>
+                      <span className="text-[10px] text-gray-500 dark:text-gray-400">April Statement.pdf</span>
+                    </div>
+                    <span className="text-[10px] text-green-600 font-medium">Valid</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-800">
+                    <span className="text-[10px] text-gray-400">Bank detected</span>
+                    <span className="text-[10px] text-gray-700 dark:text-gray-300 font-medium">HDFC Bank</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-[10px] text-gray-400">Transactions</span>
+                    <span className="text-[10px] text-gray-700 dark:text-gray-300 font-medium">24 found</span>
+                  </div>
+                </div>
+              </div>
+            </BrowserFrame>
+
             <BrowserFrame label="Settings">
               <div className="p-4 space-y-3">
                 <div className="flex items-center gap-3">

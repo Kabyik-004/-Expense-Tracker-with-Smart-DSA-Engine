@@ -9,9 +9,19 @@ import {
   FiFilter,
   FiMonitor,
   FiCloud,
+  FiUploadCloud,
 } from "react-icons/fi";
 
 const features = [
+  {
+    icon: FiUploadCloud,
+    title: "Smart Bank Statement Import",
+    description:
+      "Upload PDF, CSV or Excel bank statements and automatically extract, categorize and import transactions into your expense tracker with intelligent parsing.",
+    color: "text-indigo-600",
+    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    premium: true,
+  },
   {
     icon: FiDollarSign,
     title: "Expense Management",
@@ -107,8 +117,17 @@ export default function Features() {
           {features.map((feature) => (
             <article
               key={feature.title}
-              className="group relative bg-white dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200/50 dark:hover:border-indigo-800/50"
+              className={`group relative bg-white dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                feature.premium
+                  ? "hover:border-indigo-300/60 dark:hover:border-indigo-600/60 shadow-indigo-500/5 hover:shadow-indigo-500/10"
+                  : "hover:border-indigo-200/50 dark:hover:border-indigo-800/50"
+              }`}
             >
+              {feature.premium && (
+                <div className="absolute -top-2.5 right-4 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+                  Premium
+                </div>
+              )}
               <div
                 className={`w-11 h-11 rounded-lg ${feature.bg} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
               >

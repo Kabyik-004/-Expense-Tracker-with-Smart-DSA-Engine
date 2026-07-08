@@ -34,6 +34,8 @@ import { lazy, Suspense } from "react";
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Expenses = lazy(() => import("./pages/Expenses"));
 const Incomes = lazy(() => import("./pages/Incomes"));
@@ -176,6 +178,24 @@ export default function App() {
             element={
               <PublicRoute>
                 <PageTransition><Register /></PageTransition>
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <PageTransition><ForgotPassword /></PageTransition>
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <PageTransition><ResetPassword /></PageTransition>
               </PublicRoute>
             }
           />

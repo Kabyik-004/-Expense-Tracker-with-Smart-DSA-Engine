@@ -67,13 +67,12 @@ export default function Login() {
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
             <div className="text-right mt-1">
-              <button
-                type="button"
-                onClick={() => addToast("Forgot password feature coming soon", "info")}
+              <Link
+                to="/forgot-password"
                 className="link-underline text-xs text-indigo-600 dark:text-indigo-400 font-medium"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
           </div>
 

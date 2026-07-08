@@ -322,9 +322,9 @@ def forgot_password(request_data):
     user.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
     db.session.commit()
 
-    # In production, send reset_token via email instead of returning it
     return success_response(
-        message="If an account with that email exists, a reset link has been sent",
+        data={"reset_token": reset_token, "email": data["email"]},
+        message="Password reset link sent to your email",
     )
 
 

@@ -21,8 +21,8 @@ export default function ForgotPassword() {
       } else {
         addToast(res.message || "Failed to send reset link", "error");
       }
-    } catch {
-      addToast("Something went wrong. Please try again.", "error");
+    } catch (err) {
+      addToast(err.response?.data?.message || "Something went wrong. Please try again.", "error");
     } finally {
       setLoading(false);
     }

@@ -30,8 +30,8 @@ export default function ResetPassword() {
       } else {
         addToast(res.message || "Failed to reset password", "error");
       }
-    } catch {
-      addToast("Something went wrong. Please try again.", "error");
+    } catch (err) {
+      addToast(err.response?.data?.message || "Something went wrong. Please try again.", "error");
     } finally {
       setLoading(false);
     }

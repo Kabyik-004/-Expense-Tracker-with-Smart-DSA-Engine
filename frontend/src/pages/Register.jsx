@@ -42,18 +42,22 @@ export default function Register() {
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
             <input type="text" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} />
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">3-80 characters, letters, numbers &amp; underscores only</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
             <input type="email" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Enter a valid email address</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
             <input type="text" className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Optional, max 150 characters</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
             <input type="password" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">8-128 characters, with 1 uppercase, 1 lowercase &amp; 1 digit</p>
           </div>
           <button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium">
             {loading ? "Creating account..." : "Create account"}

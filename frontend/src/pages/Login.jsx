@@ -69,7 +69,7 @@ export default function Login() {
             <div className="text-right mt-1">
               <Link
                 to="/forgot-password"
-                className="link-underline text-xs text-indigo-600 dark:text-indigo-400 font-medium"
+                className="link-underline text-xs text-emerald-600 dark:text-emerald-400 font-medium"
               >
                 Forgot password?
               </Link>
@@ -79,7 +79,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium"
+            className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
@@ -89,7 +89,7 @@ export default function Login() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="link-underline text-indigo-600 font-medium"
+            className="link-underline text-emerald-600 font-medium"
           >
             Sign up
           </Link>

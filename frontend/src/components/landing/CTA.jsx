@@ -5,10 +5,10 @@ export default function CTA() {
   return (
     <section className="relative py-24 lg:py-32 bg-white dark:bg-gray-950 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 dark:from-indigo-500 dark:via-indigo-600 dark:to-purple-700">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 dark:from-emerald-500 dark:via-emerald-600 dark:to-emerald-700">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-white/10 blur-3xl animate-pulse-slow" />
-            <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-purple-300/20 blur-3xl animate-pulse-slow" style={{ animationDelay: "2s" }} />
+            <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-emerald-300/20 blur-3xl animate-pulse-slow" style={{ animationDelay: "2s" }} />
             <div className="absolute top-1/2 left-1/3 w-40 h-40 rounded-full bg-white/5 blur-2xl animate-float" />
             <div className="absolute top-1/4 right-1/4 w-20 h-20 rounded-full bg-white/10 blur-xl animate-float" style={{ animationDelay: "1s" }} />
             <div className="absolute bottom-1/3 left-1/4 w-16 h-16 rounded-lg bg-white/5 blur-lg animate-float" style={{ animationDelay: "1.5s" }} />
@@ -18,10 +18,10 @@ export default function CTA() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.15]">
               Ready to Take Control of
               <br />
-              <span className="text-indigo-200">Your Finances?</span>
+              <span className="text-emerald-200">Your Finances?</span>
             </h2>
 
-            <p className="mt-5 text-lg text-indigo-200/90 max-w-xl mx-auto leading-relaxed">
+            <p className="mt-5 text-lg text-emerald-200/90 max-w-xl mx-auto leading-relaxed">
               Join thousands of users who trust the Smart DSA Engine to track,
               analyze and optimize their expenses.
             </p>
@@ -29,7 +29,7 @@ export default function CTA() {
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-200 shadow-lg shadow-black/10 hover:shadow-xl hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-lg shadow-black/10 hover:shadow-xl hover:-translate-y-0.5"
               >
                 Create Account
                 <FiArrowRight className="w-4 h-4" />
@@ -42,7 +42,7 @@ export default function CTA() {
               </Link>
             </div>
 
-            <p className="mt-6 text-sm text-indigo-200/70">
+            <p className="mt-6 text-sm text-emerald-200/70">
               Free to use. No credit card required.
             </p>
           </div>

@@ -123,9 +123,9 @@ export default function Dashboard() {
       trend: "text-gray-400 dark:text-gray-500",
     },
     balance: {
-      accent: balance >= 0 ? "from-indigo-400 to-violet-500" : "from-red-400 to-rose-500",
-      iconBg: balance >= 0 ? "from-indigo-400 to-violet-500" : "from-red-400 to-rose-500",
-      text: balance >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
+      accent: balance >= 0 ? "from-emerald-400 to-emerald-500" : "from-red-400 to-rose-500",
+      iconBg: balance >= 0 ? "from-emerald-400 to-emerald-500" : "from-red-400 to-rose-500",
+      text: balance >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400",
       trend: balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400",
     },
   };
@@ -172,7 +172,7 @@ export default function Dashboard() {
     {
       label: "View Analytics",
       icon: FiBarChart2,
-      color: "bg-indigo-100 text-indigo-600 hover:bg-indigo-200",
+      color: "bg-emerald-100 text-emerald-600 hover:bg-emerald-200",
       path: "/analytics",
       action: () => navigate("/analytics"),
     },
@@ -247,7 +247,7 @@ export default function Dashboard() {
             subtitle={budgetStatus?.total_budget > 0 ? `${formatCurrency(budgetStatus.total_spent)} / ${formatCurrency(budgetStatus.total_budget)}` : "No budget set"}
           >
             <div className="text-center">
-              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 tabular-nums">
+              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {budgetStatus?.total_budget > 0 ? `${Math.round(budgetStatus.overall_percentage)}%` : "—"}
               </p>
               <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">used</p>
@@ -256,8 +256,8 @@ export default function Dashboard() {
           <svg width="0" height="0" className="absolute">
             <defs>
               <linearGradient id="budgetGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#8b5cf6" />
+                <stop offset="0%" stopColor="#059669" />
+                <stop offset="100%" stopColor="#047857" />
               </linearGradient>
             </defs>
           </svg>
@@ -326,7 +326,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
             <button
               onClick={() => navigate("/expenses")}
-              className="link-underline text-sm text-indigo-600 font-medium flex items-center gap-1"
+              className="link-underline text-sm text-emerald-600 font-medium flex items-center gap-1"
             >
               View all <FiArrowRight className="w-4 h-4" />
             </button>
@@ -338,7 +338,7 @@ export default function Dashboard() {
                 title="No transactions yet"
                 description="Your recent expenses will appear here once you add your first one."
                 action={{ label: "Add your first expense", onClick: () => navigate("/expenses") }}
-                color="indigo"
+                color="emerald"
               />
             ) : (
               recentTransactions.map((txn) => (
@@ -388,15 +388,15 @@ export default function Dashboard() {
           <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
             <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Spending Insights</h3>
             <div className="space-y-3">
-              <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-                <p className="text-sm font-medium text-indigo-900 dark:text-indigo-300">Top Category</p>
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg">
+                <p className="text-sm font-medium text-emerald-900 dark:text-emerald-300">Top Category</p>
                 <div className="flex items-center gap-2 mt-2">
                   <CategoryIcon name={data?.categories?.most_used?.category_name} size="sm" />
-                  <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
+                  <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                     {data?.categories?.most_used?.category_name || "—"}
                   </p>
                 </div>
-                <p className="text-xs text-indigo-500 dark:text-indigo-400 mt-1">
+                <p className="text-xs text-emerald-500 dark:text-emerald-400 mt-1">
                   {formatCurrency(
                     data?.categories?.distribution?.find(
                       d => d.category_id === data?.categories?.most_used?.category_id
@@ -420,16 +420,16 @@ export default function Dashboard() {
 
       <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6" aria-labelledby="charts-heading">
         <h2 id="charts-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <FiBarChart2 className="w-5 h-5 text-indigo-600" />
+          <FiBarChart2 className="w-5 h-5 text-emerald-600" />
           Charts & Analytics
         </h2>
-        <div className="bg-gradient-to-br from-indigo-50 dark:from-indigo-900/20 to-purple-50 dark:to-purple-900/20 rounded-xl">
+        <div className="bg-gradient-to-br from-emerald-50 dark:from-emerald-900/20 to-emerald-50 dark:to-emerald-900/20 rounded-xl">
           <EmptyState
             icon={<FiBarChart2 className="w-7 h-7" />}
             title="Charts coming soon"
             description="Expense trends, category breakdown, monthly comparison"
             action={{ label: "View Analytics", onClick: () => navigate("/analytics"), icon: <FiArrowRight className="w-4 h-4" /> }}
-            color="indigo"
+            color="emerald"
             size="large"
           />
         </div>

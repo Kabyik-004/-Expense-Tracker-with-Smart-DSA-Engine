@@ -27,9 +27,9 @@ const BANKS = [
   },
   {
     id: "kotak", name: "Kotak Mahindra Bank",
-    gradient: "from-purple-600 to-violet-700",
+    gradient: "from-emerald-600 to-emerald-700",
     formats: ["CSV"],
-    color: "purple",
+    color: "emerald",
   },
   {
     id: "yes", name: "Yes Bank",
@@ -43,13 +43,13 @@ export default function SupportedBanks() {
   return (
     <section className="w-full">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center">
-          <FiCheckCircle className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+        <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+          <FiCheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           Supported Banks
         </h3>
-        <span className="px-2.5 py-0.5 text-[11px] font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full tracking-wide uppercase">
+        <span className="px-2.5 py-0.5 text-[11px] font-bold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded-full tracking-wide uppercase">
           {BANKS.length} Banks
         </span>
       </div>
@@ -58,7 +58,7 @@ export default function SupportedBanks() {
         {BANKS.map((bank) => (
           <div
             key={bank.id}
-            className="group relative overflow-hidden rounded-2xl border border-gray-200/50 dark:border-gray-700/40 bg-white/50 dark:bg-gray-900/40 backdrop-blur-xl p-5 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-200/60 dark:hover:border-indigo-600/30 card-hover"
+            className="group relative overflow-hidden rounded-2xl border border-gray-200/50 dark:border-gray-700/40 bg-white/50 dark:bg-gray-900/40 backdrop-blur-xl p-5 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-200/60 dark:hover:border-emerald-600/30 card-hover"
           >
             {/* Gradient accent bar */}
             <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${bank.gradient} opacity-80`} />

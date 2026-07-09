@@ -91,7 +91,7 @@ export default function Navbar() {
             </Link>
             <Link
               to="/register"
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-200"
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors duration-200"
             >
               Register
             </Link>
@@ -124,7 +124,7 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => scrollToSection(link.href)}
-              className="block w-full text-left px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+              className="block w-full text-left px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
             >
               {link.label}
             </button>
@@ -143,7 +143,7 @@ export default function Navbar() {
             <Link
               to="/register"
               onClick={() => setMobileOpen(false)}
-              className="block w-full text-center px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+              className="block w-full text-center px-4 py-2.5 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors duration-200"
             >
               Register
             </Link>

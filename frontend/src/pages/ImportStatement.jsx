@@ -224,7 +224,7 @@ export default function ImportStatement() {
         tabIndex={-1}
         className="relative overflow-hidden rounded-3xl border border-gray-200/40 dark:border-gray-800/30 bg-white/30 dark:bg-gray-900/20 backdrop-blur-2xl p-8 md:p-10 shadow-lg outline-none"
       >
-        <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-indigo-200/30 via-purple-200/20 to-transparent dark:from-indigo-500/10 dark:via-purple-500/8 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-emerald-200/30 via-emerald-200/20 to-transparent dark:from-emerald-500/10 dark:via-emerald-500/8 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-gradient-to-tr from-emerald-200/20 to-transparent dark:from-emerald-500/8 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
         <div className="relative flex items-center justify-between flex-wrap gap-4">
@@ -238,7 +238,7 @@ export default function ImportStatement() {
                 <FiArrowLeft className="w-5 h-5" />
               </button>
             )}
-            <div className="w-14 h-14 rounded-[18px] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/20">
+            <div className="w-14 h-14 rounded-[18px] bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20">
               <FiUploadCloud className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -262,14 +262,14 @@ export default function ImportStatement() {
                 <div
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
                     step === s || (s === "upload" && importResult?.success)
-                      ? "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300"
+                      ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300"
                       : "text-gray-400 dark:text-gray-500"
                   }`}
                   aria-current={step === s ? "step" : undefined}
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
                     step === s || (s === "upload" && importResult?.success)
-                      ? "bg-indigo-600 text-white"
+                      ? "bg-emerald-600 text-white"
                       : "bg-gray-200 dark:bg-gray-700 text-gray-500"
                   }`}>
                     {s === "upload" && importResult?.success ? (
@@ -327,7 +327,7 @@ export default function ImportStatement() {
         <section aria-label="Preview and import section" className="space-y-6">
           {/* Import progress */}
           {showImportProgress && (
-            <div className="rounded-2xl border border-indigo-200/40 dark:border-indigo-800/30 bg-indigo-50/30 dark:bg-indigo-950/20 backdrop-blur-sm p-6">
+            <div className="rounded-2xl border border-emerald-200/40 dark:border-emerald-800/30 bg-emerald-50/30 dark:bg-emerald-950/20 backdrop-blur-sm p-6">
               <ImportProgressSkeleton />
               <div className="max-w-md mx-auto mt-4">
                 <ProgressBar
@@ -346,8 +346,8 @@ export default function ImportStatement() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4" role="list" aria-label="Transaction summary">
               <div className="relative overflow-hidden rounded-2xl border border-gray-200/40 dark:border-gray-800/30 bg-white/30 dark:bg-gray-900/20 backdrop-blur-xl p-5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center">
-                    <FiDatabase className="w-5 h-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                    <FiDatabase className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Total</p>
@@ -418,7 +418,7 @@ export default function ImportStatement() {
                     value={pdfPassword}
                     onChange={(e) => setPdfPassword(e.target.value)}
                     placeholder="Enter PDF password"
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all input-focus"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 transition-all input-focus"
                   />
                 </div>
               )}
@@ -479,7 +479,7 @@ export default function ImportStatement() {
                 ref={confirmBtnRef}
                 onClick={handleConfirmImport}
                 disabled={importing || validCount === 0}
-                className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-semibold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 btn-hover"
+                className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-2xl font-semibold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 btn-hover"
                 aria-label={`Confirm import of ${validCount} transactions`}
               >
                 {importing ? (

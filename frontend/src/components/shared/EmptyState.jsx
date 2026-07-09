@@ -1,10 +1,10 @@
 import { FiPlus, FiX } from "react-icons/fi";
 
 const colorSchemes = {
-  indigo: {
-    bg: "bg-indigo-50 dark:bg-indigo-900/30",
-    icon: "text-indigo-500 dark:text-indigo-400",
-    btn: "bg-indigo-600 hover:bg-indigo-700 text-white",
+  emerald: {
+    bg: "bg-emerald-50 dark:bg-emerald-900/30",
+    icon: "text-emerald-500 dark:text-emerald-400",
+    btn: "bg-emerald-600 hover:bg-emerald-700 text-white",
     btnOutline: "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50",
   },
   green: {

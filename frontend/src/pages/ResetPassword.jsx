@@ -81,14 +81,14 @@ export default function ResetPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium"
+            className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium"
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-          <Link to="/login" className="link-underline text-indigo-600 font-medium">Back to login</Link>
+          <Link to="/login" className="link-underline text-emerald-600 font-medium">Back to login</Link>
         </p>
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function ThemeSwitch({ className = "", compact = false }) {
               compact ? "text-sm" : "text-base"
             } ${
               isActive
-                ? "bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm scale-105"
+                ? "bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 shadow-sm scale-105"
                 : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50"
             }`}
           >

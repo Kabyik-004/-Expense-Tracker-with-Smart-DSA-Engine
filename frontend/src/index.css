@@ -12,6 +12,27 @@
   }
 }
 
+:root {
+  --color-primary: #059669;
+  --color-primary-hover: #047857;
+  --color-primary-light: #ECFDF5;
+  --color-bg: #F8FAFC;
+  --color-card: #FFFFFF;
+  --color-card-border: #E2E8F0;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+  --color-border: #E2E8F0;
+  --color-input-border: #CBD5E1;
+  --color-income: #16A34A;
+  --color-expense: #DC2626;
+  --color-analytics: #0EA5E9;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+  --color-danger: #DC2626;
+  --color-danger-hover: #B91C1C;
+}
+
 /* ─── Fade / Slide ─── */
 
 @keyframes fade-in {
@@ -36,7 +57,7 @@
   transition: all 0.2s ease;
 }
 .btn-hover:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.02);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .btn-hover:active {
@@ -50,8 +71,8 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1), 0 4px 8px -4px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.03);
 }
 
 /* ─── Icon rotate ─── */
@@ -86,21 +107,21 @@
   width: 100%;
 }
 
-/* ─── Input focus glow ─── */
+/* ─── Input focus ─── */
 
 .input-focus {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .input-focus:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
   transform: scale(1.005);
 }
 .dark .input-focus:focus {
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
 }
 
-/* ─── Page transition (fade + slide + scale) ─── */
+/* ─── Page transition ─── */
 
 @keyframes page-enter {
   from {
@@ -116,7 +137,7 @@
   animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ─── Scale reveal (for progress bars, etc.) ─── */
+/* ─── Scale reveal ─── */
 
 @keyframes scale-x-in {
   from { transform: scaleX(0); }
@@ -130,19 +151,11 @@
 /* ─── Smart Import upload animations ─── */
 
 @keyframes upload-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
-  50% { box-shadow: 0 0 0 12px rgba(99, 102, 241, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.3); }
+  50% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
 }
 .animate-upload-pulse {
   animation: upload-pulse 2s ease-in-out infinite;
-}
-
-@keyframes upload-pulse-dark {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.3); }
-  50% { box-shadow: 0 0 0 12px rgba(129, 140, 248, 0); }
-}
-.dark .animate-upload-pulse {
-  animation: upload-pulse-dark 2s ease-in-out infinite;
 }
 
 @keyframes scan-line {
@@ -162,8 +175,8 @@
 }
 
 @keyframes border-glow {
-  0%, 100% { border-color: rgba(99, 102, 241, 0.3); }
-  50% { border-color: rgba(99, 102, 241, 0.7); }
+  0%, 100% { border-color: rgba(5, 150, 105, 0.3); }
+  50% { border-color: rgba(5, 150, 105, 0.7); }
 }
 .drag-over .animate-border-glow {
   animation: border-glow 1.5s ease-in-out infinite;
@@ -200,8 +213,8 @@
 }
 
 @keyframes progress-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
-  50% { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1); }
 }
 .animate-progress-pulse {
   animation: progress-pulse 1.5s ease-in-out infinite;
@@ -225,11 +238,6 @@
 }
 .animate-success-check {
   animation: success-check 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes particle-burst {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.3); }
 }
 
 /* ─── Reduced motion overrides ─── */

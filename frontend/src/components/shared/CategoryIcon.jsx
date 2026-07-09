@@ -39,8 +39,8 @@ const categories = [
   {
     keys: ["entertain", "movie", "game", "fun", "cinema", "netflix", "spotify", "music", "concert", "subscription"],
     icon: FiFilm,
-    bg: "bg-purple-100 dark:bg-purple-900/40",
-    color: "text-purple-600 dark:text-purple-400",
+    bg: "bg-emerald-100 dark:bg-emerald-900/40",
+    color: "text-emerald-600 dark:text-emerald-400",
   },
   {
     keys: ["bill", "util", "electricity", "water", "gas", "internet", "phone", "rent", "maintenance", "insurance"],

@@ -19,7 +19,7 @@ export default function SearchBar({
   onChange,
   onClear,
   placeholder = "Search...",
-  accentColor = "indigo",
+  accentColor = "emerald",
   loading = false,
   recentSearchesKey,
   suggestions = [],
@@ -101,50 +101,45 @@ export default function SearchBar({
   const hasContent = value.length > 0;
 
   const accentRing = {
-    indigo: "focus:ring-indigo-500 dark:focus:ring-indigo-400",
+    emerald: "focus:ring-emerald-500 dark:focus:ring-emerald-400",
     green: "focus:ring-green-500 dark:focus:ring-green-400",
     blue: "focus:ring-blue-500 dark:focus:ring-blue-400",
     red: "focus:ring-red-500 dark:focus:ring-red-400",
-    purple: "focus:ring-purple-500 dark:focus:ring-purple-400",
   };
 
   const accentFocus = {
-    indigo: "text-indigo-600 dark:text-indigo-400",
+    emerald: "text-emerald-600 dark:text-emerald-400",
     green: "text-green-600 dark:text-green-400",
     blue: "text-blue-600 dark:text-blue-400",
     red: "text-red-600 dark:text-red-400",
-    purple: "text-purple-600 dark:text-purple-400",
   };
 
   const accentBg = {
-    indigo: "bg-indigo-50 dark:bg-indigo-900/20",
+    emerald: "bg-emerald-50 dark:bg-emerald-900/20",
     green: "bg-green-50 dark:bg-green-900/20",
     blue: "bg-blue-50 dark:bg-blue-900/20",
     red: "bg-red-50 dark:bg-red-900/20",
-    purple: "bg-purple-50 dark:bg-purple-900/20",
   };
 
   const accentHover = {
-    indigo: "hover:bg-indigo-50 dark:hover:bg-indigo-900/15",
+    emerald: "hover:bg-emerald-50 dark:hover:bg-emerald-900/15",
     green: "hover:bg-green-50 dark:hover:bg-green-900/15",
     blue: "hover:bg-blue-50 dark:hover:bg-blue-900/15",
     red: "hover:bg-red-50 dark:hover:bg-red-900/15",
-    purple: "hover:bg-purple-50 dark:hover:bg-purple-900/15",
   };
 
   const accentTextHover = {
-    indigo: "hover:text-indigo-700 dark:hover:text-indigo-300",
+    emerald: "hover:text-emerald-700 dark:hover:text-emerald-300",
     green: "hover:text-green-700 dark:hover:text-green-300",
     blue: "hover:text-blue-700 dark:hover:text-blue-300",
     red: "hover:text-red-700 dark:hover:text-red-300",
-    purple: "hover:text-purple-700 dark:hover:text-purple-300",
   };
 
-  const ringClass = accentRing[accentColor] || accentRing.indigo;
-  const focusColorClass = accentFocus[accentColor] || accentFocus.indigo;
-  const bgColorClass = accentBg[accentColor] || accentBg.indigo;
-  const hoverColorClass = accentHover[accentColor] || accentHover.indigo;
-  const textHoverClass = accentTextHover[accentColor] || accentTextHover.indigo;
+  const ringClass = accentRing[accentColor] || accentRing.emerald;
+  const focusColorClass = accentFocus[accentColor] || accentFocus.emerald;
+  const bgColorClass = accentBg[accentColor] || accentBg.emerald;
+  const hoverColorClass = accentHover[accentColor] || accentHover.emerald;
+  const textHoverClass = accentTextHover[accentColor] || accentTextHover.emerald;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>

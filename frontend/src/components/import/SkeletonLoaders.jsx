@@ -84,9 +84,9 @@ export function ImportProgressSkeleton() {
       <div className="flex items-center justify-center py-12">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-indigo-200 dark:border-indigo-800/50 border-t-indigo-600 rounded-full animate-spin" />
+            <div className="w-16 h-16 border-4 border-emerald-200 dark:border-emerald-800/50 border-t-emerald-600 rounded-full animate-spin" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/50 animate-ping" />
+              <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/50 animate-ping" />
             </div>
           </div>
           <div className="space-y-2 text-center">

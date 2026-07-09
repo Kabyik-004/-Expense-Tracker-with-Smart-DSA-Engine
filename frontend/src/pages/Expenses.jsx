@@ -255,16 +255,16 @@ export default function Expenses() {
             <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"><FiX className="w-5 h-5 text-gray-500 dark:text-gray-400" /></button>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
-              <p className="text-xs text-indigo-500 dark:text-indigo-400 font-medium">Amount</p>
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl">
+              <p className="text-xs text-emerald-500 dark:text-emerald-400 font-medium">Amount</p>
               <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{formatCurrency(expense.amount)}</p>
             </div>
             <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-xl">
               <p className="text-xs text-green-500 dark:text-green-400 font-medium">Date</p>
               <p className="text-lg font-semibold text-gray-900 dark:text-white mt-1">{formatDate(expense.date)}</p>
             </div>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
-              <p className="text-xs text-purple-500 dark:text-purple-400 font-medium">Category</p>
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl">
+              <p className="text-xs text-emerald-500 dark:text-emerald-400 font-medium">Category</p>
               <div className="flex items-center gap-2 mt-1">
                 <CategoryIcon name={expense.category_name} size="sm" />
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{expense.category_name || `#${expense.category_id}`}</p>
@@ -279,7 +279,7 @@ export default function Expenses() {
             <div><p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Description</p><p className="text-gray-900 dark:text-white">{expense.description}</p></div>
           )}
           <div className="flex justify-end gap-2 pt-2">
-            <button onClick={() => { onClose(); handleEdit(expense); }} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium flex items-center gap-2">
+            <button onClick={() => { onClose(); handleEdit(expense); }} className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium flex items-center gap-2">
               <FiEdit2 className="w-4 h-4" /> Edit
             </button>
           </div>
@@ -324,7 +324,7 @@ export default function Expenses() {
               <FiRefreshCw className="w-4 h-4" /> Undo ({undoStackSize})
             </button>
           )}
-          <button onClick={() => { resetForm(); setShowForm(!showForm); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${showForm ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}>
+          <button onClick={() => { resetForm(); setShowForm(!showForm); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${showForm ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600" : "bg-emerald-600 text-white hover:bg-emerald-700"}`}>
             {showForm ? <FiX className="w-4 h-4" /> : <FiPlus className="w-4 h-4" />}
             {showForm ? "Cancel" : "Add Expense"}
           </button>
@@ -338,21 +338,21 @@ export default function Expenses() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Title *</label>
-                <input type="text" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${formErrors.title ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Groceries" />
+                <input type="text" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 ${formErrors.title ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Groceries" />
                 {formErrors.title && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{formErrors.title}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Amount *</label>
-                <input type="number" step="0.01" min="0.01" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${formErrors.amount ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="500.00" />
+                <input type="number" step="0.01" min="0.01" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 ${formErrors.amount ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="500.00" />
                 {formErrors.amount && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{formErrors.amount}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Date *</label>
-                <input type="date" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 ${formErrors.date ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+                <input type="date" required className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 ${formErrors.date ? "border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/30" : "border-gray-300 dark:border-gray-600"}`} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Category</label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
                   <option value="">Select category</option>
                   {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                   <option value="other">Other</option>
@@ -360,7 +360,7 @@ export default function Expenses() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Payment Method</label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
                   {PAYMENT_METHODS.map((m) => (
                     <option key={m} value={m}>{m.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}</option>
                   ))}
@@ -368,12 +368,12 @@ export default function Expenses() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Description</label>
-                <input type="text" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional notes" />
+                <input type="text" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional notes" />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               {editing && <button type="button" onClick={resetForm} className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 text-sm font-medium">Cancel</button>}
-              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium flex items-center gap-2">
+              <button type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium flex items-center gap-2">
                 {editing ? <FiEdit2 className="w-4 h-4" /> : <FiPlus className="w-4 h-4" />}
                 {editing ? "Update Expense" : "Create Expense"}
               </button>
@@ -390,7 +390,7 @@ export default function Expenses() {
               onChange={(v) => { setSearchInput(v); setPage(1); }}
               onClear={() => { setSearchInput(""); setPage(1); }}
               placeholder="Live search expenses..."
-              accentColor="indigo"
+              accentColor="emerald"
               loading={loading}
               recentSearchesKey="expenses-search-history"
               suggestions={searchInput ? categories.filter((c) => c?.toLowerCase().includes(searchInput.toLowerCase())).map((c) => ({ text: c, icon: <CategoryIcon name={c} size="sm" /> })) : []}
@@ -399,7 +399,7 @@ export default function Expenses() {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`px-3 py-2 rounded-lg text-sm border font-medium flex items-center gap-1.5 transition-colors ${showFilters || activeFilterCount > 0 ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300" : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"}`}
+                className={`px-3 py-2 rounded-lg text-sm border font-medium flex items-center gap-1.5 transition-colors ${showFilters || activeFilterCount > 0 ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300" : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"}`}
               >
                 <FiSliders className="w-4 h-4" /> Filters{activeFilterCount > 0 && ` (${activeFilterCount})`}
               </button>
@@ -416,37 +416,37 @@ export default function Expenses() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Category</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.category} onChange={(e) => updateFilter("category", e.target.value)}>
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.category} onChange={(e) => updateFilter("category", e.target.value)}>
                     <option value="">All Categories</option>
                     {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Date From</label>
-                  <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.dateFrom} onChange={(e) => updateFilter("dateFrom", e.target.value)} />
+                  <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.dateFrom} onChange={(e) => updateFilter("dateFrom", e.target.value)} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Date To</label>
-                  <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.dateTo} onChange={(e) => updateFilter("dateTo", e.target.value)} />
+                  <input type="date" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.dateTo} onChange={(e) => updateFilter("dateTo", e.target.value)} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Min Amount</label>
-                  <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.amountMin} onChange={(e) => updateFilter("amountMin", e.target.value)} placeholder="₹0" />
+                  <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.amountMin} onChange={(e) => updateFilter("amountMin", e.target.value)} placeholder="₹0" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Max Amount</label>
-                  <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.amountMax} onChange={(e) => updateFilter("amountMax", e.target.value)} placeholder="₹99999" />
+                  <input type="number" min="0" step="0.01" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.amountMax} onChange={(e) => updateFilter("amountMax", e.target.value)} placeholder="₹99999" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Month</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.month} onChange={(e) => updateFilter("month", e.target.value)}>
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.month} onChange={(e) => updateFilter("month", e.target.value)}>
                     <option value="">All Months</option>
                     {MONTHS.map((m, i) => <option key={i} value={String(i).padStart(2, "0")}>{m}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Year</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" value={filters.year} onChange={(e) => updateFilter("year", e.target.value)}>
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400" value={filters.year} onChange={(e) => updateFilter("year", e.target.value)}>
                     <option value="">All Years</option>
                     {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
@@ -458,7 +458,7 @@ export default function Expenses() {
                       <button
                         key={opt.value}
                         onClick={() => toggleSort(opt.value)}
-                        className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-0.5 ${sortField === opt.value ? "bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300" : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"}`}
+                        className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-0.5 ${sortField === opt.value ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300" : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"}`}
                       >
                         {opt.label}
                         {getSortIcon(opt.value)}
@@ -476,7 +476,7 @@ export default function Expenses() {
               <button
                 key={opt.value}
                 onClick={() => toggleSort(opt.value)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${sortField === opt.value ? "bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${sortField === opt.value ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300" : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"}`}
               >
                 {opt.label}
                 {getSortIcon(opt.value)}
@@ -485,14 +485,14 @@ export default function Expenses() {
           </div>
 
           {hasActiveFilters && (
-            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-2 rounded-lg flex-wrap">
+            <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-2 rounded-lg flex-wrap">
               <FiFilter className="w-4 h-4 shrink-0" />
               <span>Filtered to <strong>{filtered.length}</strong> of {allExpenses.length} expenses</span>
-              {debouncedSearch && <span className="text-indigo-400">· search: "{debouncedSearch}"</span>}
-              {filters.category && <span className="text-indigo-400">· category: {categories.find(c => String(c.id) === filters.category)?.name || filters.category}</span>}
-              {filters.month && <span className="text-indigo-400">· month: {MONTHS[parseInt(filters.month)]}</span>}
-              {filters.year && <span className="text-indigo-400">· year: {filters.year}</span>}
-              {(filters.amountMin || filters.amountMax) && <span className="text-indigo-400">· amount: {filters.amountMin || "0"} - {filters.amountMax || "∞"}</span>}
+              {debouncedSearch && <span className="text-emerald-400">· search: "{debouncedSearch}"</span>}
+              {filters.category && <span className="text-emerald-400">· category: {categories.find(c => String(c.id) === filters.category)?.name || filters.category}</span>}
+              {filters.month && <span className="text-emerald-400">· month: {MONTHS[parseInt(filters.month)]}</span>}
+              {filters.year && <span className="text-emerald-400">· year: {filters.year}</span>}
+              {(filters.amountMin || filters.amountMax) && <span className="text-emerald-400">· amount: {filters.amountMin || "0"} - {filters.amountMax || "∞"}</span>}
             </div>
           )}
         </div>
@@ -550,7 +550,7 @@ export default function Expenses() {
             description={hasActiveFilters ? "Try adjusting your filters to find what you're looking for." : "Add your first expense to get started with tracking."}
             action={hasActiveFilters ? undefined : { label: "Add Expense", onClick: () => { resetForm(); setShowForm(true); } }}
             secondaryAction={hasActiveFilters ? { label: "Clear Filters", onClick: clearFilters } : undefined}
-            color="indigo"
+            color="emerald"
           />
         ) : (
           <>
@@ -580,7 +580,7 @@ export default function Expenses() {
                       <td className="px-4 py-3.5"><span className="text-sm font-semibold text-red-600 dark:text-red-400">{formatCurrency(exp.amount)}</span></td>
                       <td className="px-4 py-3.5 text-sm text-gray-500 dark:text-gray-400">{formatDate(exp.date)}</td>
                       <td className="px-4 py-3.5">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
                           <CategoryIcon name={exp.category_name} size="sm" className="!w-5 !h-5" />
                           {exp.category_name || `#${exp.category_id}`}
                         </span>
@@ -588,7 +588,7 @@ export default function Expenses() {
                       <td className="px-4 py-3.5"><span className="text-sm text-gray-500 dark:text-gray-400 capitalize">{exp.payment_method || "Cash"}</span></td>
                       <td className="px-4 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => setDetailTarget(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg" title="View"><FiEye className="w-4 h-4" /></button>
+                          <button onClick={() => setDetailTarget(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg" title="View"><FiEye className="w-4 h-4" /></button>
                           <button onClick={() => handleEdit(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg" title="Edit"><FiEdit2 className="w-4 h-4" /></button>
                           <button onClick={() => setDeleteTarget(exp)} className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg" title="Delete"><FiTrash2 className="w-4 h-4" /></button>
                         </div>
@@ -609,7 +609,7 @@ export default function Expenses() {
                         <p className="font-medium text-gray-900 dark:text-white">{exp.title}</p>
                         {exp.description && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{exp.description}</p>}
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="inline-flex items-center gap-1 text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-full">
+                          <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full">
                             <CategoryIcon name={exp.category_name} size="sm" className="!w-4 !h-4" />
                             {exp.category_name || `#${exp.category_id}`}
                           </span>
@@ -624,7 +624,7 @@ export default function Expenses() {
                   </div>
                   <div className="flex gap-2 mt-3 pt-3 border-t border-gray-50 dark:border-gray-700">
                     <button onClick={() => setDetailTarget(exp)} className="flex-1 text-xs py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 font-medium flex items-center justify-center gap-1"><FiEye className="w-3.5 h-3.5" /> View</button>
-                    <button onClick={() => handleEdit(exp)} className="flex-1 text-xs py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 font-medium flex items-center justify-center gap-1"><FiEdit2 className="w-3.5 h-3.5" /> Edit</button>
+                    <button onClick={() => handleEdit(exp)} className="flex-1 text-xs py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 font-medium flex items-center justify-center gap-1"><FiEdit2 className="w-3.5 h-3.5" /> Edit</button>
                     <button onClick={() => setDeleteTarget(exp)} className="flex-1 text-xs py-1.5 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 font-medium flex items-center justify-center gap-1"><FiTrash2 className="w-3.5 h-3.5" /> Delete</button>
                   </div>
                 </div>
@@ -643,7 +643,7 @@ export default function Expenses() {
                     const end = Math.min(totalFilteredPages, page + 2);
                     for (let i = start; i <= end; i++) {
                       pages.push(
-                        <button key={i} onClick={() => setPage(i)} className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition-colors ${i === page ? "bg-indigo-600 text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}>{i}</button>
+                        <button key={i} onClick={() => setPage(i)} className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition-colors ${i === page ? "bg-emerald-600 text-white" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}>{i}</button>
                       );
                     }
                     return pages;

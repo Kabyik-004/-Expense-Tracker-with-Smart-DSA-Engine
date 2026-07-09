@@ -2,14 +2,14 @@ import { forwardRef } from "react";
 import { FiLoader } from "react-icons/fi";
 
 const variantStyles = {
-  primary: "bg-indigo-600 text-white hover:bg-indigo-700",
+  primary: "bg-emerald-600 text-white hover:bg-emerald-700",
   "primary-green": "bg-green-600 text-white hover:bg-green-700",
   danger: "bg-red-600 text-white hover:bg-red-700",
   undo: "bg-orange-600 text-white hover:bg-orange-700",
   secondary: "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50",
-  ghost: "text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30",
+  ghost: "text-gray-400 dark:text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30",
   outline: "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
-  auth: "w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium",
+  auth: "w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium",
 };
 
 const sizeStyles = {

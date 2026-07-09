@@ -26,8 +26,8 @@ const techs = [
     icon: SiVite,
     name: "Vite",
     description: "Lightning-fast build tool for modern web development workflows.",
-    color: "text-purple-500",
-    bg: "bg-purple-100 dark:bg-purple-900/30",
+    color: "text-emerald-500",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
   },
   {
     icon: SiTailwindcss,
@@ -89,8 +89,8 @@ const techs = [
     icon: SiRender,
     name: "Render",
     description: "Cloud platform hosting the backend API and PostgreSQL database.",
-    color: "text-indigo-500",
-    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    color: "text-emerald-500",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
   },
   {
     icon: SiVercel,
@@ -113,12 +113,12 @@ export default function TechStack() {
     <section id="tech-stack" className="relative py-24 lg:py-32 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm tracking-wide uppercase mb-3">
+          <p className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm tracking-wide uppercase mb-3">
             Tech Stack
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
             Built with{" "}
-            <span className="text-indigo-600 dark:text-indigo-400">Modern</span>{" "}
+            <span className="text-emerald-600 dark:text-emerald-400">Modern</span>{" "}
             Technologies
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
@@ -145,7 +145,7 @@ export default function TechStack() {
                 {tech.description}
               </p>
 
-              <div className="absolute inset-x-4 bottom-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+              <div className="absolute inset-x-4 bottom-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
             </article>
           ))}
         </div>

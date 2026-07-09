@@ -92,7 +92,7 @@ export default function FloatingActionButton() {
         }`}
       >
         <FiPlus
-          className={`w-6 h-6 text-indigo-600 dark:text-indigo-400 transition-transform duration-300 ease-out ${
+          className={`w-6 h-6 text-emerald-600 dark:text-emerald-400 transition-transform duration-300 ease-out ${
             open ? "rotate-45 scale-110" : "rotate-0 scale-100"
           }`}
         />

@@ -7,16 +7,16 @@ const stats = [
     value: 20,
     suffix: "+",
     label: "REST APIs",
-    gradient: "from-indigo-600 to-blue-600",
-    iconBg: "bg-indigo-500/20",
+    gradient: "from-emerald-600 to-blue-600",
+    iconBg: "bg-emerald-500/20",
   },
   {
     icon: FiGrid,
     value: 10,
     suffix: "+",
     label: "Major Modules",
-    gradient: "from-purple-600 to-pink-600",
-    iconBg: "bg-purple-500/20",
+    gradient: "from-emerald-600 to-pink-600",
+    iconBg: "bg-emerald-500/20",
   },
   {
     icon: FiCpu,
@@ -39,8 +39,8 @@ const stats = [
     value: 3,
     suffix: "+",
     label: "File Formats",
-    gradient: "from-violet-500 to-indigo-600",
-    iconBg: "bg-violet-500/20",
+    gradient: "from-emerald-500 to-emerald-600",
+    iconBg: "bg-emerald-500/20",
   },
   {
     icon: FiShield,
@@ -109,12 +109,12 @@ export default function Stats() {
     <section className="relative py-24 lg:py-32 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm tracking-wide uppercase mb-3">
+          <p className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm tracking-wide uppercase mb-3">
             By the Numbers
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
             Built with{" "}
-            <span className="text-indigo-600 dark:text-indigo-400">Precision</span>
+            <span className="text-emerald-600 dark:text-emerald-400">Precision</span>
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
             Every component, API and algorithm is crafted for performance and

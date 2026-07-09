@@ -1,7 +1,7 @@
 export default function Loader({
   type = "spinner",
   size = "md",
-  color = "border-indigo-600",
+  color = "border-emerald-600",
   text,
   fullPage = false,
   count = 3,

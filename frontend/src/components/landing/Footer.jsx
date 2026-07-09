@@ -29,7 +29,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center">
                 <span className="text-white font-bold text-[10px]">ET</span>
               </div>
               <span className="text-base font-semibold text-gray-900 dark:text-white">
@@ -49,7 +49,7 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 group"
+                className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 group"
                 aria-label={link.label}
               >
                 <link.icon className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
@@ -70,7 +70,7 @@ export default function Footer() {
               href="https://github.com/kabyik-004"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
             >
               Kabyik Paul
             </a>

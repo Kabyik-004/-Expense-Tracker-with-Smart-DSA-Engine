@@ -58,7 +58,7 @@ const navItems = [
 function LoadingScreen() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
     </div>
   );
 }
@@ -107,7 +107,7 @@ function AppLayout() {
           <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3">
             <img src={dashboardLogo} alt="Expense Tracker" className="w-8 h-8 object-contain" />
             <div>
-              <h1 className="text-lg font-bold text-indigo-600">
+              <h1 className="text-lg font-bold text-emerald-600">
                 Expense Tracker
               </h1>
               <p className="text-xs text-gray-400 mt-1">Smart DSA Engine</p>
@@ -121,7 +121,7 @@ function AppLayout() {
               to={path}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === path
-                  ? "bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300"
+                  ? "bg-emerald-50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300"
                   : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
               }`}
             >

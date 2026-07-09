@@ -101,33 +101,33 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
         className={`
           relative overflow-hidden rounded-3xl border-2 border-dashed cursor-pointer
           transition-all duration-500 p-10 md:p-14 text-center outline-none
-          ${focused ? "ring-2 ring-indigo-400/50 ring-offset-2 ring-offset-transparent" : ""}
+          ${focused ? "ring-2 ring-emerald-400/50 ring-offset-2 ring-offset-transparent" : ""}
           ${dragOver
-            ? "border-indigo-400/80 bg-indigo-50/80 dark:bg-indigo-950/40 drag-over"
+            ? "border-emerald-400/80 bg-emerald-50/80 dark:bg-emerald-950/40 drag-over"
             : selectedFile
               ? "border-emerald-300/70 bg-emerald-50/70 dark:border-emerald-600/50 dark:bg-emerald-950/30"
               : error
                 ? "border-red-300/70 bg-red-50/70 dark:border-red-600/50 dark:bg-red-950/30"
-                : "border-gray-200/60 dark:border-gray-700/50 bg-white/40 dark:bg-gray-900/30 hover:border-indigo-300/50 dark:hover:border-indigo-600/40"
+                : "border-gray-200/60 dark:border-gray-700/50 bg-white/40 dark:bg-gray-900/30 hover:border-emerald-300/50 dark:hover:border-emerald-600/40"
           }
           backdrop-blur-xl shadow-lg
           ${loading ? "pointer-events-none opacity-80" : ""}
         `}
       >
         {dragOver && (
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/10 via-transparent to-purple-400/10 dark:from-indigo-500/10 dark:to-purple-500/10 animate-gradient-shift pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/10 via-transparent to-emerald-400/10 dark:from-emerald-500/10 dark:to-emerald-500/10 animate-gradient-shift pointer-events-none" />
         )}
 
         {dragOver && (
-          <div className="absolute left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-indigo-500/60 to-transparent animate-scan-line pointer-events-none" />
+          <div className="absolute left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent animate-scan-line pointer-events-none" />
         )}
 
         {!selectedFile && !dragOver && !loading && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 dark:opacity-20">
-            <div className="absolute w-2 h-2 rounded-full bg-indigo-400 top-1/4 left-[20%] animate-float-particle" style={{ animationDelay: "0s" }} />
-            <div className="absolute w-1.5 h-1.5 rounded-full bg-purple-400 top-1/3 left-[70%] animate-float-particle" style={{ animationDelay: "0.8s" }} />
-            <div className="absolute w-2.5 h-2.5 rounded-full bg-indigo-300 top-[60%] left-[40%] animate-float-particle" style={{ animationDelay: "1.6s" }} />
-            <div className="absolute w-1 h-1 rounded-full bg-violet-400 top-[20%] left-[55%] animate-float-particle" style={{ animationDelay: "2.2s" }} />
+            <div className="absolute w-2 h-2 rounded-full bg-emerald-400 top-1/4 left-[20%] animate-float-particle" style={{ animationDelay: "0s" }} />
+            <div className="absolute w-1.5 h-1.5 rounded-full bg-emerald-400 top-1/3 left-[70%] animate-float-particle" style={{ animationDelay: "0.8s" }} />
+            <div className="absolute w-2.5 h-2.5 rounded-full bg-emerald-300 top-[60%] left-[40%] animate-float-particle" style={{ animationDelay: "1.6s" }} />
+            <div className="absolute w-1 h-1 rounded-full bg-emerald-400 top-[20%] left-[55%] animate-float-particle" style={{ animationDelay: "2.2s" }} />
           </div>
         )}
 
@@ -145,8 +145,8 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
           <div className="relative space-y-6 py-4">
             <div className="flex flex-col items-center gap-3">
               <div className="relative">
-                <div className="w-20 h-20 rounded-[28px] bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center shadow-inner">
-                  <div className="w-10 h-10 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
+                <div className="w-20 h-20 rounded-[28px] bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shadow-inner">
+                  <div className="w-10 h-10 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
                 </div>
               </div>
               <div>
@@ -191,7 +191,7 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
                   onClick={(e) => e.stopPropagation()}
                   onChange={(e) => onPasswordChange?.(e.target.value)}
                   placeholder="Enter PDF password"
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all input-focus"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-white/70 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 transition-all input-focus"
                   aria-label="PDF password"
                 />
               </div>
@@ -200,7 +200,7 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
               <button
                 onClick={(e) => { e.stopPropagation(); handleUploadClick(); }}
                 disabled={loading}
-                className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-semibold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 btn-hover"
+                className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-500 hover:to-emerald-500 text-white rounded-2xl font-semibold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 btn-hover"
                 aria-label="Upload selected file"
               >
                 <FiUpload className="w-4 h-4" />
@@ -222,12 +222,12 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
               <div className={`w-24 h-24 mx-auto rounded-[32px] flex items-center justify-center shadow-inner transition-all duration-500 ${
                 error
                   ? "bg-red-100 dark:bg-red-900/40"
-                  : "bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40"
+                  : "bg-gradient-to-br from-emerald-100 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-900/40"
               }`}>
                 {error ? (
                   <FiAlertCircle className="w-10 h-10 text-red-500 dark:text-red-400" />
                 ) : (
-                  <FiUpload className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
+                  <FiUpload className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                 )}
               </div>
               {dragOver && (
@@ -245,7 +245,7 @@ export default function UploadZone({ onUpload, loading, progress, uploadStatus, 
                 ) : (
                   <>
                     Drag & drop your statement or{" "}
-                    <span className="text-indigo-600 dark:text-indigo-400 font-semibold underline underline-offset-2 decoration-indigo-300/50">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold underline underline-offset-2 decoration-emerald-300/50">
                       browse files
                     </span>
                   </>

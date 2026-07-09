@@ -48,12 +48,12 @@ export default function Screenshots() {
     <section id="screenshots" className="relative py-24 lg:py-32 bg-gray-50/50 dark:bg-gray-900/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm tracking-wide uppercase mb-3">
+          <p className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm tracking-wide uppercase mb-3">
             Screenshots
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
             Beautiful{" "}
-            <span className="text-indigo-600 dark:text-indigo-400">Interface</span>
+            <span className="text-emerald-600 dark:text-emerald-400">Interface</span>
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
             Clean, responsive design that works seamlessly across all devices.
@@ -69,19 +69,19 @@ export default function Screenshots() {
                     <div className="h-4 w-28 bg-gray-200 dark:bg-gray-700 rounded" />
                     <div className="h-3 w-20 bg-gray-100 dark:bg-gray-800 rounded mt-1.5" />
                   </div>
-                  <div className="h-7 w-16 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg" />
+                  <div className="h-7 w-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg" />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   {[
                     { color: "bg-green-500", label: "Income", value: "₹84K", bar: "w-3/4" },
                     { color: "bg-red-500", label: "Expenses", value: "₹63K", bar: "w-2/3" },
-                    { color: "bg-indigo-500", label: "Balance", value: "₹21K", bar: "w-1/3" },
+                    { color: "bg-emerald-500", label: "Balance", value: "₹21K", bar: "w-1/3" },
                   ].map((s) => (
                     <div key={s.label} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
                       <div className="flex items-center gap-1.5 mb-2">
                         {s.label === "Income" && <FiTrendingUp className="w-3 h-3 text-green-500" />}
                         {s.label === "Expenses" && <FiTrendingDown className="w-3 h-3 text-red-500" />}
-                        {s.label === "Balance" && <FiDollarSign className="w-3 h-3 text-indigo-500" />}
+                        {s.label === "Balance" && <FiDollarSign className="w-3 h-3 text-emerald-500" />}
                         <span className="text-[10px] text-gray-400 dark:text-gray-500">{s.label}</span>
                       </div>
                       <p className="text-sm font-bold text-gray-800 dark:text-gray-200">{s.value}</p>
@@ -91,7 +91,7 @@ export default function Screenshots() {
                 <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
                   <div className="flex items-end gap-1 h-16">
                     {[35, 55, 40, 70, 45, 60, 50, 75, 55, 65, 80, 60].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-indigo-400 to-indigo-300 dark:from-indigo-600 dark:to-indigo-500" style={{ height: `${h}%` }} />
+                      <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-emerald-400 to-emerald-300 dark:from-emerald-600 dark:to-emerald-500" style={{ height: `${h}%` }} />
                     ))}
                   </div>
                   <div className="flex justify-between mt-1.5">
@@ -109,7 +109,7 @@ export default function Screenshots() {
               <div className="p-4 space-y-3">
                 <div className="flex gap-1.5 mb-3">
                   {["All", "Food", "Travel", "Shop"].map((t) => (
-                    <span key={t} className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${t === "All" ? "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
+                    <span key={t} className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${t === "All" ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
                       {t}
                     </span>
                   ))}
@@ -153,21 +153,21 @@ export default function Screenshots() {
               <div className="p-4 space-y-4">
                 <div className="flex gap-2">
                   {["Week", "Month", "Year"].map((t) => (
-                    <span key={t} className={`flex-1 text-center px-2 py-1 text-[10px] rounded-md font-medium ${t === "Month" ? "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
+                    <span key={t} className={`flex-1 text-center px-2 py-1 text-[10px] rounded-md font-medium ${t === "Month" ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
                       {t}
                     </span>
                   ))}
                 </div>
                 <div className="flex items-end gap-1.5 h-20">
                   {[20, 45, 30, 65, 40, 55, 35].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-indigo-400 to-indigo-300 dark:from-indigo-600 dark:to-indigo-500" style={{ height: `${h}%` }} />
+                    <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-emerald-400 to-emerald-300 dark:from-emerald-600 dark:to-emerald-500" style={{ height: `${h}%` }} />
                   ))}
                 </div>
                 <div className="flex items-center justify-center gap-4">
                   {[
                     { label: "Food", color: "bg-orange-400", value: "42%" },
                     { label: "Travel", color: "bg-blue-400", value: "18%" },
-                    { label: "Bills", color: "bg-purple-400", value: "25%" },
+                    { label: "Bills", color: "bg-emerald-400", value: "25%" },
                   ].map((c) => (
                     <div key={c.label} className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${c.color}`} />
@@ -182,9 +182,9 @@ export default function Screenshots() {
           <div className="lg:col-span-1">
             <BrowserFrame label="Import">
               <div className="p-5 space-y-3">
-                <div className="border-2 border-dashed border-indigo-200 dark:border-indigo-700/60 rounded-xl p-5 text-center">
-                  <div className="w-10 h-10 mx-auto rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center mb-2">
-                    <FiUploadCloud className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <div className="border-2 border-dashed border-emerald-200 dark:border-emerald-700/60 rounded-xl p-5 text-center">
+                  <div className="w-10 h-10 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-2">
+                    <FiUploadCloud className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Upload Statement</p>
                   <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">CSV, PDF or XLSX</p>
@@ -214,7 +214,7 @@ export default function Screenshots() {
             <BrowserFrame label="Settings">
               <div className="p-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-400 flex items-center justify-center text-white text-sm font-bold">
                     K
                   </div>
                   <div>
@@ -248,7 +248,7 @@ export default function Screenshots() {
                   { label: "Food & Dining", spent: 82, color: "bg-orange-500" },
                   { label: "Transportation", spent: 45, color: "bg-blue-500" },
                   { label: "Entertainment", spent: 90, color: "bg-red-500" },
-                  { label: "Shopping", spent: 30, color: "bg-purple-500" },
+                  { label: "Shopping", spent: 30, color: "bg-emerald-500" },
                 ].map((b) => (
                   <div key={b.label}>
                     <div className="flex items-center justify-between mb-1">

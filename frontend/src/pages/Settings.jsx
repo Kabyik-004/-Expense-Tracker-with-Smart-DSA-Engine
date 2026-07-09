@@ -55,7 +55,7 @@ export default function Settings() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
-                  ? "bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                  ? "bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-sm"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               }`}
             >
@@ -161,7 +161,7 @@ function ProfileSection({ user, setUser, addToast }) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <div className="flex items-center gap-6">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center overflow-hidden ring-2 ring-indigo-200">
+            <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center overflow-hidden ring-2 ring-emerald-200">
               {user?.avatar ? (
                 <img
                   src={user.avatar}
@@ -169,10 +169,10 @@ function ProfileSection({ user, setUser, addToast }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <FiUser className="w-8 h-8 text-indigo-500 dark:text-indigo-400" />
+                <FiUser className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
               )}
             </div>
-            <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-indigo-600 text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-700 shadow-sm transition-colors">
+            <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-emerald-700 shadow-sm transition-colors">
               <FiCamera className="w-3.5 h-3.5" />
               <input
                 type="file"
@@ -197,7 +197,7 @@ function ProfileSection({ user, setUser, addToast }) {
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <FiEdit3 className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+          <FiEdit3 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           Edit Profile
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -206,7 +206,7 @@ function ProfileSection({ user, setUser, addToast }) {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Full Name</label>
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                 value={form.full_name}
                 onChange={(e) => setForm({ ...form, full_name: e.target.value })}
               />
@@ -215,7 +215,7 @@ function ProfileSection({ user, setUser, addToast }) {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Username</label>
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
               />
@@ -224,7 +224,7 @@ function ProfileSection({ user, setUser, addToast }) {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Email</label>
               <input
                 type="email"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -232,7 +232,7 @@ function ProfileSection({ user, setUser, addToast }) {
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Currency</label>
               <select
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                 value={form.currency}
                 onChange={(e) => setForm({ ...form, currency: e.target.value })}
               >
@@ -246,7 +246,7 @@ function ProfileSection({ user, setUser, addToast }) {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 text-sm font-medium transition-colors"
+            className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 text-sm font-medium transition-colors"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -255,7 +255,7 @@ function ProfileSection({ user, setUser, addToast }) {
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <FiDollarSign className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+          <FiDollarSign className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           Account Details
         </h3>
         <div className="space-y-3">
@@ -334,7 +334,7 @@ function PasswordSection({ addToast }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
       <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        <FiKey className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+        <FiKey className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
         Change Password
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
@@ -342,7 +342,7 @@ function PasswordSection({ addToast }) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Current Password</label>
           <input
             type="password"
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm ${
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
               errors.current_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.current_password}
@@ -354,7 +354,7 @@ function PasswordSection({ addToast }) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">New Password</label>
           <input
             type="password"
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm ${
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
               errors.new_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.new_password}
@@ -366,7 +366,7 @@ function PasswordSection({ addToast }) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Confirm New Password</label>
           <input
             type="password"
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm ${
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
               errors.confirm_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.confirm_password}
@@ -377,7 +377,7 @@ function PasswordSection({ addToast }) {
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 text-sm font-medium transition-colors"
+          className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 text-sm font-medium transition-colors"
         >
           {saving ? "Updating..." : "Update Password"}
         </button>
@@ -425,7 +425,7 @@ function ActivitySection({ activities, setActivities, loading, setLoading }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
       <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        <FiClock className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+        <FiClock className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
         Recent Activity
       </h3>
 

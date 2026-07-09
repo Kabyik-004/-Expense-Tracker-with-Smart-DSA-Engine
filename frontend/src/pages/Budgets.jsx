@@ -112,7 +112,7 @@ export default function Budgets() {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition-colors"
         >
           <FiPlus className="w-4 h-4" />
           Set Budget
@@ -161,7 +161,7 @@ export default function Budgets() {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                  <FiTarget className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                  <FiTarget className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                   Overall Budget
                 </h3>
               </div>
@@ -219,7 +219,7 @@ export default function Budgets() {
                 title={`No budgets set for ${MONTHS[month - 1]} ${year}`}
                 description="Set a spending limit to track your expenses and stay on top of your finances."
                 action={{ label: "Set Budget", onClick: () => setShowForm(true) }}
-                color="indigo"
+                color="emerald"
               />
             </div>
           )}
@@ -262,7 +262,7 @@ export default function Budgets() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Category (optional)</label>
                 <select
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                   value={form.category_id}
                   onChange={(e) => setForm({ ...form, category_id: e.target.value })}
                 >
@@ -281,7 +281,7 @@ export default function Budgets() {
                   step="0.01"
                   min="0"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
                   placeholder="e.g. 50000"
                   value={form.amount}
                   onChange={(e) => setForm({ ...form, amount: e.target.value })}
@@ -298,7 +298,7 @@ export default function Budgets() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 text-sm font-medium"
+                  className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 text-sm font-medium"
                 >
                   {saving ? "Saving..." : "Save Budget"}
                 </button>

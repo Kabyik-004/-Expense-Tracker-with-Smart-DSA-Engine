@@ -41,16 +41,16 @@ export default function ForgotPassword() {
           </p>
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6 break-all">
             <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Your reset token:</p>
-            <code className="text-sm text-indigo-600 dark:text-indigo-400 font-mono">{resetToken}</code>
+            <code className="text-sm text-emerald-600 dark:text-emerald-400 font-mono">{resetToken}</code>
           </div>
           <Link
             to={`/reset-password?token=${resetToken}`}
-            className="block w-full text-center bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-medium"
+            className="block w-full text-center bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 font-medium"
           >
             Reset Password
           </Link>
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-            <Link to="/login" className="link-underline text-indigo-600 font-medium">Back to login</Link>
+            <Link to="/login" className="link-underline text-emerald-600 font-medium">Back to login</Link>
           </p>
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium"
+            className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
@@ -88,7 +88,7 @@ export default function ForgotPassword() {
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Remember your password?{" "}
-          <Link to="/login" className="link-underline text-indigo-600 font-medium">Sign in</Link>
+          <Link to="/login" className="link-underline text-emerald-600 font-medium">Sign in</Link>
         </p>
       </div>
     </div>

@@ -19,9 +19,9 @@ import CategoryIcon from "../components/shared/CategoryIcon";
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
 
 const COLORS = [
-  "#6366f1", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
-  "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#84cc16",
-  "#d946ef", "#0ea5e9",
+  "#059669", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
+  "#047857", "#14b8a6", "#0ea5e9", "#f97316", "#84cc16",
+  "#8b5cf6", "#6b7280",
 ];
 
 const CHART_OPTIONS = {
@@ -154,8 +154,8 @@ export default function Analytics() {
     datasets: [{
       label: "Expenses",
       data: timeValues,
-      backgroundColor: (ctx) => gradientBg(ctx, "rgba(99, 102, 241, 0.85)", "rgba(99, 102, 241, 0.2)"),
-      borderColor: "#6366f1",
+      backgroundColor: (ctx) => gradientBg(ctx, "rgba(5, 150, 105, 0.85)", "rgba(5, 150, 105, 0.2)"),
+      borderColor: "#059669",
       borderWidth: 1,
       borderRadius: 6,
       borderSkipped: false,
@@ -168,10 +168,10 @@ export default function Analytics() {
       label: "Expense Trend",
       data: timeValues,
       fill: true,
-      backgroundColor: (ctx) => gradientBg(ctx, "rgba(99, 102, 241, 0.35)", "rgba(99, 102, 241, 0)"),
-      borderColor: "#6366f1",
+      backgroundColor: (ctx) => gradientBg(ctx, "rgba(5, 150, 105, 0.35)", "rgba(5, 150, 105, 0)"),
+      borderColor: "#059669",
       borderWidth: 2.5,
-      pointBackgroundColor: "#6366f1",
+      pointBackgroundColor: "#059669",
       pointBorderColor: "#fff",
       pointBorderWidth: 2,
       pointRadius: 3,
@@ -200,8 +200,8 @@ export default function Analytics() {
     {
       label: "Balance",
       value: s.balance,
-      color: (s.balance || 0) >= 0 ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400",
-      bg: (s.balance || 0) >= 0 ? "bg-indigo-50 dark:bg-indigo-900/30" : "bg-red-50 dark:bg-red-900/30",
+      color: (s.balance || 0) >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400",
+      bg: (s.balance || 0) >= 0 ? "bg-emerald-50 dark:bg-emerald-900/30" : "bg-red-50 dark:bg-red-900/30",
       icon: FiDollarSign,
       change: s.total_income > 0
         ? `${(((s.balance || 0) / s.total_income) * 100).toFixed(1)}% saved`
@@ -210,8 +210,8 @@ export default function Analytics() {
     {
       label: "Average Expense",
       value: e?.average_expense,
-      color: "text-purple-600",
-      bg: "bg-purple-50 dark:bg-purple-900/30",
+      color: "text-emerald-600",
+      bg: "bg-emerald-50 dark:bg-emerald-900/30",
       icon: FiActivity,
       change: e?.highest_expense ? `vs highest ${formatCurrency(e.highest_expense.amount)}` : "—",
     },
@@ -221,7 +221,7 @@ export default function Analytics() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <p className="text-red-500 dark:text-red-400">{error}</p>
-        <button onClick={fetchData} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
+        <button onClick={fetchData} className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700 transition-colors">
           Retry
         </button>
       </div>
@@ -253,7 +253,7 @@ export default function Analytics() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
           <div className="flex items-center gap-2 mb-4">
-            <FiPieChart className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <FiPieChart className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Category Distribution</h2>
           </div>
           <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
@@ -267,7 +267,7 @@ export default function Analytics() {
                 spacing: 4,
               }} />
             ) : (
-              <EmptyState icon={<FiPieChart className="w-6 h-6" />} title="No category data" color="indigo" />
+              <EmptyState icon={<FiPieChart className="w-6 h-6" />} title="No category data" color="emerald" />
             )}
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function Analytics() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div className="flex items-center gap-2">
-              <FiBarChart2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <FiBarChart2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Expense Trends</h2>
             </div>
             <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-0.5 gap-0.5">
@@ -338,7 +338,7 @@ export default function Analytics() {
                 }} />
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <EmptyState icon={<FiBarChart2 className="w-6 h-6" />} title="No expense data" color="indigo" />
+                  <EmptyState icon={<FiBarChart2 className="w-6 h-6" />} title="No expense data" color="emerald" />
                 </div>
               )}
             </div>
@@ -366,7 +366,7 @@ export default function Analytics() {
                 }} />
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <EmptyState icon={<FiTrendingUp className="w-6 h-6" />} title="No trend data" color="indigo" />
+                  <EmptyState icon={<FiTrendingUp className="w-6 h-6" />} title="No trend data" color="emerald" />
                 </div>
               )}
             </div>
@@ -376,7 +376,7 @@ export default function Analytics() {
         {top5.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6 transition-all duration-300 hover:shadow-md lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <FiTrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <FiTrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Top Spending Categories</h2>
             </div>
             <div className="space-y-3">

@@ -59,13 +59,13 @@ export default function Register() {
             <input type="password" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
             <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">8-128 characters, with 1 uppercase, 1 lowercase &amp; 1 digit</p>
           </div>
-          <button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium">
+          <button type="submit" disabled={loading} className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium">
             {loading ? "Creating account..." : "Create account"}
           </button>
         </form>
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="link-underline text-indigo-600 font-medium">Sign in</Link>
+          <Link to="/login" className="link-underline text-emerald-600 font-medium">Sign in</Link>
         </p>
       </div>
     </div>

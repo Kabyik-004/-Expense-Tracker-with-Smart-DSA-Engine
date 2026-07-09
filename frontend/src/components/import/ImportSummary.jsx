@@ -132,7 +132,7 @@ export default function ImportSummary({
       label: "Parsing Time",
       value: formatDur(parsingTime),
       icon: FiClock,
-      color: "indigo",
+      color: "emerald",
       desc: "File processing duration",
     },
   ];
@@ -144,7 +144,7 @@ export default function ImportSummary({
     gray: { bg: "bg-gray-100 dark:bg-gray-800/60", icon: "text-gray-500 dark:text-gray-400" },
     orange: { bg: "bg-orange-100 dark:bg-orange-900/40", icon: "text-orange-600 dark:text-orange-400" },
     amber: { bg: "bg-amber-100 dark:bg-amber-900/40", icon: "text-amber-600 dark:text-amber-400" },
-    indigo: { bg: "bg-indigo-100 dark:bg-indigo-900/40", icon: "text-indigo-600 dark:text-indigo-400" },
+    emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/40", icon: "text-emerald-600 dark:text-emerald-400" },
   };
 
   return (
@@ -178,7 +178,7 @@ export default function ImportSummary({
           return (
             <div
               key={card.label}
-              className="relative overflow-hidden rounded-2xl border border-gray-200/40 dark:border-gray-800/30 bg-white/40 dark:bg-gray-900/30 backdrop-blur-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-indigo-200/50 dark:hover:border-indigo-600/30 card-hover"
+              className="relative overflow-hidden rounded-2xl border border-gray-200/40 dark:border-gray-800/30 bg-white/40 dark:bg-gray-900/30 backdrop-blur-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-emerald-200/50 dark:hover:border-emerald-600/30 card-hover"
               role="listitem"
               style={{ animationDelay: `${idx * 40}ms` }}
             >
@@ -234,7 +234,7 @@ export default function ImportSummary({
       <div className="flex justify-center">
         <button
           onClick={handleDownloadCsv}
-          className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50/80 dark:bg-indigo-900/30 border border-indigo-200/50 dark:border-indigo-700/40 rounded-2xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all backdrop-blur-sm btn-hover"
+          className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-900/30 border border-emerald-200/50 dark:border-emerald-700/40 rounded-2xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all backdrop-blur-sm btn-hover"
           aria-label="Download import report as CSV"
         >
           <FiDownload className="w-4 h-4" aria-hidden="true" />

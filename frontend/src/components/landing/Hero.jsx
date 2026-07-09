@@ -6,9 +6,9 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-gray-950">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-400/20 to-purple-400/20 dark:from-indigo-500/10 dark:to-purple-500/10 blur-3xl animate-pulse-slow" />
-        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-cyan-400/20 to-indigo-400/20 dark:from-cyan-500/10 dark:to-indigo-500/10 blur-3xl animate-pulse-slow animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-r from-violet-400/10 to-fuchsia-400/10 dark:from-violet-500/5 dark:to-fuchsia-500/5 blur-3xl animate-spin-slow" />
+        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-emerald-400/20 to-emerald-400/20 dark:from-emerald-500/10 dark:to-emerald-500/10 blur-3xl animate-pulse-slow" />
+        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-cyan-400/20 to-emerald-400/20 dark:from-cyan-500/10 dark:to-emerald-500/10 blur-3xl animate-pulse-slow animation-delay-2000" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-r from-emerald-400/10 to-emerald-400/10 dark:from-emerald-500/5 dark:to-emerald-500/5 blur-3xl animate-spin-slow" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-0">
@@ -16,19 +16,19 @@ export default function Hero() {
           <div className="relative">
             <div className="relative p-6 sm:p-8 lg:p-10 rounded-2xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl border border-white/40 dark:border-gray-700/30 shadow-xl shadow-black/5">
               <div className="text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200/50 dark:border-indigo-700/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium mb-8 animate-fade-in">
-                  <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/50 dark:border-emerald-700/50 text-emerald-700 dark:text-emerald-300 text-sm font-medium mb-8 animate-fade-in">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   Built with React + Flask + DSA
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white leading-[1.1]">
                   Track Every{" "}
-                  <span className="text-indigo-600 dark:text-indigo-400">Rupee</span>.
+                  <span className="text-emerald-600 dark:text-emerald-400">Rupee</span>.
                   <br />
                   Analyze Every{" "}
-                  <span className="text-indigo-600 dark:text-indigo-400">Expense</span>.
+                  <span className="text-emerald-600 dark:text-emerald-400">Expense</span>.
                   <br />
-                  <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-emerald-600 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 bg-clip-text text-transparent">
                     Powered by Smart DSA.
                   </span>
                 </h1>
@@ -43,7 +43,7 @@ export default function Hero() {
                 <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
                   <Link
                     to="/register"
-                    className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all duration-200 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 text-center"
+                    className="w-full sm:w-auto px-8 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all duration-200 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40 text-center"
                   >
                     Get Started
                   </Link>
@@ -98,7 +98,7 @@ export default function Hero() {
                   <span className="text-xl font-bold text-green-600 dark:text-green-400">12,430</span>
                 </div>
                 <div className="mt-3 w-full h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                  <div className="w-3/5 h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" />
+                  <div className="w-3/5 h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-500" />
                 </div>
                 <span className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 block">60% of monthly budget</span>
               </div>
@@ -121,13 +121,13 @@ export default function Hero() {
                 </div>
               </div>
 
-              <div className="absolute bottom-[8%] right-[8%] w-[40%] p-4 rounded-2xl bg-indigo-600/90 backdrop-blur-xl border border-indigo-400/30 shadow-xl animate-float" style={{ animationDelay: "0.5s" }}>
+              <div className="absolute bottom-[8%] right-[8%] w-[40%] p-4 rounded-2xl bg-emerald-600/90 backdrop-blur-xl border border-emerald-400/30 shadow-xl animate-float" style={{ animationDelay: "0.5s" }}>
                 <div className="flex items-center gap-2">
-                  <FiTrendingUp className="w-4 h-4 text-indigo-200" />
-                  <span className="text-xs font-semibold text-indigo-200 uppercase tracking-wider">Savings Rate</span>
+                  <FiTrendingUp className="w-4 h-4 text-emerald-200" />
+                  <span className="text-xs font-semibold text-emerald-200 uppercase tracking-wider">Savings Rate</span>
                 </div>
                 <p className="text-2xl font-bold text-white mt-1">24.5%</p>
-                <p className="text-xs text-indigo-200 mt-0.5">of income saved this month</p>
+                <p className="text-xs text-emerald-200 mt-0.5">of income saved this month</p>
               </div>
 
               <div className="absolute bottom-[32%] right-[12%] w-[20%] p-3 rounded-xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-xl animate-float flex items-center gap-2" style={{ animationDelay: "1.5s" }}>

@@ -32,17 +32,17 @@ export default function ProgressBar({
         };
       case "processing":
         return {
-          barColor: "bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500",
-          bgColor: "bg-indigo-100 dark:bg-indigo-900/30",
+          barColor: "bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500",
+          bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
           icon: null,
-          iconColor: "text-indigo-500",
+          iconColor: "text-emerald-500",
         };
       default:
         return {
-          barColor: "bg-gradient-to-r from-indigo-500 to-purple-500",
-          bgColor: "bg-indigo-100 dark:bg-indigo-900/30",
+          barColor: "bg-gradient-to-r from-emerald-500 to-emerald-500",
+          bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
           icon: null,
-          iconColor: "text-indigo-500",
+          iconColor: "text-emerald-500",
         };
     }
   }, [status]);
@@ -63,7 +63,7 @@ export default function ProgressBar({
           <div className="flex items-center gap-2 min-w-0">
             {Icon && <Icon className={`w-4 h-4 shrink-0 ${iconColor}`} />}
             {status === "processing" && (
-              <div className={`w-4 h-4 rounded-full border-2 border-indigo-300 border-t-indigo-600 animate-spin shrink-0`} />
+              <div className={`w-4 h-4 rounded-full border-2 border-emerald-300 border-t-emerald-600 animate-spin shrink-0`} />
             )}
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
               {label || (status === "processing" ? "Processing..." : status === "success" ? "Complete" : status === "error" ? "Failed" : "")}
@@ -73,7 +73,7 @@ export default function ProgressBar({
             {onRetry && status === "error" && (
               <button
                 onClick={onRetry}
-                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-1 rounded-lg transition-colors"
+                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-1 rounded-lg transition-colors"
                 aria-label="Retry upload"
               >
                 Retry

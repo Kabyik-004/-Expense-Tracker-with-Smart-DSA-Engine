@@ -18,8 +18,8 @@ const features = [
     title: "Smart Bank Statement Import",
     description:
       "Upload PDF, CSV or Excel bank statements and automatically extract, categorize and import transactions into your expense tracker with intelligent parsing.",
-    color: "text-indigo-600",
-    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    color: "text-emerald-600",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
     premium: true,
   },
   {
@@ -40,15 +40,15 @@ const features = [
     icon: FiBarChart2,
     title: "Dashboard Analytics",
     description: "Visualize spending patterns with interactive charts and insights.",
-    color: "text-indigo-600",
-    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    color: "text-emerald-600",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
   },
   {
     icon: FiTarget,
     title: "Budget Planning",
     description: "Set monthly budgets per category and track progress in real time.",
-    color: "text-purple-600",
-    bg: "bg-purple-100 dark:bg-purple-900/30",
+    color: "text-emerald-600",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
   },
   {
     icon: FiLock,
@@ -82,8 +82,8 @@ const features = [
     icon: FiMonitor,
     title: "Responsive UI",
     description: "Seamless experience across desktop, tablet and mobile devices.",
-    color: "text-violet-600",
-    bg: "bg-violet-100 dark:bg-violet-900/30",
+    color: "text-emerald-600",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
   },
   {
     icon: FiCloud,
@@ -99,12 +99,12 @@ export default function Features() {
     <section id="features" className="relative py-24 lg:py-32 bg-gray-50/50 dark:bg-gray-900/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm tracking-wide uppercase mb-3">
+          <p className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm tracking-wide uppercase mb-3">
             Features
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
             Built for Modern{" "}
-            <span className="text-indigo-600 dark:text-indigo-400">Finance</span>{" "}
+            <span className="text-emerald-600 dark:text-emerald-400">Finance</span>{" "}
             Management
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
@@ -119,12 +119,12 @@ export default function Features() {
               key={feature.title}
               className={`group relative bg-white dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                 feature.premium
-                  ? "hover:border-indigo-300/60 dark:hover:border-indigo-600/60 shadow-indigo-500/5 hover:shadow-indigo-500/10"
-                  : "hover:border-indigo-200/50 dark:hover:border-indigo-800/50"
+                  ? "hover:border-emerald-300/60 dark:hover:border-emerald-600/60 shadow-emerald-500/5 hover:shadow-emerald-500/10"
+                  : "hover:border-emerald-200/50 dark:hover:border-emerald-800/50"
               }`}
             >
               {feature.premium && (
-                <div className="absolute -top-2.5 right-4 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+                <div className="absolute -top-2.5 right-4 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full bg-gradient-to-r from-emerald-600 to-emerald-600 text-white shadow-lg">
                   Premium
                 </div>
               )}
@@ -139,7 +139,7 @@ export default function Features() {
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                 {feature.description}
               </p>
-              <div className="absolute inset-x-6 bottom-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+              <div className="absolute inset-x-6 bottom-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
             </article>
           ))}
         </div>

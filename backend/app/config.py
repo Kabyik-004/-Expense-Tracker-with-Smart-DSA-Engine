@@ -38,7 +38,7 @@ class Config:
     )
 
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
-    PROPAGATE_EXCEPTIONS = True
+    PROPAGATE_EXCEPTIONS = False
 
     JWT_BLOCKLIST_ENABLED = os.getenv("JWT_BLOCKLIST_ENABLED", "true").lower() == "true"
 

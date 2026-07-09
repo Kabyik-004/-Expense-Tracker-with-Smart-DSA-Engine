@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
+from sqlalchemy import inspect as sa_inspect
 
 from app.config import Config
 from app.middleware.error_handler import register_error_handlers
@@ -142,6 +143,17 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
+
+        # ── Auto-migrate: add password_changed_at to existing users table ──
+        try:
+            inspector = sa_inspect(db.engine)
+            columns = [c["name"] for c in inspector.get_columns("users")]
+            if "password_changed_at" not in columns:
+                db.session.execute(db.text("ALTER TABLE users ADD COLUMN password_changed_at TIMESTAMP"))
+                db.session.commit()
+                logger.info("Auto-migration: added password_changed_at column to users table")
+        except Exception:
+            logger.exception("Auto-migration for password_changed_at failed (non-fatal)")
 
     return app
 

@@ -343,7 +343,7 @@ function PasswordSection({ addToast }) {
           <input
             type="password"
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
-              errors.current_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
+              errors.current_password ? "border-red-300 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.current_password}
             onChange={(e) => setForm({ ...form, current_password: e.target.value })}
@@ -355,7 +355,7 @@ function PasswordSection({ addToast }) {
           <input
             type="password"
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
-              errors.new_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
+              errors.new_password ? "border-red-300 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.new_password}
             onChange={(e) => setForm({ ...form, new_password: e.target.value })}
@@ -367,7 +367,7 @@ function PasswordSection({ addToast }) {
           <input
             type="password"
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
-              errors.confirm_password ? "border-red-300" : "border-gray-300 dark:border-gray-600"
+              errors.confirm_password ? "border-red-300 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
             }`}
             value={form.confirm_password}
             onChange={(e) => setForm({ ...form, confirm_password: e.target.value })}

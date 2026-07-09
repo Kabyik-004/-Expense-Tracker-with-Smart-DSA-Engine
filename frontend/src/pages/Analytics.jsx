@@ -15,38 +15,21 @@ import {
 import { SkeletonAnalytics } from "../components/shared/skeletons";
 import EmptyState from "../components/shared/EmptyState";
 import CategoryIcon from "../components/shared/CategoryIcon";
+import { useTheme } from "../context/ThemeContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
 
-const COLORS = [
+const LIGHT_COLORS = [
   "#059669", "#06b6d4", "#f59e0b", "#ef4444", "#10b981",
   "#047857", "#14b8a6", "#0ea5e9", "#f97316", "#84cc16",
   "#8b5cf6", "#6b7280",
 ];
 
-const CHART_OPTIONS = {
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: { duration: 800, easing: "easeOutQuart" },
-  plugins: {
-    legend: {
-      position: "bottom",
-      labels: { padding: 16, usePointStyle: true, boxWidth: 8, font: { size: 11 } },
-    },
-    tooltip: {
-      backgroundColor: "rgba(15, 23, 42, 0.95)",
-      padding: 12,
-      cornerRadius: 12,
-      titleFont: { size: 13, weight: "600" },
-      bodyFont: { size: 12 },
-      displayColors: true,
-      boxPadding: 4,
-      usePointStyle: true,
-      caretSize: 8,
-      caretPadding: 6,
-    },
-  },
-};
+const DARK_COLORS = [
+  "#34d399", "#22d3ee", "#fbbf24", "#f87171", "#4ade80",
+  "#6ee7b7", "#2dd4bf", "#38bdf8", "#fb923c", "#a3e635",
+  "#a78bfa", "#a1a1aa",
+];
 
 function gradientBg(ctx, c1, c2) {
   if (!ctx?.chart?.chartArea) return c1;
@@ -57,7 +40,65 @@ function gradientBg(ctx, c1, c2) {
   return g;
 }
 
+function getChartOptions(isDark) {
+  const textColor = isDark ? "#A1A1AA" : "#64748B";
+  const gridColor = isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.04)";
+  const tooltipBg = isDark ? "rgba(17, 17, 17, 0.96)" : "rgba(15, 23, 42, 0.95)";
+  const tooltipBorder = isDark ? "#27272A" : "transparent";
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 800, easing: "easeOutQuart" },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          padding: 16,
+          usePointStyle: true,
+          boxWidth: 8,
+          font: { size: 11 },
+          color: textColor,
+        },
+      },
+      tooltip: {
+        backgroundColor: tooltipBg,
+        borderColor: tooltipBorder,
+        borderWidth: isDark ? 1 : 0,
+        padding: 12,
+        cornerRadius: 12,
+        titleFont: { size: 13, weight: "600" },
+        titleColor: isDark ? "#FAFAFA" : "#fff",
+        bodyFont: { size: 12 },
+        bodyColor: isDark ? "#A1A1AA" : "#fff",
+        displayColors: true,
+        boxPadding: 4,
+        usePointStyle: true,
+        caretSize: 8,
+        caretPadding: 6,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 10 }, color: textColor },
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: gridColor, drawTicks: false },
+        border: { dash: [4, 4], color: isDark ? "#27272A" : "#E2E8F0" },
+        ticks: { font: { size: 10 }, padding: 8, color: textColor },
+      },
+    },
+  };
+}
+
 export default function Analytics() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const COLORS = isDark ? DARK_COLORS : LIGHT_COLORS;
+  const chartOpts = getChartOptions(isDark);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [summary, setSummary] = useState(null);
@@ -126,13 +167,15 @@ export default function Analytics() {
 
   const hasTrend = timeLabels.length > 0 && timeValues.some(v => v > 0);
 
+  const pieBorderColor = isDark ? "#18181B" : "#fff";
+
   const pieData = {
     labels: dist.map((d) => d.category_name || `#${d.category_id}`),
     datasets: [{
       data: dist.map((d) => d.total_amount),
       backgroundColor: COLORS.slice(0, dist.length),
       borderWidth: 2,
-      borderColor: "#fff",
+      borderColor: pieBorderColor,
       hoverOffset: 10,
     }],
   };
@@ -141,21 +184,24 @@ export default function Analytics() {
     labels: ["Total Income", "Total Expenses"],
     datasets: [{
       data: [s.total_income || 0, s.total_expense || 0],
-      backgroundColor: ["#10b981", "#ef4444"],
+      backgroundColor: isDark ? ["#4ade80", "#f87171"] : ["#10b981", "#ef4444"],
       borderWidth: 3,
-      borderColor: "#fff",
+      borderColor: pieBorderColor,
       hoverOffset: 12,
       spacing: 4,
     }],
   };
+
+  const emeraldBar = isDark ? "#34d399" : "#059669";
+  const emeraldBarRgba = isDark ? "rgba(52, 211, 153, " : "rgba(5, 150, 105, ";
 
   const barData = {
     labels: timeLabels,
     datasets: [{
       label: "Expenses",
       data: timeValues,
-      backgroundColor: (ctx) => gradientBg(ctx, "rgba(5, 150, 105, 0.85)", "rgba(5, 150, 105, 0.2)"),
-      borderColor: "#059669",
+      backgroundColor: (ctx) => gradientBg(ctx, `${emeraldBarRgba}0.85)`, `${emeraldBarRgba}0.2)`),
+      borderColor: emeraldBar,
       borderWidth: 1,
       borderRadius: 6,
       borderSkipped: false,
@@ -168,11 +214,11 @@ export default function Analytics() {
       label: "Expense Trend",
       data: timeValues,
       fill: true,
-      backgroundColor: (ctx) => gradientBg(ctx, "rgba(5, 150, 105, 0.35)", "rgba(5, 150, 105, 0)"),
-      borderColor: "#059669",
+      backgroundColor: (ctx) => gradientBg(ctx, `${emeraldBarRgba}0.35)`, `${emeraldBarRgba}0)`),
+      borderColor: emeraldBar,
       borderWidth: 2.5,
-      pointBackgroundColor: "#059669",
-      pointBorderColor: "#fff",
+      pointBackgroundColor: emeraldBar,
+      pointBorderColor: pieBorderColor,
       pointBorderWidth: 2,
       pointRadius: 3,
       pointHoverRadius: 7,
@@ -259,10 +305,10 @@ export default function Analytics() {
           <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
             {dist.length > 0 ? (
               <Pie data={pieData} options={{
-                ...CHART_OPTIONS,
+                ...chartOpts,
                 plugins: {
-                  ...CHART_OPTIONS.plugins,
-                  legend: { ...CHART_OPTIONS.plugins.legend, position: "right" },
+                  ...chartOpts.plugins,
+                  legend: { ...chartOpts.plugins.legend, position: "right" },
                 },
                 spacing: 4,
               }} />
@@ -280,12 +326,12 @@ export default function Analytics() {
           <div className="h-[280px] sm:h-[320px] flex items-center justify-center">
             {(s.total_income || s.total_expense) ? (
               <Doughnut data={doughnutData} options={{
-                ...CHART_OPTIONS,
+                ...chartOpts,
                 cutout: "68%",
                 spacing: 6,
                 plugins: {
-                  ...CHART_OPTIONS.plugins,
-                  legend: { ...CHART_OPTIONS.plugins.legend, position: "bottom" },
+                  ...chartOpts.plugins,
+                  legend: { ...chartOpts.plugins.legend, position: "bottom" },
                 },
               }} />
             ) : (
@@ -318,20 +364,20 @@ export default function Analytics() {
             <div className="h-[260px] sm:h-[300px]">
               {hasTrend ? (
                 <Bar data={barData} options={{
-                  ...CHART_OPTIONS,
+                  ...chartOpts,
                   scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10 }, color: chartOpts.plugins.legend.labels.color } },
                     y: {
                       beginAtZero: true,
-                      grid: { color: "rgba(0,0,0,0.04)", drawTicks: false },
-                      border: { dash: [4, 4] },
-                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}` },
+                      grid: { color: chartOpts.scales.y.grid.color, drawTicks: false },
+                      border: { dash: [4, 4], color: chartOpts.scales.y.border.color },
+                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}`, color: chartOpts.plugins.legend.labels.color },
                     },
                   },
                   plugins: {
                     legend: { display: false },
                     tooltip: {
-                      ...CHART_OPTIONS.plugins.tooltip,
+                      ...chartOpts.plugins.tooltip,
                       callbacks: { label: (ctx) => `₹${ctx.parsed.y.toLocaleString("en-IN")}` },
                     },
                   },
@@ -345,20 +391,20 @@ export default function Analytics() {
             <div className="h-[260px] sm:h-[300px]">
               {hasTrend ? (
                 <Line data={areaData} options={{
-                  ...CHART_OPTIONS,
+                  ...chartOpts,
                   scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10 }, color: chartOpts.plugins.legend.labels.color } },
                     y: {
                       beginAtZero: true,
-                      grid: { color: "rgba(0,0,0,0.04)", drawTicks: false },
-                      border: { dash: [4, 4] },
-                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}` },
+                      grid: { color: chartOpts.scales.y.grid.color, drawTicks: false },
+                      border: { dash: [4, 4], color: chartOpts.scales.y.border.color },
+                      ticks: { font: { size: 10 }, padding: 8, callback: (v) => `₹${v}`, color: chartOpts.plugins.legend.labels.color },
                     },
                   },
                   plugins: {
                     legend: { display: false },
                     tooltip: {
-                      ...CHART_OPTIONS.plugins.tooltip,
+                      ...chartOpts.plugins.tooltip,
                       callbacks: { label: (ctx) => `₹${ctx.parsed.y.toLocaleString("en-IN")}` },
                     },
                   },

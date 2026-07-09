@@ -88,7 +88,7 @@ export default function ResetPassword() {
         </form>
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-          <Link to="/login" className="link-underline text-emerald-600 font-medium">Back to login</Link>
+          <Link to="/login" className="link-underline text-emerald-600 dark:text-emerald-400 font-medium">Back to login</Link>
         </p>
       </div>
     </div>

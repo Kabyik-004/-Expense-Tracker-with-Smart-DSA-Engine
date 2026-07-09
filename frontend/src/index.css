@@ -258,3 +258,129 @@
     opacity: 0.3 !important;
   }
 }
+
+/* ═══════════════════════════════════════════
+   Premium True Black Dark Theme
+   Inspired by: ChatGPT, Linear, GitHub Dark,
+   Raycast, Vercel Dashboard
+   ═══════════════════════════════════════════ */
+
+.dark {
+  /* ─── Background system ─── */
+  --color-gray-950: #000000;
+  --color-gray-900: #0A0A0A;
+  --color-gray-800: #111111;
+  --color-gray-700: #18181B;
+  --color-gray-600: #171717;
+
+  /* ─── Primary text ─── */
+  --color-white: #FAFAFA;
+  --color-gray-50: #FAFAFA;
+
+  /* ─── Emerald accent for dark mode ─── */
+  --color-emerald-400: #10B981;
+  --color-emerald-500: #059669;
+
+  /* ─── Status colors ─── */
+  --color-green-400: #22C55E;
+  --color-red-400: #EF4444;
+  --color-blue-400: #38BDF8;
+  --color-amber-400: #F59E0B;
+}
+
+/* ─── Borders ─── */
+
+.dark .dark\:border-gray-200,
+.dark .dark\:border-gray-300,
+.dark .dark\:border-gray-400,
+.dark .dark\:border-gray-500,
+.dark .dark\:border-gray-600,
+.dark .dark\:border-gray-700,
+.dark .dark\:border-gray-800 {
+  border-color: #27272A;
+}
+
+.dark hr,
+.dark .dark\:divide-gray-100,
+.dark .dark\:divide-gray-200,
+.dark .dark\:divide-gray-700 {
+  border-color: #27272A;
+}
+
+/* ─── Text ─── */
+
+.dark .dark\:text-gray-200,
+.dark .dark\:text-gray-300 {
+  color: #A1A1AA;
+}
+
+.dark .dark\:text-gray-400,
+.dark .dark\:text-gray-500 {
+  color: #71717A;
+}
+
+/* ─── Placeholders ─── */
+
+.dark .dark\:placeholder-gray-400,
+.dark .dark\:placeholder-gray-500 {
+  color: #52525B;
+}
+
+/* ─── Shadows ─── */
+
+.dark .dark\:shadow-sm,
+.dark .dark\:shadow,
+.dark .dark\:shadow-md,
+.dark .dark\:shadow-lg,
+.dark .dark\:shadow-xl,
+.dark .dark\:shadow-2xl {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark .dark\:shadow-sm {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Selection ─── */
+
+.dark ::selection {
+  background-color: rgba(16, 185, 129, 0.3);
+  color: #FAFAFA;
+}
+
+/* ─── Scrollbar ─── */
+
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* ─── Focus ring ─── */
+
+.dark *:focus {
+  outline: none;
+}
+
+.dark *:focus-visible {
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+  border-color: #10B981;
+}
+
+/* ─── Table hover ─── */
+
+.dark table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}

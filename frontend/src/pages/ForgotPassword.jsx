@@ -50,7 +50,7 @@ export default function ForgotPassword() {
             Reset Password
           </Link>
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-            <Link to="/login" className="link-underline text-emerald-600 font-medium">Back to login</Link>
+            <Link to="/login"             className="link-underline text-emerald-600 dark:text-emerald-400 font-medium">Back to login</Link>
           </p>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function ForgotPassword() {
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Remember your password?{" "}
-          <Link to="/login" className="link-underline text-emerald-600 font-medium">Sign in</Link>
+          <Link to="/login" className="link-underline text-emerald-600 dark:text-emerald-400 font-medium">Sign in</Link>
         </p>
       </div>
     </div>

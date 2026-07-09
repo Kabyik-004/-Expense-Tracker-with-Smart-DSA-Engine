@@ -110,7 +110,7 @@ function AppLayout() {
               <h1 className="text-lg font-bold text-emerald-600">
                 Expense Tracker
               </h1>
-              <p className="text-xs text-gray-400 mt-1">Smart DSA Engine</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Smart DSA Engine</p>
             </div>
           </div>
 

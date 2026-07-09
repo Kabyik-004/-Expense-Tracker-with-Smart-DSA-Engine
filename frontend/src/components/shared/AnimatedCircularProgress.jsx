@@ -8,7 +8,7 @@ export default function AnimatedCircularProgress({
   value,
   size = 120,
   strokeWidth = 8,
-  color = "#6366f1",
+  color = "#059669",
   bgCircle = null,
   label,
   subtitle,

@@ -144,7 +144,6 @@ export default function ImportSummary({
     gray: { bg: "bg-gray-100 dark:bg-gray-800/60", icon: "text-gray-500 dark:text-gray-400" },
     orange: { bg: "bg-orange-100 dark:bg-orange-900/40", icon: "text-orange-600 dark:text-orange-400" },
     amber: { bg: "bg-amber-100 dark:bg-amber-900/40", icon: "text-amber-600 dark:text-amber-400" },
-    emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/40", icon: "text-emerald-600 dark:text-emerald-400" },
   };
 
   return (

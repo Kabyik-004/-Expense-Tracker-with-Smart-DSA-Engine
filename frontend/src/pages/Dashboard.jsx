@@ -356,8 +356,8 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-red-600">
-                      -{formatCurrency(txn.amount)}
+                    <p className="font-semibold text-red-600 dark:text-red-400">
+                       -{formatCurrency(txn.amount)}
                     </p>
                     <p className="text-xs text-gray-400 dark:text-gray-500">{txn.payment_method || "Cash"}</p>
                   </div>
@@ -420,7 +420,7 @@ export default function Dashboard() {
 
       <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6" aria-labelledby="charts-heading">
         <h2 id="charts-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <FiBarChart2 className="w-5 h-5 text-emerald-600" />
+          <FiBarChart2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           Charts & Analytics
         </h2>
         <div className="bg-gradient-to-br from-emerald-50 dark:from-emerald-900/20 to-emerald-50 dark:to-emerald-900/20 rounded-xl">

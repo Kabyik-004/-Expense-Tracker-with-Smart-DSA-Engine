@@ -209,7 +209,7 @@ export default function PreviewTable({
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="relative flex-1 max-w-md w-full">
-          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             value={search}
@@ -334,7 +334,7 @@ export default function PreviewTable({
                         {isSelected ? <FiCheckSquare className="w-4 h-4 text-emerald-600" /> : <FiSquare className="w-4 h-4" />}
                       </button>
                     </td>
-                    <td className="px-3 py-2.5 text-xs text-gray-400">{tx.row_index + 1}</td>
+                    <td className="px-3 py-2.5 text-xs text-gray-400 dark:text-gray-500">{tx.row_index + 1}</td>
 
                     {/* Date */}
                     <td className="px-3 py-2.5">
@@ -353,7 +353,7 @@ export default function PreviewTable({
                         <input autoFocus value={editValue} onChange={(e) => setEditValue(e.target.value)} onBlur={() => saveEdit(tx.row_index, "description")} onKeyDown={(e) => e.key === "Enter" && saveEdit(tx.row_index, "description")} className="w-full px-2 py-1 rounded-lg border border-emerald-300 dark:border-emerald-600 bg-white dark:bg-gray-800 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400/30" />
                       ) : (
                         <button onClick={() => startEdit(tx.row_index, "description", tx.description)} className="text-xs text-gray-700 dark:text-gray-200 truncate block w-full text-left hover:text-emerald-600 dark:hover:text-emerald-400">
-                          {tx.description || <span className="text-gray-400 italic">—</span>}
+                          {tx.description || <span className="text-gray-400 dark:text-gray-500 italic">—</span>}
                         </button>
                       )}
                     </td>

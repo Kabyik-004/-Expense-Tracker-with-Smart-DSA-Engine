@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 
-const COLORS = ["#6366f1", "#8b5cf6", "#a855f7", "#d946ef", "#10b981", "#f59e0b", "#ef4444", "#06b6d4"];
+const COLORS = ["#059669", "#06b6d4", "#f59e0b", "#ef4444", "#10b981", "#06b6d4", "#14b8a6", "#f97316"];
 
 function Particle({ index }) {
   const angle = (index / 20) * 360;

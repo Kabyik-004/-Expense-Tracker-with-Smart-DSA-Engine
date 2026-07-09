@@ -1,24 +1,23 @@
 """
-Email service — SMTP email sending with HTML templates.
-Uses Python stdlib smtplib (no additional dependencies).
-Configuration is read from Flask app.config (populated from .env).
+Email service — application-level interface for sending transactional emails.
+Delegates delivery to the configured provider via a background thread pool
+so API responses never wait for email transmission.
 """
 
 import logging
-import smtplib
-import time
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from concurrent.futures import ThreadPoolExecutor
 
 from flask import current_app, render_template
 
 logger = logging.getLogger(__name__)
 
+_executor = ThreadPoolExecutor(max_workers=4)
+
 
 def send_otp_email(to_email, otp):
     """
-    Render the OTP email template and send it via SMTP.
-    Returns True if the email was sent successfully, False otherwise.
+    Render the OTP email template and dispatch it via the configured provider.
+    Returns True if the email was submitted for delivery, False otherwise.
     """
     html = render_template("emails/otp_email.html", otp=otp)
     subject = "Your Password Reset OTP — Expense Tracker"
@@ -27,56 +26,26 @@ def send_otp_email(to_email, otp):
 
 def send_email(to_email, subject, html_body):
     """
-    Low-level SMTP send with retry. Reads config from flask current_app.config.
-    Returns True on success, False on failure (never raises — prevents enumeration).
+    Queue an HTML email for background delivery via the configured provider.
+    Returns True immediately (submission accepted), never raises.
     """
-    config = current_app.config
+    app = current_app._get_current_object()
+    _executor.submit(_deliver, app, to_email, subject, html_body)
+    return True
 
-    smtp_host = config.get("MAIL_SERVER", "smtp.gmail.com")
-    smtp_port = config.get("MAIL_PORT", 587)
-    smtp_user = config.get("MAIL_USERNAME", "")
-    smtp_pass = config.get("MAIL_PASSWORD", "")
-    use_tls = config.get("MAIL_USE_TLS", True)
-    sender = config.get("MAIL_DEFAULT_SENDER") or smtp_user
 
-    if not smtp_user or not smtp_pass:
-        logger.warning(
-            "MAIL_USERNAME/MAIL_PASSWORD not configured — skipping email to %s",
+def _deliver(app, to_email, subject, html_body):
+    """Background task: send one email with retry, then log the outcome."""
+    with app.app_context():
+        from app.email_provider import get_provider
+
+        provider = get_provider(current_app.config)
+        ok = provider.send(to_email, subject, html_body)
+
+    if ok:
+        logger.info("Background email sent to %s", to_email)
+    else:
+        logger.error(
+            "Background email delivery failed for %s after all retries",
             to_email,
         )
-        return False
-
-    msg = MIMEMultipart("alternative")
-    msg["From"] = sender
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(html_body, "html"))
-
-    attempts = [(smtp_host, smtp_port, smtp_user, smtp_pass, use_tls)]
-
-    for attempt in range(2):
-        try:
-            with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
-                if use_tls:
-                    server.starttls()
-                if smtp_user:
-                    server.login(smtp_user, smtp_pass)
-                server.sendmail(sender, to_email, msg.as_string())
-
-            logger.info(
-                "Email sent to %s (attempt %d/2)", to_email, attempt + 1
-            )
-            return True
-
-        except Exception as exc:
-            logger.warning(
-                "SMTP attempt %d/2 failed for %s: %s",
-                attempt + 1,
-                to_email,
-                exc,
-            )
-            if attempt == 0:
-                time.sleep(1)
-
-    logger.error("All SMTP attempts failed for %s", to_email)
-    return False

@@ -16,8 +16,6 @@ from app.controllers.auth_controller import (
     update_user_profile,
     change_user_password,
     upload_user_avatar,
-    forgot_password,
-    reset_password,
     validate_token,
 )
 from app.utils.responses import error_response
@@ -49,31 +47,6 @@ def login():
     """
     try:
         return login_user(request.get_json())
-    except ValidationError as e:
-        return error_response("Validation failed", 400, errors=e.messages)
-
-
-@auth_bp.route("/forgot-password", methods=["POST"])
-def forgot_password_route():
-    """
-    POST /api/auth/forgot-password
-    Body: { email }
-    Returns: { reset_token } (token returned in response for testing only)
-    """
-    try:
-        return forgot_password(request.get_json())
-    except ValidationError as e:
-        return error_response("Validation failed", 400, errors=e.messages)
-
-
-@auth_bp.route("/reset-password", methods=["POST"])
-def reset_password_route():
-    """
-    POST /api/auth/reset-password
-    Body: { token, new_password }
-    """
-    try:
-        return reset_password(request.get_json())
     except ValidationError as e:
         return error_response("Validation failed", 400, errors=e.messages)
 

@@ -3,8 +3,7 @@ Auth controller — all authentication business logic.
 Routes call these functions; they never touch HTTP directly.
 """
 
-import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 from flask_jwt_extended import (
     create_access_token,
@@ -21,8 +20,6 @@ from app.schemas.user_schema import (
     LoginSchema,
     UpdateProfileSchema,
     ChangePasswordSchema,
-    ForgotPasswordSchema,
-    ResetPasswordSchema,
     UserResponseSchema,
 )
 from app.utils.responses import success_response, error_response
@@ -33,8 +30,6 @@ register_schema = RegisterSchema()
 login_schema = LoginSchema()
 update_profile_schema = UpdateProfileSchema()
 change_password_schema = ChangePasswordSchema()
-forgot_password_schema = ForgotPasswordSchema()
-reset_password_schema = ResetPasswordSchema()
 user_response_schema = UserResponseSchema()
 
 
@@ -68,6 +63,7 @@ def register_user(request_data):
         currency=data.get("currency", "INR"),
     )
     user.set_password(data["password"])
+    user.password_changed_at = datetime.now(timezone.utc)
 
     db.session.add(user)
     db.session.commit()
@@ -295,61 +291,6 @@ def change_user_password(request_data):
     log_activity(user.id, "update", "password", user.id, "Password changed")
 
     return success_response(message="Password changed successfully")
-
-
-# ═════════════════════════════════════════════════════════════════════════════
-#  FORGOT PASSWORD  (structure only — email sending not implemented)
-# ═════════════════════════════════════════════════════════════════════════════
-
-def forgot_password(request_data):
-    """
-    Generate a password reset token and store it on the user record.
-    In production, this would send an email with a reset link.
-    For now, the token is returned in the response for testing.
-    """
-    data = forgot_password_schema.load(request_data)
-    user = User.query.filter_by(email=data["email"]).first()
-
-    if not user:
-        # Return success even if email doesn't exist (prevents email enumeration)
-        return success_response(
-            message="If an account with that email exists, a reset link has been sent"
-        )
-
-    # Generate a secure random token
-    reset_token = secrets.token_urlsafe(32)
-    user.reset_token = reset_token
-    user.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
-    db.session.commit()
-
-    return success_response(
-        data={"reset_token": reset_token, "email": data["email"]},
-        message="Password reset link sent to your email",
-    )
-
-
-# ═════════════════════════════════════════════════════════════════════════════
-#  RESET PASSWORD
-# ═════════════════════════════════════════════════════════════════════════════
-
-def reset_password(request_data):
-    """Validate the reset token and set a new password."""
-    data = reset_password_schema.load(request_data)
-
-    user = User.query.filter_by(reset_token=data["token"]).first()
-
-    if not user:
-        return error_response("Invalid or expired reset token", 400)
-
-    if not user.reset_token_expires or user.reset_token_expires.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
-        return error_response("Reset token has expired", 400)
-
-    user.set_password(data["new_password"])
-    user.reset_token = None
-    user.reset_token_expires = None
-    db.session.commit()
-
-    return success_response(message="Password reset successfully")
 
 
 # ═════════════════════════════════════════════════════════════════════════════

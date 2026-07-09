@@ -13,6 +13,7 @@ export const API_PATHS = {
     profile: "/auth/profile",
     changePassword: "/auth/change-password",
     forgotPassword: "/auth/forgot-password",
+    verifyOtp: "/auth/verify-otp",
     resetPassword: "/auth/reset-password",
     validate: "/auth/validate",
     avatar: "/auth/avatar",

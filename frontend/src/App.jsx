@@ -36,6 +36,7 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const VerifyOTP = lazy(() => import("./pages/VerifyOTP"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Expenses = lazy(() => import("./pages/Expenses"));
@@ -191,6 +192,15 @@ export default function App() {
             element={
               <PublicRoute>
                 <PageTransition><ForgotPassword /></PageTransition>
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/verify-otp"
+            element={
+              <PublicRoute>
+                <PageTransition><VerifyOTP /></PageTransition>
               </PublicRoute>
             }
           />

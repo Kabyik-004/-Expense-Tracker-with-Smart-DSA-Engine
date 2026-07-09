@@ -51,6 +51,11 @@ export async function forgotPassword(data) {
   return res.data;
 }
 
+export async function verifyOtp(data) {
+  const res = await api.post(API_PATHS.auth.verifyOtp, data);
+  return res.data;
+}
+
 export async function resetPassword(data) {
   const res = await api.post(API_PATHS.auth.resetPassword, data);
   return res.data;

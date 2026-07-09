@@ -14,9 +14,10 @@ from app.models.activity_log import ActivityLog
 from app.models.budget import Budget
 from app.models.blocklist import TokenBlocklist
 from app.models.bank_statement import BankStatement, ImportLog
+from app.models.password_reset_otp import PasswordResetOTP
 
 __all__ = [
     "User", "Expense", "Income", "Category", "UndoHistory",
     "ActivityLog", "Budget", "TokenBlocklist",
-    "BankStatement", "ImportLog",
+    "BankStatement", "ImportLog", "PasswordResetOTP",
 ]

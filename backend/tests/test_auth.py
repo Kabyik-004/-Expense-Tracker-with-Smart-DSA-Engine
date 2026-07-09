@@ -31,6 +31,7 @@ def client(app):
 @pytest.fixture
 def sample_user(app):
     """Create and return a sample user for login tests."""
+    from datetime import datetime, timezone
     with app.app_context():
         user = User(
             username="testuser",
@@ -38,6 +39,7 @@ def sample_user(app):
             full_name="Test User",
         )
         user.set_password("TestPass1")
+        user.password_changed_at = datetime.now(timezone.utc)
         db.session.add(user)
         db.session.commit()
         return {
@@ -290,8 +292,20 @@ class TestRefreshToken:
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-#  FORGOT / RESET PASSWORD
+#  FORGOT / RESET PASSWORD (OTP-based)
 # ═════════════════════════════════════════════════════════════════════════════
+
+TEST_OTP = "123456"
+
+
+@pytest.fixture
+def patch_generate_otp(monkeypatch):
+    """Force generate_otp() to return a known OTP so tests can verify+reset."""
+    import app.otp.otp_utils as ou
+    import app.otp.otp_service as svc
+    monkeypatch.setattr(ou, "generate_otp", lambda length=6: TEST_OTP)
+    monkeypatch.setattr(svc, "generate_otp", lambda length=6: TEST_OTP)
+
 
 class TestForgotResetPassword:
 
@@ -302,58 +316,77 @@ class TestForgotResetPassword:
             })
             assert res.status_code == 200
             assert res.get_json()["success"] is True
-            user = User.query.filter_by(email="test@example.com").first()
-            assert user.reset_token is not None
-            assert user.reset_token_expires is not None
+            from app.models.password_reset_otp import PasswordResetOTP
+            record = PasswordResetOTP.query.filter_by(user_id=sample_user["id"]).first()
+            assert record is not None
+            assert record.verified is False
 
     def test_forgot_password_nonexistent_email(self, client):
         res = client.post("/api/auth/forgot-password", json={
             "email": "nobody@example.com",
         })
         assert res.status_code == 200
-        assert "If an account" in res.get_json()["message"]
+        assert res.get_json()["success"] is True
 
-    def test_reset_password_success(self, client, sample_user, app):
+    def test_forgot_password_invalid_email(self, client):
+        res = client.post("/api/auth/forgot-password", json={
+            "email": "not-an-email",
+        })
+        assert res.status_code == 400
+
+    def test_forgot_password_missing_email(self, client):
+        res = client.post("/api/auth/forgot-password", json={})
+        assert res.status_code == 400
+        assert "required" in res.get_json()["message"].lower()
+
+    def test_reset_password_success(self, client, sample_user, app, patch_generate_otp):
         with app.app_context():
             client.post("/api/auth/forgot-password", json={"email": "test@example.com"})
-            user = User.query.filter_by(email="test@example.com").first()
-            token = user.reset_token
+            res = client.post("/api/auth/verify-otp", json={
+                "email": "test@example.com", "otp": TEST_OTP,
+            })
+            assert res.status_code == 200
+
         res = client.post("/api/auth/reset-password", json={
-            "token": token, "new_password": "ResetPass1",
+            "email": "test@example.com", "otp": TEST_OTP, "new_password": "ResetPass1",
         })
         assert res.status_code == 200
+        assert res.get_json()["success"] is True
+
         login_res = client.post("/api/auth/login", json={
             "login": "testuser", "password": "ResetPass1",
         })
         assert login_res.status_code == 200
 
-    def test_reset_password_invalid_token(self, client):
+    def test_reset_password_invalid_otp(self, client, sample_user, app):
         res = client.post("/api/auth/reset-password", json={
-            "token": "invalid-token-123", "new_password": "ResetPass1",
+            "email": "test@example.com", "otp": "000000", "new_password": "ResetPass1",
         })
         assert res.status_code == 400
 
-    def test_reset_password_expired_token(self, client, sample_user, app):
+    def test_reset_password_expired_otp(self, client, sample_user, app):
         from datetime import datetime, timedelta, timezone
         with app.app_context():
             client.post("/api/auth/forgot-password", json={"email": "test@example.com"})
-            user = User.query.filter_by(email="test@example.com").first()
-            user.reset_token_expires = datetime.now(timezone.utc) - timedelta(hours=2)
+            from app.models.password_reset_otp import PasswordResetOTP
+            record = PasswordResetOTP.query.filter_by(user_id=sample_user["id"]).first()
+            record.expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
             db.session.commit()
-            token = user.reset_token
         res = client.post("/api/auth/reset-password", json={
-            "token": token, "new_password": "ResetPass1",
+            "email": "test@example.com", "otp": "000000", "new_password": "ResetPass1",
         })
         assert res.status_code == 400
 
     def test_reset_password_weak_new(self, client, sample_user, app):
-        with app.app_context():
-            client.post("/api/auth/forgot-password", json={"email": "test@example.com"})
-            user = User.query.filter_by(email="test@example.com").first()
-            token = user.reset_token
         res = client.post("/api/auth/reset-password", json={
-            "token": token, "new_password": "weak",
+            "email": "test@example.com", "otp": "123456", "new_password": "weak",
         })
+        assert res.status_code == 400
+
+    def test_reset_password_missing_fields(self, client):
+        res = client.post("/api/auth/reset-password", json={})
+        assert res.status_code == 400
+        res = client.post("/api/auth/reset-password", json={"email": "test@example.com"})
         assert res.status_code == 400
 
 

@@ -40,6 +40,9 @@ class User(db.Model):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )
+    password_changed_at = db.Column(
+        db.DateTime, nullable=True, default=None
+    )
 
     # ── Relationships ────────────────────────────────────────────────────
     expenses = db.relationship(

@@ -42,6 +42,23 @@ class Config:
 
     JWT_BLOCKLIST_ENABLED = os.getenv("JWT_BLOCKLIST_ENABLED", "true").lower() == "true"
 
+    # Email / SMTP
+    MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
+    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "true").lower() == "true"
+    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER", "")
+
+    # OTP / Security
+    OTP_LENGTH = int(os.getenv("OTP_LENGTH", "6"))
+    OTP_EXPIRY_MINUTES = int(os.getenv("OTP_EXPIRY_MINUTES", "5"))
+    OTP_MAX_ATTEMPTS = int(os.getenv("OTP_MAX_ATTEMPTS", "5"))
+    OTP_COOLDOWN_SECONDS = int(os.getenv("OTP_COOLDOWN_SECONDS", "60"))
+    OTP_RESEND_COOLDOWN = int(os.getenv("OTP_RESEND_COOLDOWN", "60"))
+    OTP_RATE_LIMIT_WINDOW = int(os.getenv("OTP_RATE_LIMIT_WINDOW", "60"))
+    OTP_RATE_LIMIT_MAX = int(os.getenv("OTP_RATE_LIMIT_MAX", "5"))
+
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
         "pool_recycle": 300,

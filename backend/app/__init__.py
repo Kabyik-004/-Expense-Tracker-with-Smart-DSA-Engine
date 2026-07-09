@@ -2,6 +2,10 @@
 Expense Tracker Backend - Application Factory
 """
 
+import logging
+import os
+from datetime import datetime, timezone
+
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
@@ -16,13 +20,37 @@ db = SQLAlchemy()
 jwt = JWTManager()
 ma = Marshmallow()
 
+# ── Logging ────────────────────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
 
 def _is_token_revoked(jwt_header, jwt_payload):
     from app.models.blocklist import TokenBlocklist
+    from app.models.user import User
 
     jti = jwt_payload["jti"]
     entry = TokenBlocklist.query.filter_by(jti=jti).first()
-    return entry is not None
+    if entry is not None:
+        return True
+
+    token_pwd_at = jwt_payload.get("password_changed_at")
+    if token_pwd_at is not None:
+        user_id = jwt_payload.get("sub")
+        if user_id:
+            user = db.session.get(User, int(user_id))
+            if user and user.password_changed_at:
+                token_time = datetime.fromtimestamp(token_pwd_at, tz=timezone.utc)
+                user_time = user.password_changed_at
+                if user_time.tzinfo is None:
+                    user_time = user_time.replace(tzinfo=timezone.utc)
+                if user_time > token_time:
+                    return True
+
+    return False
 
 
 def create_app(config_class=Config):
@@ -40,6 +68,18 @@ def create_app(config_class=Config):
     @jwt.token_in_blocklist_loader
     def check_if_token_revoked(jwt_header, jwt_payload):
         return _is_token_revoked(jwt_header, jwt_payload)
+
+    @jwt.additional_claims_loader
+    def add_claims(identity):
+        from app.models.user import User
+
+        user = db.session.get(User, int(identity))
+        if user and user.password_changed_at:
+            pwd_at = user.password_changed_at
+            if pwd_at.tzinfo is None:
+                pwd_at = pwd_at.replace(tzinfo=timezone.utc)
+            return {"password_changed_at": pwd_at.timestamp()}
+        return {}
 
     # ── JWT error callbacks (return JSON instead of HTML) ─────────────
     @jwt.expired_token_loader
@@ -82,6 +122,7 @@ def create_app(config_class=Config):
     from app.routes.activity_routes import activity_bp
     from app.routes.budget_routes import budget_bp
     from app.statement_import import import_bp
+    from app.otp import otp_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(expense_bp, url_prefix="/api/expenses")
@@ -91,13 +132,13 @@ def create_app(config_class=Config):
     app.register_blueprint(activity_bp, url_prefix="/api/auth")
     app.register_blueprint(budget_bp, url_prefix="/api/budgets")
     app.register_blueprint(import_bp, url_prefix="/api/import")
+    app.register_blueprint(otp_bp, url_prefix="/api/auth")
 
     # Ensure instance directory exists for SQLite database
-    import os
     os.makedirs(app.instance_path, exist_ok=True)
 
     # Import models so SQLAlchemy registers all tables
-    from app.models import User, Expense, Income, Category, UndoHistory, ActivityLog, Budget, TokenBlocklist, BankStatement, ImportLog  # noqa: F401
+    from app.models import User, Expense, Income, Category, UndoHistory, ActivityLog, Budget, TokenBlocklist, BankStatement, ImportLog, PasswordResetOTP  # noqa: F401
 
     with app.app_context():
         db.create_all()

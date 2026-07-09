@@ -30,6 +30,7 @@ import ProfileMenu from "./components/shared/ProfileMenu";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
 
 import { lazy, Suspense } from "react";
+import dashboardLogo from "./assets/dashboard-logo.png";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login"));
@@ -103,12 +104,15 @@ function AppLayout() {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
       <aside className="w-64 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-800/50 flex flex-col">
-        <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-          <h1 className="text-lg font-bold text-indigo-600">
-            Expense Tracker
-          </h1>
-          <p className="text-xs text-gray-400 mt-1">Smart DSA Engine</p>
-        </div>
+          <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3">
+            <img src={dashboardLogo} alt="Expense Tracker" className="w-8 h-8 object-contain" />
+            <div>
+              <h1 className="text-lg font-bold text-indigo-600">
+                Expense Tracker
+              </h1>
+              <p className="text-xs text-gray-400 mt-1">Smart DSA Engine</p>
+            </div>
+          </div>
 
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map(({ path, label, icon: Icon }) => (

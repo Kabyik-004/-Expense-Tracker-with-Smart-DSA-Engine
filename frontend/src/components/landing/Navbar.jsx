@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import ThemeSwitch from "../shared/ThemeSwitch";
+import navbarLogo from "../../assets/navbar-logo.png";
 
 const navLinks = [
   { label: "Features", href: "features" },
@@ -54,9 +55,7 @@ export default function Navbar() {
             className="flex items-center gap-2 shrink-0"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">ET</span>
-            </div>
+            <img src={navbarLogo} alt="Expense Tracker" className="w-8 h-8 object-contain" />
             <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
               Expense Tracker
             </span>

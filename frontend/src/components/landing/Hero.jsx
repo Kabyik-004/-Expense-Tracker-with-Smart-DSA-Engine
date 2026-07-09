@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiTrendingUp, FiTrendingDown, FiDollarSign } from "react-icons/fi";
+import landingLogo from "../../assets/landing-logo.png";
 
 export default function Hero() {
   return (
@@ -86,26 +87,8 @@ export default function Hero() {
 
           <div className="relative hidden lg:block">
             <div className="relative w-full aspect-[4/3]">
-              <div className="absolute top-[8%] left-[5%] w-[72%] p-5 rounded-2xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-xl animate-float" style={{ animationDelay: "0s" }}>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Today's Spending</span>
-                  <span className="text-xs text-red-500 font-medium flex items-center gap-1">
-                    <FiTrendingDown className="w-3 h-3" />
-                    +12.3%
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold text-gray-900 dark:text-white">₹</span>
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">1,847</span>
-                  <span className="text-sm text-gray-400 dark:text-gray-500 ml-1">today</span>
-                </div>
-                <div className="mt-4 flex gap-2">
-                  {["Food", "Transport", "Shopping"].map((tag) => (
-                    <span key={tag} className="px-2.5 py-1 text-xs font-medium rounded-full bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              <div className="absolute top-[8%] left-[5%] w-[72%] p-6 rounded-2xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-xl animate-float flex items-center justify-center" style={{ animationDelay: "0s" }}>
+                <img src={landingLogo} alt="Expense Tracker Logo" className="w-full h-auto object-contain max-h-40" />
               </div>
 
               <div className="absolute top-[5%] right-[5%] w-[32%] p-4 rounded-2xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-xl animate-float" style={{ animationDelay: "1s" }}>

@@ -92,10 +92,16 @@ def create_otp_record(user_id, email):
 
     delivered = send_otp(email, otp)
 
-    logger.info(
-        "OTP record %d created for user %s — delivered=%s",
-        record.id, user_id, delivered,
-    )
+    if not delivered:
+        logger.info(
+            "Dev fallback — OTP for %s: %s (email not configured)",
+            email, otp,
+        )
+    else:
+        logger.info(
+            "OTP record %d created for user %s — delivered=%s",
+            record.id, user_id, delivered,
+        )
 
     return otp
 

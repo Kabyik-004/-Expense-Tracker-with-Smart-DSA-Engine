@@ -44,6 +44,55 @@ def _needs_slot_filling(intent):
     return intent in REQUIRED_FIELDS and REQUIRED_FIELDS[intent]
 
 
+def _reconstruct_state(history):
+    """Reconstruct slot-filling state from history when session is lost.
+    Returns (intent, entities, missing, target_field) or None."""
+    if not history or len(history) < 2:
+        return None
+
+    first_user = None
+    for entry in history:
+        if entry.get("role") == "user":
+            first_user = entry.get("text", "")
+            break
+    if not first_user:
+        return None
+
+    result = classify_message(first_user)
+    intent = result["intent"]
+    if intent not in REQUIRED_FIELDS or not REQUIRED_FIELDS[intent]:
+        return None
+
+    entities = {}
+    for entry in history:
+        if entry.get("role") == "user":
+            extracted = extract_entities(entry.get("text", ""))
+            for k, v in extracted.items():
+                if v is not None:
+                    entities[k] = v
+
+    missing = get_missing_fields(intent, entities)
+    if not missing:
+        return None
+
+    last_assistant = None
+    for entry in reversed(history):
+        if entry.get("role") == "assistant":
+            last_assistant = entry.get("text", "")
+            break
+    if not last_assistant:
+        return None
+
+    from app.assistant.slot_filler import QUESTIONS, ALL_FIELDS
+    known_questions = set(QUESTIONS.values())
+    for f in ALL_FIELDS.get(intent, []):
+        known_questions.add(f"Please tell me the {f.replace('_', ' ')}.")
+    if last_assistant not in known_questions:
+        return None
+
+    return intent, entities, missing, missing[0]
+
+
 def process_message_stream(message, history=None, user_id=None):
     api_key = _get_api_key()
     system_prompt = _get_system_prompt()
@@ -51,6 +100,13 @@ def process_message_stream(message, history=None, user_id=None):
 
     if session:
         yield from _handle_slot_fill(message, session, user_id, api_key, system_prompt)
+    elif history:
+        state = _reconstruct_state(history)
+        if state:
+            intent, entities, missing, target_field = state
+            yield from _handle_slot_fill_from_history(message, intent, entities, missing, target_field, user_id, api_key, system_prompt)
+        else:
+            yield from _handle_new_message(message, history, user_id, api_key, system_prompt)
     else:
         yield from _handle_new_message(message, history, user_id, api_key, system_prompt)
 
@@ -156,6 +212,31 @@ def _handle_slot_fill(message, session, user_id, api_key, system_prompt):
         tool_result = execute_tool(user_id, intent, session["entities"], message)
         reply = tool_result.get("reply", "")
         for chunk in _yield_text(reply):
+            yield chunk
+
+
+def _handle_slot_fill_from_history(message, intent, entities, missing, target_field, user_id, api_key, system_prompt):
+    slot_entities = extract_from_slot_answer(message, target_field)
+    had_new = False
+    for k, v in slot_entities.items():
+        if v is not None:
+            entities[k] = v
+            had_new = True
+
+    if not had_new:
+        question = f"Please tell me the {target_field.replace('_', ' ')}."
+        for chunk in _yield_text(question):
+            yield chunk
+        return
+
+    remaining = get_missing_fields(intent, entities)
+    if remaining:
+        question = get_next_question(remaining, 0)
+        for chunk in _yield_text(question):
+            yield chunk
+    else:
+        tool_result = execute_tool(user_id, intent, entities, message)
+        for chunk in _yield_text(tool_result.get("reply", "")):
             yield chunk
 
 

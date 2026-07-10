@@ -48,6 +48,7 @@ def _reconstruct_state(history):
     """Reconstruct slot-filling state from history when session is lost.
     Returns (intent, entities, missing, target_field) or None."""
     if not history or len(history) < 2:
+        logger.debug("reconstruct: history too short (len=%s)", len(history) if history else 0)
         return None
 
     first_user = None
@@ -56,11 +57,13 @@ def _reconstruct_state(history):
             first_user = entry.get("text", "")
             break
     if not first_user:
+        logger.debug("reconstruct: no user message found")
         return None
 
     result = classify_message(first_user)
     intent = result["intent"]
     if intent not in REQUIRED_FIELDS or not REQUIRED_FIELDS[intent]:
+        logger.debug("reconstruct: intent %s not slot-fillable", intent)
         return None
 
     entities = {}
@@ -73,6 +76,7 @@ def _reconstruct_state(history):
 
     missing = get_missing_fields(intent, entities)
     if not missing:
+        logger.debug("reconstruct: no missing fields for %s (entities=%s)", intent, entities)
         return None
 
     last_assistant = None
@@ -81,6 +85,7 @@ def _reconstruct_state(history):
             last_assistant = entry.get("text", "")
             break
     if not last_assistant:
+        logger.debug("reconstruct: no assistant message found")
         return None
 
     from app.assistant.slot_filler import QUESTIONS, ALL_FIELDS
@@ -88,6 +93,8 @@ def _reconstruct_state(history):
     for f in ALL_FIELDS.get(intent, []):
         known_questions.add(f"Please tell me the {f.replace('_', ' ')}.")
     if last_assistant not in known_questions:
+        logger.debug("reconstruct: last assistant msg '%s' not in known questions (sample: %s)", 
+                     last_assistant, list(known_questions)[:3])
         return None
 
     return intent, entities, missing, missing[0]

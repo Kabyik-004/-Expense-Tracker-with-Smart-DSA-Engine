@@ -74,11 +74,6 @@ def _reconstruct_state(history):
                 if v is not None:
                     entities[k] = v
 
-    missing = get_missing_fields(intent, entities)
-    if not missing:
-        logger.debug("reconstruct: no missing fields for %s (entities=%s)", intent, entities)
-        return None
-
     last_assistant = None
     for entry in reversed(history):
         if entry.get("role") == "assistant":
@@ -97,7 +92,8 @@ def _reconstruct_state(history):
                      last_assistant, list(known_questions)[:3])
         return None
 
-    return intent, entities, missing, missing[0]
+    missing = get_missing_fields(intent, entities)
+    return intent, entities, missing, missing[0] if missing else None
 
 
 def process_message_stream(message, history=None, user_id=None):
@@ -111,7 +107,12 @@ def process_message_stream(message, history=None, user_id=None):
         state = _reconstruct_state(history)
         if state:
             intent, entities, missing, target_field = state
-            yield from _handle_slot_fill_from_history(message, intent, entities, missing, target_field, user_id, api_key, system_prompt)
+            if target_field is None:
+                tool_result = execute_tool(user_id, intent, entities, message)
+                for chunk in _yield_text(tool_result.get("reply", "")):
+                    yield chunk
+            else:
+                yield from _handle_slot_fill_from_history(message, intent, entities, missing, target_field, user_id, api_key, system_prompt)
         else:
             yield from _handle_new_message(message, history, user_id, api_key, system_prompt)
     else:

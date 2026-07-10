@@ -85,10 +85,12 @@ def _regex_extract(message):
 
     if result["amount"] is None:
         bare = re.findall(r"\b(\d{2,6}(?:\.\d{1,2})?)\b", message)
-        spending_words = re.search(r"\b(spent|paid|spend|cost|buy|bought|purchase|earned|received|income|salary|subscription|bill|fee|charge|payment)\b", lower)
+        spending_words = re.search(r"\b(spent|paid|spend|cost|buy|bought|purchase|earned|received|income|salary|subscription|bill|fee|charge|payment|expense|add|record|create|log|new)\b", lower)
         if bare and spending_words:
             result["amount"] = float(bare[-1].replace(",", ""))
         elif bare and len(bare) == 1 and re.search(r"(?:via|through|using|by)\s+(?:card|upi|cash|pay)", lower):
+            result["amount"] = float(bare[-1].replace(",", ""))
+        elif bare and len(bare) == 1 and message.strip() == bare[0]:
             result["amount"] = float(bare[-1].replace(",", ""))
 
     for cat, kws in CATEGORY_KEYWORDS.items():

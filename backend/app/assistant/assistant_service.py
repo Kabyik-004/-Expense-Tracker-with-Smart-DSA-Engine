@@ -87,8 +87,14 @@ def _handle_new_message(message, history, user_id, api_key, system_prompt):
 
     if intent in ("unknown", "general_help", "navigation_help", "bank_statement_query"):
         if api_key:
+            replied = False
             for chunk in stream_chat(api_key, system_prompt, message, history):
+                replied = True
                 yield chunk
+            if not replied:
+                tool_result = execute_tool(user_id, intent, merged_entities)
+                for chunk in _yield_text(tool_result.get("reply", "")):
+                    yield chunk
         else:
             tool_result = execute_tool(user_id, intent, merged_entities)
             for chunk in _yield_text(tool_result.get("reply", "")):

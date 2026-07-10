@@ -1,11 +1,14 @@
 import json
 import logging
+import time
 import requests
 
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 MODEL = "gemini-2.0-flash"
+MAX_RETRIES = 3
+INITIAL_BACKOFF = 2.0
 
 
 def _build_contents(message, history):
@@ -20,13 +23,38 @@ def _build_contents(message, history):
     return contents
 
 
+def _attempt_stream(api_key, payload):
+    url = f"{BASE_URL}/{MODEL}:streamGenerateContent?alt=sse&key={api_key}"
+    resp = requests.post(url, json=payload, stream=True, timeout=60)
+    resp.raise_for_status()
+
+    for line in resp.iter_lines():
+        if not line:
+            continue
+        decoded = line.decode("utf-8")
+        if not decoded.startswith("data: "):
+            continue
+        data_str = decoded[6:]
+        if data_str == "[DONE]":
+            break
+        try:
+            chunk = json.loads(data_str)
+            candidates = chunk.get("candidates", [])
+            if not candidates:
+                continue
+            parts = candidates[0].get("content", {}).get("parts", [])
+            for part in parts:
+                text = part.get("text", "")
+                if text:
+                    yield {"reply": text}
+        except json.JSONDecodeError:
+            continue
+
+
 def stream_chat(api_key, system_prompt, message, history=None):
     if not api_key:
         logger.error("GEMINI_API_KEY not configured")
-        yield {"error": "AI assistant is not configured. Please set GEMINI_API_KEY."}
         return
-
-    url = f"{BASE_URL}/{MODEL}:streamGenerateContent?alt=sse&key={api_key}"
 
     payload = {
         "system_instruction": {"parts": [{"text": system_prompt}]},
@@ -45,56 +73,44 @@ def stream_chat(api_key, system_prompt, message, history=None):
         ],
     }
 
-    logger.debug("Sending request to Gemini API (%s)", MODEL)
+    last_error = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            logger.debug("Gemini attempt %d/%d (%s)", attempt, MAX_RETRIES, MODEL)
+            yield from _attempt_stream(api_key, payload)
+            return
+        except requests.exceptions.HTTPError as e:
+            status = e.response.status_code if e.response is not None else 0
+            body = e.response.text if e.response is not None else ""
+            logger.error("Gemini HTTP %d (attempt %d): %s", status, attempt, body)
 
-    try:
-        resp = requests.post(url, json=payload, stream=True, timeout=60)
-        resp.raise_for_status()
-
-        for line in resp.iter_lines():
-            if not line:
-                continue
-            decoded = line.decode("utf-8")
-            if not decoded.startswith("data: "):
-                continue
-            data_str = decoded[6:]
-            if data_str == "[DONE]":
-                break
-            try:
-                chunk = json.loads(data_str)
-                candidates = chunk.get("candidates", [])
-                if not candidates:
-                    continue
-                parts = candidates[0].get("content", {}).get("parts", [])
-                for part in parts:
-                    text = part.get("text", "")
-                    if text:
-                        yield {"reply": text}
-            except json.JSONDecodeError:
+            if status == 403:
+                return
+            if status == 429 and attempt < MAX_RETRIES:
+                backoff = INITIAL_BACKOFF * (2 ** (attempt - 1))
+                logger.warning("Rate limited, retrying in %.1fs (attempt %d/%d)", backoff, attempt, MAX_RETRIES - 1)
+                time.sleep(backoff)
                 continue
 
-    except requests.exceptions.HTTPError as e:
-        status = e.response.status_code if e.response is not None else 0
-        body = e.response.text if e.response is not None else ""
-        logger.error("Gemini HTTP %d: %s", status, body)
-        if status == 403:
-            yield {"error": "Invalid or expired API key. Please check GEMINI_API_KEY."}
-        elif status == 429:
-            yield {"error": "Rate limited. Please wait a moment and try again."}
-        else:
-            yield {"error": f"AI service error (HTTP {status}). Please try again."}
+            last_error = status
+            break
 
-    except requests.exceptions.ConnectionError:
-        logger.error("Gemini connection failed")
-        yield {"error": "Could not connect to the AI service. Check your internet connection."}
+        except requests.exceptions.ConnectionError:
+            logger.error("Gemini connection failed (attempt %d)", attempt)
+            last_error = "connection"
+            break
 
-    except requests.exceptions.Timeout:
-        logger.error("Gemini request timed out")
-        yield {"error": "AI service took too long to respond. Please try again."}
+        except requests.exceptions.Timeout:
+            logger.error("Gemini timeout (attempt %d)", attempt)
+            last_error = "timeout"
+            break
 
-    except Exception as e:
-        logger.exception("Gemini streaming failed")
-        yield {"error": "An unexpected error occurred. Please try again."}
+    if last_error == 403:
+        return
+    if last_error == "connection":
+        return
+    if last_error == "timeout":
+        return
 
 
 def chat(api_key, system_prompt, message, history=None):

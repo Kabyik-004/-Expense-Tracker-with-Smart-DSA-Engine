@@ -124,6 +124,7 @@ def create_app(config_class=Config):
     from app.routes.budget_routes import budget_bp
     from app.statement_import import import_bp
     from app.otp import otp_bp
+    from app.assistant import assistant_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(expense_bp, url_prefix="/api/expenses")
@@ -134,6 +135,7 @@ def create_app(config_class=Config):
     app.register_blueprint(budget_bp, url_prefix="/api/budgets")
     app.register_blueprint(import_bp, url_prefix="/api/import")
     app.register_blueprint(otp_bp, url_prefix="/api/auth")
+    app.register_blueprint(assistant_bp, url_prefix="/api/assistant")
 
     # Ensure instance directory exists for SQLite database
     os.makedirs(app.instance_path, exist_ok=True)

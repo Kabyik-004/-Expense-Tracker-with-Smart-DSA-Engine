@@ -28,6 +28,7 @@ import FloatingActionButton from "./components/shared/FloatingActionButton";
 import PageTransition from "./components/shared/PageTransition";
 import ProfileMenu from "./components/shared/ProfileMenu";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
+import AIAssistant from "./components/shared/AIAssistant";
 
 import { lazy, Suspense } from "react";
 import dashboardLogo from "./assets/dashboard-logo.png";
@@ -223,6 +224,7 @@ export default function App() {
             }
           />
         </Routes>
+          <AIAssistant />
         </ToastProvider>
       </AuthProvider>
     </Router>

@@ -42,6 +42,9 @@ class Config:
 
     JWT_BLOCKLIST_ENABLED = os.getenv("JWT_BLOCKLIST_ENABLED", "true").lower() == "true"
 
+    # Gemini AI
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+
     # Email / Brevo
     BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
     MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER", "")

@@ -77,11 +77,25 @@ def _regex_classify(message):
 
     is_question = bool(re.search(r"^(what|which|how|when|where|why|who|did|do|does|is|are|can|could|would)", lower))
 
-    if not is_question and re.search(r"\b(?:spent|paid|bought|purchased)\b", lower) and re.search(r"\b\d+\b", lower):
-        return "add_expense", 0.85
+    if not is_question and re.search(r"\b\d+\b", lower):
+        if re.search(r"\b(?:spent|paid|bought|purchased)\b", lower):
+            return "add_expense", 0.85
+        if re.search(r"\b(?:add|record|new|create|log)\b", lower) and re.search(r"\b(?:expense|transaction|spend|spent|payment|bill|cost)\b", lower):
+            return "add_expense", 0.9
+        if re.search(r"\b(?:add|record|new)\b", lower) and re.search(r"\b(?:income|salary|earn|received|deposit)\b", lower):
+            return "add_income", 0.9
+        if re.search(r"\b(?:for|at|on|in)\b", lower):
+            if re.search(r"\b(?:food|transport|shopping|entertainment|bills|health|education|fuel|petrol|groceries|rent|movie|uber|zomato|swiggy|amazon)\b", lower):
+                return "add_expense", 0.85
 
     if not is_question and re.search(r"\b(?:spent|paid|bought|purchased)\b", lower):
         return "add_expense", 0.7
+
+    if not is_question and re.search(r"\b(?:add|record|new|create|log)\b", lower) and re.search(r"\b(?:expense|transaction|spend|spent|payment|bill|cost)\b", lower):
+        return "add_expense", 0.75
+
+    if not is_question and re.search(r"\b(?:add|record|new)\b", lower) and re.search(r"\b(?:income|salary|earn|received|deposit)\b", lower):
+        return "add_income", 0.75
 
     if re.search(r"\b(calendar|schedule|this month|last month|this week|last week|this year|in january|in february|in march|monthly)\b", lower):
         return "calendar_query", 0.7

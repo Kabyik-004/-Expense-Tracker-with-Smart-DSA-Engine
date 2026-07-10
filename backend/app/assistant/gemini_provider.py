@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 MODEL = "gemini-2.0-flash"
-MAX_RETRIES = 3
-INITIAL_BACKOFF = 2.0
+MAX_RETRIES = 1
+INITIAL_BACKOFF = 1.0
 
 
 def _build_contents(message, history):

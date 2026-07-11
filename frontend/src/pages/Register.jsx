@@ -12,17 +12,33 @@ export default function Register() {
   const [form, setForm] = useState({
     username: "", email: "", password: "", full_name: "",
   });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const fieldError = (field) => {
+    const err = errors[field];
+    if (!err) return null;
+    return Array.isArray(err) ? err[0] : err;
+  };
+
+  const setField = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: null }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors({});
     try {
       const res = await register(form);
       if (res.success) {
         navigate("/dashboard");
       } else {
+        if (res.errors) {
+          setErrors(res.errors);
+        }
         addToast(res.message || "Registration failed", "error");
       }
     } catch {
@@ -43,18 +59,30 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
-            <input type="text" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} />
-            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">3-80 characters, letters, numbers &amp; underscores only</p>
+            <input type="text" required className={`input-focus w-full px-3 py-2 border rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${fieldError("username") ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`} value={form.username} onChange={(e) => setField("username", e.target.value)} />
+            {fieldError("username") ? (
+              <p className="mt-1 text-xs text-red-500">{fieldError("username")}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">3-80 characters, letters, numbers &amp; underscores only</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-            <input type="email" required className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Enter a valid email address</p>
+            <input type="email" required className={`input-focus w-full px-3 py-2 border rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${fieldError("email") ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`} value={form.email} onChange={(e) => setField("email", e.target.value)} />
+            {fieldError("email") ? (
+              <p className="mt-1 text-xs text-red-500">{fieldError("email")}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Enter a valid email address</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-            <input type="text" className="input-focus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
-            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Optional, max 150 characters</p>
+            <input type="text" className={`input-focus w-full px-3 py-2 border rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${fieldError("full_name") ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`} value={form.full_name} onChange={(e) => setField("full_name", e.target.value)} />
+            {fieldError("full_name") ? (
+              <p className="mt-1 text-xs text-red-500">{fieldError("full_name")}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Optional, max 150 characters</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
@@ -62,9 +90,9 @@ export default function Register() {
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                className="input-focus w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                className={`input-focus w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${fieldError("password") ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) => setField("password", e.target.value)}
               />
               <button
                 type="button"
@@ -76,7 +104,11 @@ export default function Register() {
                 {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
               </button>
             </div>
-            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">8-128 characters, with 1 uppercase, 1 lowercase &amp; 1 digit</p>
+            {fieldError("password") ? (
+              <p className="mt-1 text-xs text-red-500">{fieldError("password")}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">8-128 characters, with 1 uppercase, 1 lowercase &amp; 1 digit</p>
+            )}
           </div>
           <button type="submit" disabled={loading} className="w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium">
             {loading ? "Creating account..." : "Create account"}

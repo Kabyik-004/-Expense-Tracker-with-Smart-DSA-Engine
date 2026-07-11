@@ -51,9 +51,9 @@ def register_user(request_data):
 
     # Check duplicates
     if User.query.filter_by(username=data["username"]).first():
-        return error_response("Username already taken", 409)
+        return error_response("Username already taken", 409, errors={"username": ["Username already taken"]})
     if User.query.filter_by(email=data["email"]).first():
-        return error_response("Email already registered", 409)
+        return error_response("Email already registered", 409, errors={"email": ["Email already registered"]})
 
     # Create user
     user = User(

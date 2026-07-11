@@ -25,23 +25,31 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = useCallback(async (credentials) => {
-    const res = await authService.loginUser(credentials);
-    if (res.success) {
-      localStorage.setItem("access_token", res.data.access_token);
-      localStorage.setItem("refresh_token", res.data.refresh_token);
-      setUser(res.data.user);
+    try {
+      const res = await authService.loginUser(credentials);
+      if (res.success) {
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("refresh_token", res.data.refresh_token);
+        setUser(res.data.user);
+      }
+      return res;
+    } catch (err) {
+      return err.response?.data || { success: false, message: "Something went wrong" };
     }
-    return res;
   }, []);
 
   const register = useCallback(async (data) => {
-    const res = await authService.registerUser(data);
-    if (res.success) {
-      localStorage.setItem("access_token", res.data.access_token);
-      localStorage.setItem("refresh_token", res.data.refresh_token);
-      setUser(res.data.user);
+    try {
+      const res = await authService.registerUser(data);
+      if (res.success) {
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("refresh_token", res.data.refresh_token);
+        setUser(res.data.user);
+      }
+      return res;
+    } catch (err) {
+      return err.response?.data || { success: false, message: "Something went wrong" };
     }
-    return res;
   }, []);
 
   const logout = useCallback(() => {

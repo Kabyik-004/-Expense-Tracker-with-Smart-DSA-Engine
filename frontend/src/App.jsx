@@ -30,7 +30,8 @@ import ProfileMenu from "./components/shared/ProfileMenu";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
 import AIAssistant from "./components/shared/AIAssistant";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { startKeepAlive } from "./services/api";
 import dashboardLogo from "./assets/dashboard-logo.png";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
@@ -163,6 +164,11 @@ function AppLayout() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const stop = startKeepAlive();
+    return () => clearInterval(stop);
+  }, []);
+
   return (
     <Router>
       <AuthProvider>

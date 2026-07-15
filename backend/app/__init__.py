@@ -114,6 +114,16 @@ def create_app(config_class=Config):
     # Register middleware and error handlers
     register_error_handlers(app)
 
+    # ── Health-check endpoint (no auth, lightweight — for Render keepalive) ──
+    @app.route("/api/health", methods=["GET"])
+    def health_check():
+        from flask import jsonify
+        return jsonify({
+            "success": True,
+            "message": "healthy",
+            "data": {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
+        }), 200
+
     # Register blueprints
     from app.routes.auth_routes import auth_bp
     from app.routes.expense_routes import expense_bp
